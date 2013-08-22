@@ -1,0 +1,80 @@
+body {
+    overflow: auto;
+}
+
+.logo {
+    margin: 35px auto 30px auto;
+}
+
+.center-box {
+    height: 450px;
+    width: 650px;
+
+    text-align: center;
+
+    position: relative;
+    top: 120px;
+    margin: 0 auto 20px auto;
+
+    border: 1px solid #ddd;
+    box-shadow: 5px 5px 20px #aaa;
+
+    overflow: hidden;
+}
+
+.wrapper {
+    position: relative;
+}
+
+.main-area {
+    height: 400px;
+    padding: 25px;
+}
+
+.upload-area {
+    height: 400px;
+    padding: 25px;
+}
+
+.main-area > .row > .btn {
+    margin: 5px;
+    width: 250px;
+}
+
+#upload-icon-frame {
+    display: inline-block;
+
+    border: 4px dashed #aaa;
+    border-radius: 10px;
+
+    padding: 15px;
+    margin: 30px auto 50px auto;
+}
+
+#upload-icon {
+    width: 180px;
+    height: 180px;
+
+    border-radius: 10px;
+
+    background-image: url('/img/logo_tiny.png');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#filename-text {
+    width: 300px;
+    border-radius: 4px 0 0 4px;
+}
+
+.login-link {
+	top: 0;
+	right: 0;
+	
+	float: right;
+	position: absolute;
+	
+	margin: 7px 7px 0 0;
+	
+	text-align: right;
+}

@@ -33,3 +33,13 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Vim
+*.swp
+*.swo
+
+# configurations
+*.cfg
+
+# folders
+uploads

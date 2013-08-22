@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+	<head>
+		<title>ImgTL{% block title %}{% endblock %}</title>
+		<meta charset="utf-8" />
+		{% block meta %}{% endblock %}
+		
+		<link href="/css/bootstrap.css" rel="stylesheet" />
+		<link href="/css/todc-bootstrap.min.css" rel="stylesheet" />
+		
+		<link href="/css/public.css" rel="stylesheet" />
+		<link href="/css/{{ active_page }}.css" rel="stylesheet" />
+		
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+		
+		<script src="/js/common.js"></script>
+		<script src="/js/{{ active_page }}.js"></script>
+		{% block head %}{% endblock %}
+	</head>
+
+	<body>
+	{% block body %}{% endblock %}
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<div id="error-wrap">
+				<div id="error-alert">
+					{{ messages | first }}
+				</div>
+				<div id="error-overlay"></div>
+				<script src="/js/error.js"></script>
+			</div>
+		{% endif %}
+	{% endwith %}
+	</body>
+</html>

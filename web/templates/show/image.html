@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% set active_page = "show" %}
+{% block title %} : {{ upload.title }}{% endblock %}
+{% block meta %}
+	<meta name="twitter:card" content="photo">
+	<meta name="twitter:site" content="@img_tl">
+	<meta name="twitter:title" content="{{ upload.title }}">
+	<meta name="twitter:image:src" content="{{ upload.object.original_url }}">
+{% endblock %}
+{% block container %}
+	<aside class="sidebar">
+		<div class="panel sidebar-element">
+			<div class="panel-heading">
+				<small>URL</small>
+			</div>
+			
+			<p>Direct link</p>
+			<input type="text" value="https://img.tl/{{ upload.url }}.{{ upload.object.ext }}" class="input-block-level url-text" readonly />
+			
+			<p>Page</p>
+			<input type="text" value="https://img.tl/{{ upload.url }}" class="input-block-level url-text" readonly />
+		</div>
+		
+		<div class="panel sidebar-element">
+			<div class="panel-heading second-header">
+				<small>Information</small>
+			</div>
+			
+			<div class="image-desc">
+				{{ upload.desc or '' }}
+			</div>
+			
+			<div class="image-time">
+				At {{ upload.time }} (KST)
+			</div>
+
+			<div class="image-author">
+				By {{ upload.user.name or 'Anonymous' }}
+			</div>
+
+			<!--
+			<div class="image-view-count">
+				Viewed {{ upload.view_count }} times
+			</div>
+			-->
+		</div>
+	</aside>
+
+	<section class="panel content-area">
+		<div class="panel-heading">
+			{{ upload.title }}
+		</div>
+		
+		<div class="panel-content">
+			<a href="https://img.tl/{{ upload.url }}.{{ upload.object.ext }}">
+				<img src="{{ upload.object.original_url }}" class="content-image" />
+			</a>
+		</div>
+	</section>
+{% endblock %}

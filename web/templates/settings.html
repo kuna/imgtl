@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% set active_page = "settings" %}
+{% block title %}: Settings{% endblock %}
+
+{% block head %}
+<link href="/css/userinfo.css" rel="stylesheet" />
+<script src="/js/login.js"></script>
+{% endblock %}
+
+{% block container %}
+	<aside class="sidebar">
+		<div class="panel myinfo">
+			<div class="top-desc">
+				<img class="user-icon" src="{{ user.profile_image_url }}" />
+				<span class="username">{{ user.name }}</span>
+				<span class="email">{{ user.email }}</span>
+			</div>
+			<div class="desc">
+				<dl>
+					<dt>Image count</dt>
+					<dd>{{ user.uploads.all() | count }}</dd>
+				</dl>
+			</div>
+		</div>
+		
+		<ul class="nav nav-tabs nav-stacked">
+			<li><a href="#account"><i class="icon-chevron-left"></i> Account</a></li>
+			<li><a href="#token"><i class="icon-chevron-left"></i> Token</a></li>
+		</ul>
+	</aside>
+	
+	<section class="panel settings-area">
+		<div class="panel-heading">
+			<small>Account</small>
+		</div>
+		
+		<div class="content">
+			<div id="account">
+				<form method="POST">
+					<div class="control-group">
+						<label class="control-label" for="inputREmail">E-Mail</label>
+						<div class="error-help"></div>
+						<input type="text" id="inputREmail" name="email" class="input-block-level" maxlength="120" placeholder="E-Mail" value="{{ user.email }}" />
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="inputRUsername">Username</label>
+						<div class="error-help"></div>
+						<input type="text" id="inputRUsername" name="username" class="input-block-level" maxlength="16" placeholder="Username" value="{{ user.name }}" />
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="inputRPassword" style="margin-top: 7px;">Password</label>
+						<div class="error-help"></div>
+						<input type="password" id="inputRPassword" name="password" class="input-block-level" placeholder="Password" />
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="inputRPasswordConfirm" style="margin-top: 7px;">Password confirm</label>
+						<div class="error-help"></div>
+						<input type="password" id="inputRPasswordConfirm" name="passwordconfirm" class="input-block-level" placeholder="Password confirm" />
+					</div>
+					
+					<div style="margin: 10px 0 47px 0;">
+						<button type="submit" class="btn btn-large btn-primary pull-right">Submit</button>
+					</div>
+				</form>
+			</div>
+			
+			<div id="token" style="display: none;">
+				<div class="control-group">
+					<label class="control-label" for="inputToken">Token</label>
+					<input type="text" id="inputToken" name="token" class="input-block-level" value="{{user.token}}" readonly />
+				</div>
+				
+				<div style="margin: 10px 0 47px 0;">
+					<button type="button" class="btn btn-large btn-danger pull-right" data-toggle="modal" data-target="#token-modal">Token Reissue</button>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<div id="token-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="token-modal-label" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="token-modal-label">Warning!</h3>
+		</div>
+		
+		<div class="modal-body">
+			<p>만약 토큰을 재발급 받는다면 기존에 사용하던 토큰은 무효화 되며, 해당 토큰을 사용하는 앱에 새 토큰을 넣어줘야 합니다. 계속 하시겠습니까?</p>
+		</div>
+		
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-danger" id="token-reissue-btn">Reissue</button>
+		</div>
+	</div>
+{% endblock %}

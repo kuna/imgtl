@@ -1,0 +1,27 @@
+{% extends "common.html" %}
+{% block head %}{% endblock %}
+{% block body %}
+	<div class="container">
+		<header class="header">
+			<a href="/">
+				<img src="/img/logo_small.png" class="top-logo" />
+			</a>
+			
+			<div class="btn-group pull-right user-menu">
+				{% if user.is_anonymous() %}
+				<a class="btn btn-primary hand-cursor" href="{{ url_for('login') }}">Login / Register</a>
+				{% else %}
+				<a class="btn btn-primary hand-cursor" href="{{ url_for('index') }}"><i class="icon-user icon-white"></i> {{ user.name }}</a>
+				<a class="btn btn-primary hand-cursor dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+				{% endif %}
+				
+				<ul class="dropdown-menu">
+					<li><a href="/settings">Settings</a></li>
+					<li><a href="/logout">Logout</a></li>
+				</ul>
+			</div>
+		</header>
+		{% block container %}{% endblock %}
+	</div>
+	{% block content %}{% endblock %}
+{% endblock %}

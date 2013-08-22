@@ -1,0 +1,71 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.sidebar {
+    width: 250px;
+    min-height: 68px;
+    float: right;
+    padding: 10px;
+}
+
+.myinfo > .top-desc {
+    margin-left: 60px;
+}
+
+.myinfo > .top-desc > .user-icon {
+    width: 48px;
+    height: 48px;
+    margin-left: -62px;
+    position: absolute;
+}
+
+.myinfo > .top-desc > .username {
+    font-size: 16pt;
+    display: block;
+}
+
+.myinfo > .top-desc > .email {
+    font-size: 12pt;
+    display: block;
+}
+
+.image-grid {
+    min-height: 500px;
+    margin-right: 285px;
+}
+
+.upload-area {
+    text-align: center;
+}
+
+#upload-icon-frame {
+    display: inline-block;
+
+    border: 4px dashed #aaa;
+    border-radius: 10px;
+
+    padding: 15px;
+    margin: 20px auto 20px auto;
+}
+
+#upload-icon {
+    width: 180px;
+    height: 180px;
+
+    border-radius: 10px;
+
+    background-image: url('/img/upload_icon.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#filename-text {
+    width: 185px;
+    border-radius: 4px 0 0 4px;
+}
+
+hr.divider {
+    border-top: 1px solid #ddd;
+    margin: 0 -10px 10px -10px;
+}
