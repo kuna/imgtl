@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 
 from imgtl.db import *
 from imgtl.const import *
+from imgtl.common import do_upload_image
 import imgtl.lib
 
 
@@ -35,37 +36,11 @@ class Upload(Resource):
                 return error('wrongtoken')
         if 'image' not in request.files:
             return error('imagenotattached')
-        f = request.files['image']
-        if not f:
-            return error('wrongimage')
-        fn = f.filename
-        fs = f.read();
-        if not imgtl.lib.is_image(fs):
-            return error('notimage')
-        code = "%s.%s" % (imgtl.lib.md5(fs), imgtl.lib.get_ext(fn))
-        image = Image.query.filter_by(code=code).first()
-        if not image:
-            image = Image(server=SERVER_S1, code=code)
-            fp = imgtl.lib.get_spath(app.config['UPLOAD_DIR'], code)
-            if not os.path.exists(os.path.dirname(fp)):
-                os.makedirs(os.path.dirname(fp))
-            with open(fp, 'w') as f:
-                f.write(fs)
-        desc = request.form['desc'] if 'desc' in request.form else None
-        upload = imgtl.db.Upload(object=image, user=user, title=fn, desc=desc)
-        while True:
-            try:
-                upload.url = imgtl.lib.make_url()
-                db.session.add(upload)
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-                continue
-            else:
-                break
-        db.session.add(image)
-        db.session.commit()
-        return success({'url': {'page': 'https://img.tl/%s' % upload.url, 'direct': 'https://img.tl/%s.%s' % (upload.url, image.ext), 'original': image.original_url}})
+        upload = do_upload_image(user, request.files['image'], request.form['desc'] if 'desc' in request.form else None)
+        if isinstance(upload, str):
+            return error(upload)
+        else:
+            return success({'url': {'page': 'https://img.tl/%s' % upload.url, 'direct': 'https://img.tl/%s.%s' % (upload.url, upload.object.ext), 'original': upload.object.original_url}})
 
 class Url(Resource):
     def get(self, url):

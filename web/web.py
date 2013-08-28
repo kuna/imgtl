@@ -12,6 +12,7 @@ from sqlalchemy.exc import IntegrityError
 from imgtl.db import *
 from imgtl.const import *
 from imgtl.i18n import i18n
+from imgtl.common import do_upload_image
 import imgtl.lib
 import imgtl.validator
 
@@ -137,42 +138,16 @@ def logout():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    f = request.files['image']
-    if not f:
-        flash(i18n('imagenotattached'))
-        return redirect(url_for('index'))
-    fn = f.filename
-    fs = f.read();
-    if not imgtl.lib.is_image(fs):
-        flash(i18n('fileisnotimage'))
-        return redirect(url_for('index'))
-    code = "%s.%s" % (imgtl.lib.md5(fs), imgtl.lib.get_ext(fn))
-    image = Image.query.filter_by(code=code).first()
-    if not image: # if image is new
-        image = Image(server=SERVER_S1, code=code) # create new image
-        fp = imgtl.lib.get_spath(app.config['UPLOAD_DIR'], code)
-        if not os.path.exists(os.path.dirname(fp)):
-            os.makedirs(os.path.dirname(fp))
-        with open(fp, 'w') as f:
-            f.write(fs)
-    desc = request.form['desc'] if 'desc' in request.form else None
-    if current_user.is_anonymous():
-        upload = Upload(object=image, title=fn, desc=desc)
+    if current_user.is_authenticated():
+        user = current_user
     else:
-        upload = Upload(object=image, user=current_user, title=fn, desc=desc)
-    while 1:
-        try:
-            upload.url = imgtl.lib.make_url()
-            db.session.add(upload)
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            continue
-        else:
-            break
-    db.session.add(image)
-    db.session.commit()
-    return redirect(url_for('show', url=upload.url))
+        user = None
+    upload = do_upload_image(user, request.files['image'], request.form['desc'] if 'desc' in request.form else None)
+    if isinstance(upload, str):
+        flash(i18n(upload))
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('show', url=upload.url))
 
 @app.route('/<url>')
 def show(url):
