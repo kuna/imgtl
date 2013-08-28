@@ -7,7 +7,7 @@ from flask import request, current_app
 
 from sqlalchemy.exc import IntegrityError
 
-from .lib import md5, is_image, get_ext, get_spath, make_url
+from .lib import md5, is_image, get_ext, get_spath, make_url, create_thumbnail
 from .const import SERVER_S1
 from .db import *
 
@@ -24,10 +24,14 @@ def do_upload_image(user, f, desc):
     if not image:
         image = Image(server=SERVER_S1, code=code)
         fp = get_spath(current_app.config['UPLOAD_DIR'], code)
+        tfp = get_spath(os.path.join(current_app.config['UPLOAD_DIR'], 'thumb'), code)
         if not os.path.exists(os.path.dirname(fp)):
             os.makedirs(os.path.dirname(fp))
+        if not os.path.exists(os.path.dirname(tfp)):
+            os.makedirs(os.path.dirname(tfp))
         with open(fp, 'w') as fi:
             fi.write(fs)
+        create_thumbnail(fs).save(filename=tfp)
     upload = Upload(object=image, user=user, title=fn, desc=desc)
     while 1:
         try:

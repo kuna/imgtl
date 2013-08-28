@@ -46,3 +46,8 @@ def get_ext(fn):
 
 def get_spath(path, code):
     return os.path.join(path, code[0], code[1], code)
+
+def create_thumbnail(fs):
+    im = wImage(blob=fs)
+    im.resize(135, 135)
+    return im

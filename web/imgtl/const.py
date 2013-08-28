@@ -12,7 +12,6 @@ OBJECT_URL = {
     SERVER_S2: 'https://s2.img.tl/%s',
 }
 
-
 # OBJ_TYPE
 TYPE_IMAGE  = 1
 TYPE_FILE   = 2

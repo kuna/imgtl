@@ -76,6 +76,10 @@ class Image(Object):
         return OBJECT_URL[self.server] % get_spath('', self.code)
 
     @property
+    def thumbnail_url(self):
+        return OBJECT_URL[self.server] % get_spath('thumb', self.code)
+
+    @property
     def ext(self):
         return get_ext(self.code)
 
