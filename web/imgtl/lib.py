@@ -46,35 +46,3 @@ def get_ext(fn):
 
 def get_spath(path, code):
     return os.path.join(path, code[0], code[1], code)
-
-
-def do_upload(user, f, desc):
-    if not f:
-        return 'imagenotattached'
-    fn = f.filename
-    fs = f.read()
-    if not is_image(fs):
-        return 'wrongimage'
-    code = '%s.%s' % (md5(fs), get_ext(fn))
-    image = Image.query.filter_by(code=code).first()
-    if not image:
-        image = Image(server=SERVER_S1, code=code)
-        fp = get_spath(current_app.config['UPLOAD_DIR'], code)
-        if not os.path.exists(os.path.dirname(fp)):
-            os.makedirs(os.path.dirname(fp))
-        with open(fp, 'w') as fi:
-            fi.write(fs)
-    upload = Upload(object=image, user=user, title=fn, desc=desc)
-    while 1:
-        try:
-            upload.url = make_url()
-            db.session.add(upload)
-            db.session.commit()
-        except IntegirityError:
-            db.session.rollback()
-            continue
-        else:
-            break
-    db.session.add(image)
-    db.session.commit()
-    return upload
