@@ -3,6 +3,26 @@
     margin-right: 285px;
 }
 
+.image-area {
+    margin: -10px -10px 0 0;
+}
+
+.grid-item {
+    width: 137px;
+    height: 137px;
+    margin: 7px 7px 0 0;
+    
+    display: inline-block;
+    
+    border: solid 1px rgba(49, 176, 213, 0);
+    
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    
+    cursor: pointer;
+}
+
 .upload-area {
     text-align: center;
 }

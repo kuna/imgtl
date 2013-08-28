@@ -50,5 +50,11 @@
 		<div class="panel-heading">
 			<small>My Images</small>
 		</div>
+		
+		<div class="image-area">
+		{% for upload in user.uploads %}
+			<a class="grid-item" href="/{{upload.url}}" style="background-image: url('/{{upload.url}}.{{upload.object.ext}}')">&nbsp;</a>
+		{% endfor %}
+		<div>
 	</section>
 {% endblock %}
