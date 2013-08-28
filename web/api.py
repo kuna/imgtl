@@ -56,4 +56,4 @@ api.add_resource(Url, '/url/<string:url>')
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(host='0.0.0.0', port=2561)
+    app.run(host='127.0.0.1', port=2561)
