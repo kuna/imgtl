@@ -12,6 +12,10 @@ from .const import SERVER_S1
 from .db import *
 
 
+def do_log(target, action, action_id, ip=None, user=None):
+    log = Log(target=target, action=action, action_id=action_id, ip=ip, user=user)
+    log_db.session.add(log)
+
 def do_upload_image(user, f, desc):
     if not f:
         return 'wrongimage'

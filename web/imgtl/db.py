@@ -14,6 +14,10 @@ from .lib import md5, get_spath, get_ext
 
 
 db = SQLAlchemy()
+log_db = SQLAlchemy(session_options={
+    'autocommit': True,
+    'authflush': True,
+})
 
 
 class User(db.Model):
@@ -127,3 +131,6 @@ class Log(db.Model):
     ip = db.Column('log_by_ip', db.String(16), nullable=True)
     user = db.Column('log_by_user', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
     _user = db.relationship('User', backref=db.backref('logs', lazy='dynamic'))
+
+    def __repr__(self):
+        return '<Log %r>' % self.id

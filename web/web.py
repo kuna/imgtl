@@ -24,6 +24,8 @@ app.jinja_env.lstrip_blocks = True
 
 db.init_app(app)
 db.app = app
+log_db.init_app(app)
+log_db.app = app
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'

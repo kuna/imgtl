@@ -17,9 +17,14 @@ import imgtl.lib
 
 app = Flask(__name__)
 app.config.from_pyfile('imgtl.cfg')
+
 db.init_app(app)
 db.app = app
+log_db.init_app(app)
+log_db.app = app
+
 api = Api(app)
+
 
 def success(data):
     return {'status': 'success', 'data': data}
