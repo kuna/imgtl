@@ -116,3 +116,13 @@ class Text(Object):
 
     def __repr__(self):
         return '<Text %r>' % self.id
+
+
+class Log(db.Model):
+    __tablename__ = 'log'
+    id = db.Column('log_id', db.Integer, primary_key=True, index=True)
+    target = db.Column('log_target', db.String(16), nullable=False)
+    target_id = db.Column('log_target_id', db.Integer, nullable=False)
+    ip = db.Column('log_by_ip', db.String(16), nullable=True)
+    user = db.Column('log_by_user', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
+    _user = db.relationship('User', backref=db.backref('logs', lazy='dynamic'))
