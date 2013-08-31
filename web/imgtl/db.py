@@ -16,7 +16,6 @@ from .lib import md5, get_spath, get_ext
 db = SQLAlchemy()
 log_db = SQLAlchemy(session_options={
     'autocommit': True,
-    'authflush': True,
 })
 
 
@@ -54,9 +53,9 @@ class Upload(db.Model):
     id = db.Column('upload_id', db.Integer, primary_key=True, index=True)
     url = db.Column('url', db.String(8), unique=True, index=True, nullable=True)
     object_id = db.Column('upload_obj_id', db.Integer, db.ForeignKey('object.object_id'), nullable=False)
-    _object = db.relationship('Object', backref=db.backref('uploads', lazy='dynamic'))
+    object = db.relationship('Object', backref=db.backref('uploads', lazy='dynamic'))
     user_id = db.Column('upload_user_id', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
-    _user = db.relationship('User', backref=db.backref('uploads', lazy='dynamic'))
+    user = db.relationship('User', backref=db.backref('uploads', lazy='dynamic'))
     time = db.Column('upload_time', db.DateTime, nullable=False, default=sqlfuncs.now())
     view_count = db.Column('upload_view_count', db.Integer, nullable=False, default=0)
     title = db.Column('upload_title', db.String(120), nullable=False)
@@ -129,8 +128,8 @@ class Log(db.Model):
     action = db.Column('log_action', db.String(16), nullable=False)
     action_id = db.Column('log_action_id', db.Integer, nullable=False)
     ip = db.Column('log_by_ip', db.String(16), nullable=True)
-    user = db.Column('log_by_user', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
-    _user = db.relationship('User', backref=db.backref('logs', lazy='dynamic'))
+    user_id = db.Column('log_by_user_id', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
+    user = db.relationship('User', backref=db.backref('logs', lazy='dynamic'))
 
     def __repr__(self):
         return '<Log %r>' % self.id

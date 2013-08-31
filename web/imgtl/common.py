@@ -12,9 +12,13 @@ from .const import SERVER_S1
 from .db import *
 
 
-def do_log(target, action, action_id, ip=None, user=None):
-    log = Log(target=target, action=action, action_id=action_id, ip=ip, user=user)
+def do_log(target, action, action_id, user):
+    if user:
+        log = Log(target=target, action=action, action_id=action_id, user_id=user.id)
+    else:
+        log = Log(target=target, action=action, action_id=action_id, ip=request.remote_addr)
     log_db.session.add(log)
+    log_db.session.flush()
 
 def do_upload_image(user, f, desc):
     if not f:
@@ -49,4 +53,5 @@ def do_upload_image(user, f, desc):
             break
     db.session.add(image)
     db.session.commit()
+    do_log(current_app.name, 'upload', upload.id, user)
     return upload
