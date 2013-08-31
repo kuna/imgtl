@@ -17,6 +17,7 @@ db = SQLAlchemy()
 
 
 class User(db.Model):
+    __tablename__ = 'user'
     id = db.Column('user_id', db.Integer, primary_key=True)
     email = db.Column('user_email', db.String(120), unique=True, index=True, nullable=False)
     name = db.Column('user_name', db.String(16), unique=True, index=True, nullable=False)
@@ -43,7 +44,9 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.email
 
+
 class Upload(db.Model):
+    __tablename__ = 'upload'
     id = db.Column('upload_id', db.Integer, primary_key=True, index=True)
     url = db.Column('url', db.String(8), unique=True, index=True, nullable=True)
     object_id = db.Column('upload_obj_id', db.Integer, db.ForeignKey('object.object_id'), nullable=False)
@@ -59,16 +62,19 @@ class Upload(db.Model):
     def __repr__(self):
         return '<Upload %r>' % self.id
 
+
 class Object(db.Model):
+    __tablename__ = 'object'
     id = db.Column('object_id', db.Integer, primary_key=True, index=True)
     code = db.Column('object_code', db.String(40), unique=True, nullable=False)
     discriminator = db.Column('type', db.Integer)
     __mapper_args__ = {'polymorphic_on': discriminator}
 
+
 class Image(Object):
     __tablename__ = 'image'
     __mapper_args__ = {'polymorphic_identity': TYPE_IMAGE}
-    id = db.Column('image_id',  db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
+    id = db.Column('image_id', db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
     server = db.Column('image_srv', db.Integer, nullable=False)
 
     @property
@@ -86,19 +92,21 @@ class Image(Object):
     def __repr__(self):
         return '<Image %r>' % self.id
 
+
 class File(Object):
     __tablename__ = 'file'
     __mapper_args__ = {'polymorphic_identity': TYPE_FILE}
-    id = db.Column('file_id',  db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
+    id = db.Column('file_id', db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
     type = db.Column('file_type', db.Integer, nullable=False)
 
     def __repr__(self):
         return '<File %r>' % self.id
 
+
 class Text(Object):
     __tablename__ = 'text'
     __mapper_args__ = {'polymorphic_identity': TYPE_TEXT}
-    id = db.Column('text_id',  db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
+    id = db.Column('text_id', db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
     cont = db.Column('text_cont', db.Text, nullable=False)
 
     @validates('cont')
