@@ -68,3 +68,7 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 .default-cursor {
     cursor: default;
 }
+
+#file-input {
+    display: none;
+}
