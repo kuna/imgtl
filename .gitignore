@@ -43,3 +43,6 @@ nosetests.xml
 
 # folders
 uploads
+
+# test databases
+test.db
