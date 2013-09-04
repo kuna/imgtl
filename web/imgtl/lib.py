@@ -8,7 +8,7 @@ import shortuuid
 
 from flaskext.bcrypt import Bcrypt
 
-from .const import URL_BLACKLIST
+from .const import URL_BLACKLIST, AVAILABLE_FORMAT
 
 
 bcrypt = Bcrypt()
@@ -36,10 +36,13 @@ def pw_verify(hashedpw, plainpw):
 
 def is_image(fs):
     try:
-        wImage(blob=fs)
-        return True
+        wim = wImage(blob=fs)
+        if wim.format not in AVAILABLE_FORMAT:
+            raise
     except:
         return False
+    else:
+        return True
 
 def get_ext(fn):
     return os.path.splitext(fn)[1][1:]

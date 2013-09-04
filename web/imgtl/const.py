@@ -21,3 +21,5 @@ USER_DEFAULT_ICON = 'https://img.tl/img/user_icon.png'
 
 USERNAME_BLACKLIST = ['admin', 'root', 'mail', 'beta', 'test', 'static']
 URL_BLACKLIST = ['login', 'signup', 'logout', 'upload', 'img', 'css', 'js']
+
+AVAILABLE_FORMAT = ['JPEG', 'PNG', 'GIF', 'SVG']
