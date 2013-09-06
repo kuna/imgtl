@@ -61,6 +61,37 @@ def settings():
                 else:
                     break
             return jsonify({'token': current_user.token})
+        elif request.form['what'] == 'update':
+            if 'password' in request.form and request.form['password'] is not '':
+                if not imgtl.validator.password(request.form['passowrd']):
+                    flash(i18n('invalidpassowrd'))
+                    return redirect(url_for('settings'))
+                elif request.form['password'] != request.form['passwordconfirm']:
+                    flash(i18n('passwordmismatch'))
+                    return redirect(url_for('settings'))
+                else:
+                    current_user.password = request.form['password']
+                    db.session.commit()
+            new_email = request.form['email']
+            new_username = request.form['username']
+            if not imgtl.validator.email(new_email):
+                flash(i18n('invalidemail'))
+                return redirect(url_for('settings'))
+            if not imgtl.validator.username(new_username):
+                flash(i18n('invalidusername'))
+                return redirect(url_for('settings'))
+            if current_user.email != new_email:
+                if User.query.filter_by(email=new_email).first():
+                    flash(i18n('alreadyexistemail'))
+                    return redirect(url_for('settings'))
+            if current_user.name != new_username:
+                if User.query.filter_by(name=new_username).first():
+                    flash(i18n('alreadyexistname'))
+                    return redirect(url_for('settings'))
+            current_user.email = new_email
+            current_user.name = new_username
+            db.session.commit()
+            return redirect(url_for('settings'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
