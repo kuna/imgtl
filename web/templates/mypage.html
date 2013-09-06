@@ -52,7 +52,7 @@
 		</div>
 		
 		<div class="image-area">
-		{% for upload in user.uploads %}
+		{% for upload in user.uploads | reverse %}
 			<a class="grid-item" href="/{{upload.url}}" style="background-image: url('{{upload.object.thumbnail_url}}')">&nbsp;</a>
 		{% endfor %}
 		<div>
