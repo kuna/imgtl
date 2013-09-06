@@ -107,17 +107,18 @@ def signup_check():
     if request.form['what'] not in ['email', 'username']:
         abort(400)
     res = False
-    if request.form['what'] == 'email':
-        user = User.query.filter_by(email=request.form['value']).first()
-        if user:
-            res = True
-    elif request.form['what'] == 'username':
-        if request.form['value'] in USERNAME_BLACKLIST:
-            res = True
-        else:
-            user = User.query.filter_by(name=request.form['value']).first()
+    if 'except' not in request.form or request.form['except'] != request.form['value']:
+        if request.form['what'] == 'email':
+            user = User.query.filter_by(email=request.form['value']).first()
             if user:
                 res = True
+        elif request.form['what'] == 'username':
+            if request.form['value'] in USERNAME_BLACKLIST:
+                res = True
+            else:
+                user = User.query.filter_by(name=request.form['value']).first()
+                if user:
+                    res = True
     return jsonify({'res': res})
 
 @app.route('/login', methods=['GET', 'POST'])

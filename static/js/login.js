@@ -43,7 +43,7 @@ $(function () {
             error($(this), "email address must be at most 120 characters long");
         } else if (!re_email.test(val)) {
             error($(this), "invalid email address");
-        } else if (valueCheck(val, 'email')) {
+        } else if (valueCheck(val, 'email', $(this).attr('except'))) {
             error($(this), "email address already exists");
         } else {
             ok($(this));
@@ -59,7 +59,7 @@ $(function () {
             error($(this), "username must be at most 16 characters long");
         } else if (!re_username.test(val)) {
             error($(this), "username must contain only alphanumeric characters");
-        } else if (valueCheck(val, 'username')) {
+        } else if (valueCheck(val, 'username', $(this).attr('except'))) {
             error($(this), "username already exists");
         } else {
             ok($(this));
@@ -87,13 +87,15 @@ $(function () {
     });
 });
 
-function valueCheck(val, what) {
+function valueCheck(val, what, except) {
     res = false;
+    data = "what=" + what + "&value=" + val;
+    if (except !== undefined) data += '&except=' + except;
     $.ajax({
         type: "POST",
         url: "/signup/check",
         async: false,
-        data: "what=" + what + "&value=" + val,
+        data: data,
         success: function (data) {
             res = data.res;
         }

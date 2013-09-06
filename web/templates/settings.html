@@ -40,19 +40,19 @@
 					<div class="control-group">
 						<label class="control-label" for="inputREmail">E-Mail</label>
 						<div class="error-help"></div>
-						<input type="text" id="inputREmail" name="email" class="input-block-level" maxlength="120" placeholder="E-Mail" value="{{ user.email }}" />
+						<input type="text" id="inputREmail" name="email" class="input-block-level" maxlength="120" placeholder="E-Mail" value="{{ user.email or '' }}" except="{{ user.email or '' }}" />
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label" for="inputRUsername">Username</label>
 						<div class="error-help"></div>
-						<input type="text" id="inputRUsername" name="username" class="input-block-level" maxlength="16" placeholder="Username" value="{{ user.name }}" />
+						<input type="text" id="inputRUsername" name="username" class="input-block-level" maxlength="16" placeholder="Username" value="{{ user.name }}" except="{{ user.name }}" />
 					</div>
-					
+					{% if not user.oauth_uid %}
 					<div class="control-group">
 						<label class="control-label" for="inputRPassword" style="margin-top: 7px;">Password</label>
 						<div class="error-help"></div>
-						<input type="password" id="inputRPassword" name="password" class="input-block-level" placeholder="Password" />
+						<input type="password" id="inputRPassword" name="password" class="input-block-level" placeholder="Password"/>
 					</div>
 					
 					<div class="control-group">
@@ -60,8 +60,10 @@
 						<div class="error-help"></div>
 						<input type="password" id="inputRPasswordConfirm" name="passwordconfirm" class="input-block-level" placeholder="Password confirm" />
 					</div>
+					{% endif %}
 					
 					<div style="margin: 10px 0 47px 0;">
+						<input type='hidden' name='what' value='update' />
 						<button type="submit" class="btn btn-large btn-primary pull-right">Submit</button>
 					</div>
 				</form>
