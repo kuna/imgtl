@@ -3,8 +3,9 @@
 
 import os
 
-from flask import Flask, request, redirect, url_for, render_template, abort, make_response, flash, jsonify
+from flask import Flask, request, redirect, url_for, render_template, abort, make_response, flash, jsonify, session
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
+from flask.ext.oauth import OAuth
 
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
@@ -31,6 +32,17 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.login_message = i18n('youmustlogin')
 login_manager.init_app(app)
+
+oauth = OAuth()
+twitter = oauth.remote_app('twitter',
+    base_url='https://api.twitter.com/1.1/',
+    request_token_url='https://api.twitter.com/oauth/request_token',
+    access_token_url='https://api.twitter.com/oauth/access_token',
+    authorize_url='https://api.twitter.com/oauth/authorize',
+    consumer_key=app.config['TWITTER_CONSUMER_KEY'],
+    consumer_secret=app.config['TWITTER_CONSUMER_SECRET'],
+    access_token_method='POST',
+)
 
 
 @login_manager.user_loader
@@ -158,15 +170,87 @@ def login():
         return render_template('login.html')
     elif request.method == 'POST':
         user = User.query.filter(or_(User.email==request.form['emailuser'], User.name==request.form['emailuser'])).first()
-        if user and imgtl.lib.pw_verify(user.password, request.form['password']):
+        if user and user.password and imgtl.lib.pw_verify(user.password, request.form['password']):
             login_user(user)
             return redirect(request.args.get('next') or url_for('index'))
         else:
-            flash(i18n('loginfailed'))
+            flash(i18n('loginfailed' if not user or user.password else 'loginfailed-oauthuser'))
             return redirect(url_for('login'))
+
+@app.route('/oauth/login')
+def oauth_login():
+    if session.has_key('twitter_token'):
+        del session['twitter_token']
+    return twitter.authorize(callback=url_for('oauth_authorized',
+        next=request.args.get('next') or request.referrer or None))
+
+@app.route('/oauth/authorized')
+@twitter.authorized_handler
+def oauth_authorized(resp):
+    next_url = request.args.get('next') or url_for('index')
+    if resp is None:
+        return redirect(next_url)
+    user = User.query.filter_by(oauth_uid=resp['user_id']).first()
+    session['twitter_token'] = (
+        resp['oauth_token'],
+        resp['oauth_token_secret'],
+    )
+    if user:
+        login_user(user)
+        return redirect(next_url)
+    else:
+        session['oauth_signup'] = {
+            'name': resp['screen_name'],
+            'oauth_uid': resp['user_id'],
+        }
+        return redirect(url_for('oauth_signup'))
+
+@app.route('/oauth/signup', methods=['GET', 'POST'])
+def oauth_signup():
+    if not session.has_key('oauth_signup'):
+        flash(i18n('invalidaccess'))
+        return redirect(url_for('index'))
+    if request.method == 'GET':
+        return render_template('oauth_signup.html', user=current_user, sess=session['oauth_signup'])
+    elif request.method == 'POST':
+        if not imgtl.validator.email(request.form['email']):
+            flash(i18n('invalidemail'))
+            return redirect(url_for('oauth_signup'))
+        if not imgtl.validator.username(request.form['username']):
+            flash(i18n('invalidusername'))
+            return redirect(url_for('oauth_signup'))
+        user = User.query.filter(or_(User.email==request.form['email'], User.name==request.form['username'])).first()
+        if user:
+            if user.email == request.form['email']:
+                flash(i18n('alreadyexistemail'))
+                return redirect(url_for('oauth_signup'))
+            elif user.name == request.form['username']:
+                flash(i18n('alreadyexistname'))
+                return redirect(url_for('oauth_signup'))
+        user = User(email=request.form['email'], name=request.form['username'], oauth_uid=session['oauth_signup']['oauth_uid'])
+        while 1:
+            try:
+                user.token = imgtl.lib.make_token()
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                continue
+            else:
+                break
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        del session['oauth_signup']
+        return redirect(url_for('index'))
+
+@twitter.tokengetter
+def get_twitter_token(token=None):
+    return session.get('twitter_token')
 
 @app.route('/logout')
 def logout():
+    if session.has_key('twitter_token'):
+        del session['twitter_token']
     logout_user()
     return redirect(request.referrer or url_for('index'))
 

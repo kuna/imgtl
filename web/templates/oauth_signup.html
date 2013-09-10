@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% set active_page = "oauth_signup" %}
+{% block title %}: Settings{% endblock %}
+
+{% block head %}
+<link href="/css/userinfo.css" rel="stylesheet" />
+<script src="/js/login.js"></script>
+{% endblock %}
+
+{% block container %}
+	<section class="panel settings-area">
+		<div class="panel-heading">
+			<small>Sign up with Twitter</small>
+		</div>
+		
+		<div class="content">
+			<div id="account">
+				<form method="POST">
+					<div class="control-group">
+						<label class="control-label" for="inputREmail">E-Mail</label>
+						<div class="error-help"></div>
+						<input type="text" id="inputREmail" name="email" class="input-block-level" maxlength="120" placeholder="E-Mail" value="" />
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="inputRUsername">Username</label>
+						<div class="error-help"></div>
+						<input type="text" id="inputRUsername" name="username" class="input-block-level" maxlength="16" placeholder="Username" value="{{ sess.name }}" except="{{ sess.name }}" />
+					</div>
+					
+					<div style="margin: 10px 0 47px 0;">
+						<input type='hidden' name='what' value='update' />
+						<button type="submit" class="btn btn-large btn-primary pull-right">Sign up</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
+{% endblock %}

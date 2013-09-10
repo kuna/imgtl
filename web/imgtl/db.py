@@ -24,8 +24,9 @@ class User(db.Model):
     id = db.Column('user_id', db.Integer, primary_key=True)
     email = db.Column('user_email', db.String(120), unique=True, index=True, nullable=False)
     name = db.Column('user_name', db.String(16), unique=True, index=True, nullable=False)
-    password = db.Column('user_password', db.String(60), nullable=False)
+    password = db.Column('user_password', db.String(60), nullable=True)
     token = db.Column('user_token', db.String(32), unique=True, index=True, nullable=True)
+    oauth_uid = db.Column('user_oauth_uid', db.Integer, unique=True, index=True, nullable=True)
 
     @property
     def profile_image_url(self):

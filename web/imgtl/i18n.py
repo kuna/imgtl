@@ -11,6 +11,7 @@ i18n_dict = {
             'alreadyexistemail': '이미 존재하는 이메일입니다.',
             'alreadyexistname': '이미 존재하는 사용자 이름입니다.',
             'loginfailed': '잘못된 이메일, 계정명 또는 비밀번호입니다.',
+            'loginfailed-oauthuser': '외부 사이트 연동을 통해 가입된 유저입니다. 가입한 서비스를 이용해 로그인을 해 주십시오.',
             'wrongimage': '파일이 첨부되지 않았습니다',
             'notimage': '파일이 이미지가 아니거나 업로드가 가능한 이미지 종류(JPG, PNG, GIF, SVG)가 아닙니다.',
             }
