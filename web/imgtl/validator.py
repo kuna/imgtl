@@ -6,7 +6,7 @@ import re
 from .const import USERNAME_BLACKLIST
 
 
-REGEX_EMAIL = re.compile(r'^[^@]+@[^\.]+\...+$')
+REGEX_EMAIL = re.compile(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
 REGEX_USERNAME = re.compile(r'^[A-Za-z0-9_]{4,16}$')
 
 

@@ -88,14 +88,13 @@ $(function () {
 });
 
 function valueCheck(val, what, except) {
+    if (val == except) return false;
     res = false;
-    data = "what=" + what + "&value=" + val;
-    if (except !== undefined) data += '&except=' + except;
     $.ajax({
         type: "POST",
         url: "/signup/check",
         async: false,
-        data: data,
+        data: "what=" + what + "&value=" + val,
         success: function (data) {
             res = data.res;
         }
