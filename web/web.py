@@ -5,7 +5,7 @@ import os
 
 from flask import Flask, request, redirect, url_for, render_template, abort, make_response, flash, jsonify, session
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
-from flask.ext.oauth import OAuth
+from flask.ext.oauthlib.client import OAuth
 
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
@@ -34,6 +34,7 @@ login_manager.login_message = i18n('youmustlogin')
 login_manager.init_app(app)
 
 oauth = OAuth()
+oauth.init_app(app)
 twitter = oauth.remote_app('twitter',
     base_url='https://api.twitter.com/1.1/',
     request_token_url='https://api.twitter.com/oauth/request_token',
