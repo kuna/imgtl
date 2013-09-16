@@ -61,7 +61,9 @@ class Upload(db.Model):
     view_count = db.Column('upload_view_count', db.Integer, nullable=False, default=0)
     title = db.Column('upload_title', db.String(120), nullable=False)
     desc = db.Column('upload_desc', db.String(320), nullable=True)
-    nsfw = db.Column('upload_nsfw', db.Boolean, default=False)
+    nsfw = db.Column('upload_nsfw', db.Boolean, nullable=False, default=False)
+    private = db.Column('upload_private', db.Boolean, nullable=False, default=False)
+    deleted = db.Column('upload_deleted', db.Boolean, nullable=False, default=False)
 
     def __repr__(self):
         return '<Upload %r>' % self.id

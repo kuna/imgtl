@@ -273,6 +273,8 @@ def show(url):
     upload = Upload.query.filter_by(url=url).first()
     if not upload:
         abort(404)
+    if upload.deleted or (upload.private and (current_user != upload.user)):
+        abort(403)
     obj = Object.query.get(upload.object_id)
     if isinstance(obj, Image):
         return render_template('show/image.html', user=current_user, upload=upload)
