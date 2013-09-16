@@ -52,5 +52,5 @@ def get_spath(path, code):
 
 def create_thumbnail(fs):
     im = wImage(blob=fs)
-    im.resize(135, 135)
+    im.transform(resize='%dx%d^' % (135, 135))
     return im
