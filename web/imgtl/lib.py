@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shortuuid
 import md5 as md5module
 from wand.image import Image as wImage
-import shortuuid
+from json import dumps
 
 from flaskext.bcrypt import Bcrypt
 
@@ -54,3 +55,11 @@ def create_thumbnail(fs):
     im = wImage(blob=fs)
     im.transform(resize='%dx%d^' % (135, 135))
     return im
+
+def get_prop(fs):
+    im = wImage(blob=fs)
+    p = {
+            'width': im.width,
+            'height': im.height,
+        }
+    return dumps(p)
