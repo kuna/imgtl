@@ -82,6 +82,7 @@ class Image(Object):
     __mapper_args__ = {'polymorphic_identity': TYPE_IMAGE}
     id = db.Column('image_id', db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
     server = db.Column('image_srv', db.Integer, nullable=False)
+    prop = db.Column('image_prop', db.Text, nullable=False)
 
     @property
     def original_url(self):

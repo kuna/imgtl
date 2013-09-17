@@ -271,9 +271,9 @@ def upload():
 @app.route('/<url>')
 def show(url):
     upload = Upload.query.filter_by(url=url).first()
-    if not upload:
+    if (not upload) or upload.deleted:
         abort(404)
-    if upload.deleted or (upload.private and (current_user != upload.user)):
+    if upload.private and (current_user != upload.user):
         abort(403)
     obj = Object.query.get(upload.object_id)
     if isinstance(obj, Image):
@@ -286,8 +286,10 @@ def show_only_image(url, ext):
         abort(404)
     obj = Object.query.get(upload.object_id)
     if isinstance(obj, Image):
-        if obj.ext != ext:
+        if (not upload) or upload.deleted or obj.ext != ext:
             abort(404)
+        if upload.private and (current_user != upload.user):
+            abort(403)
         fpath = imgtl.lib.get_spath(app.config['UPLOAD_DIR'], obj.code)
         r = make_response()
         r.headers['Cache-Control'] = 'public'
