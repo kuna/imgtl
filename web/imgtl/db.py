@@ -138,6 +138,7 @@ class Log(db.Model):
     ip = db.Column('log_by_ip', db.String(16), nullable=True)
     user_id = db.Column('log_by_user_id', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
     user = db.relationship('User', backref=db.backref('logs', lazy='dynamic'))
+    time = db.Column('log_time', db.DateTime, nullable=False, default=sqlfuncs.now())
 
     def __repr__(self):
         return '<Log %r>' % self.id
