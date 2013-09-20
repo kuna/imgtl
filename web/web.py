@@ -13,7 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from imgtl.db import *
 from imgtl.const import *
 from imgtl.i18n import i18n
-from imgtl.common import do_upload_image
+from imgtl.common import do_upload_image, do_delete_image
 import imgtl.lib
 import imgtl.validator
 
@@ -268,16 +268,20 @@ def upload():
     else:
         return redirect(url_for('show', url=upload.url))
 
-@app.route('/<url>')
+@app.route('/<url>', methods=['GET', 'DELETE'])
 def show(url):
-    upload = Upload.query.filter_by(url=url).first()
-    if (not upload) or upload.deleted:
-        abort(404)
-    if upload.private and (current_user != upload.user):
-        abort(403)
-    obj = Object.query.get(upload.object_id)
-    if isinstance(obj, Image):
-        return render_template('show/image.html', user=current_user, upload=upload)
+    if request.method == 'DELETE':
+        res = do_delete_image(current_user, url)
+        return jsonify({'res': res})
+    elif request.method == 'GET':
+        upload = Upload.query.filter_by(url=url).first()
+        if (not upload) or upload.deleted:
+            abort(404)
+        if upload.private and (current_user != upload.user):
+            abort(403)
+        obj = Object.query.get(upload.object_id)
+        if isinstance(obj, Image):
+            return render_template('show/image.html', user=current_user, upload=upload)
 
 @app.route('/<url>.<ext>')
 def show_only_image(url, ext):

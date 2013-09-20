@@ -55,3 +55,14 @@ def do_upload_image(user, f, desc):
     db.session.commit()
     do_log(current_app.name, 'upload', upload.id, user)
     return upload
+
+def do_delete_image(user, upload_url):
+    upload = Upload.query.filter_by(url=upload_url).first()
+    if not upload or upload.deleted:
+        return 'nosuchimage'
+    if upload.user != user:
+        return 'notmine'
+    upload.deleted = 1
+    db.session.commit()
+    do_log(current_app.name, 'delete', upload.id, user)
+    return 'success'

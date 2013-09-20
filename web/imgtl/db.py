@@ -33,6 +33,10 @@ class User(db.Model):
         url = 'https://secure.gravatar.com/avatar/%s?%s' % (md5(self.email.lower()), urlencode({'d': USER_DEFAULT_ICON}))
         return url
 
+    @property
+    def uploads(self):
+        return self.all_uploads.filter_by(deleted=0)
+
     def get_id(self):
         return self.id
 
@@ -56,7 +60,7 @@ class Upload(db.Model):
     object_id = db.Column('upload_obj_id', db.Integer, db.ForeignKey('object.object_id'), nullable=False)
     object = db.relationship('Object', backref=db.backref('uploads', lazy='dynamic'))
     user_id = db.Column('upload_user_id', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
-    user = db.relationship('User', backref=db.backref('uploads', lazy='dynamic'))
+    user = db.relationship('User', backref=db.backref('all_uploads', lazy='dynamic'))
     time = db.Column('upload_time', db.DateTime, nullable=False, default=sqlfuncs.now())
     view_count = db.Column('upload_view_count', db.Integer, nullable=False, default=0)
     title = db.Column('upload_title', db.String(120), nullable=False)

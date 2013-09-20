@@ -44,6 +44,17 @@
 			</div>
 			-->
 		</div>
+		{% if user == upload.user %}
+		<div class="panel sidebar-element">
+			<div class="panel-heading third-header">
+				<small>Operation</small>
+			</div>
+			
+			<div class="image-delete">
+				<button type="button" id='delete-btn' class="btn btn-danger btn-block">DELETE THIS IMAGE</button>
+			</div>
+		</div>
+		{% endif %}
 	</aside>
 
 	<section class="panel content-area">

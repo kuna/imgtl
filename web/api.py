@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError
 
 from imgtl.db import *
 from imgtl.const import *
-from imgtl.common import do_upload_image
+from imgtl.common import do_upload_image, do_delete_image
 import imgtl.lib
 
 
@@ -32,6 +32,7 @@ def success(data):
 def error(msg):
     return {'status': 'error', 'error': msg}
 
+
 class Upload(Resource):
     def post(self):
         user = None
@@ -47,6 +48,7 @@ class Upload(Resource):
         else:
             return success({'url': {'page': 'https://img.tl/%s' % upload.url, 'direct': 'https://img.tl/%s.%s' % (upload.url, upload.object.ext), 'original': upload.object.original_url}})
 
+
 class Url(Resource):
     def get(self, url):
         upload = imgtl.db.Upload.query.filter_by(url=url).first()
@@ -54,6 +56,19 @@ class Url(Resource):
             return error('nosuchupload')
         user = {'name': upload.user.name, 'profile_image_url': upload.user.profile_image_url} if upload.user else None
         return success({'url': {'page': 'https://img.tl/%s' % upload.url, 'direct': 'https://img.tl/%s.%s' % (upload.url, upload.object.ext), 'original': upload.object.original_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count})
+
+    def delete(self, url):
+        token = request.headers.get('X-IMGTL-TOKEN')
+        if not token:
+            return error('notoken')
+        user = User.query.filter_by(token=token).first()
+        if not user:
+            return error('wrongtoken')
+        res = do_delete_image(user, url)
+        if res == 'success':
+            return {'status': 'success'}
+        else:
+            return error(res)
 
 
 api.add_resource(Upload, '/upload')
