@@ -123,7 +123,7 @@ def signup():
         if request.form['password'] != request.form['passwordconfirm']:
             flash(i18n('passwordmismatch'))
             return redirect(url_for('signup'))
-        user = User.query.filter(or_(User.email==request.form['email'], User.name==request.form['username'])).first()
+        user = User.query.filter((User.email==request.form['email']) | (User.name==request.form['username'])).first()
         if user:
             if user.email == request.form['email']:
                 flash(i18n('alreadyexistemail'))
