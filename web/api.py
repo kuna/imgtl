@@ -52,7 +52,7 @@ class Upload(Resource):
 class Url(Resource):
     def get(self, url):
         upload = imgtl.db.Upload.query.filter_by(url=url).first()
-        if not upload:
+        if not upload or upload.deleted:
             return error('nosuchupload')
         user = {'name': upload.user.name, 'profile_image_url': upload.user.profile_image_url} if upload.user else None
         return success({'url': {'page': 'https://img.tl/%s' % upload.url, 'direct': 'https://img.tl/%s.%s' % (upload.url, upload.object.ext), 'original': upload.object.original_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count})
