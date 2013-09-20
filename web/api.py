@@ -35,9 +35,9 @@ def error(msg):
 
 class Upload(Resource):
     def post(self):
-        user = None
-        if 'token' in request.form:
-            user = User.query.filter_by(token=request.form['token']).first()
+        user = request.headers.get('X-IMGTL-TOKEN')
+        if user:
+            user = User.query.filter_by(token=user).first()
             if not user:
                 return error('wrongtoken')
         if 'image' not in request.files:
