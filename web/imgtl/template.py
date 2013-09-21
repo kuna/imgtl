@@ -5,12 +5,11 @@ import re
 
 from jinja2 import evalcontextfilter, Markup, escape
 
-_paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
+RE_NL2BR = re.compile(r'(\\r)?\\n', re.UNICODE | re.MULTILINE)
 
 @evalcontextfilter
 def jinja2_filter_nl2br(eval_ctx, value):
-    result = u'\n\n'.join(u'<p>%s</p>' % p.replace('\n', '<br>\n') \
-        for p in _paragraph_re.split(escape(value)))
+    res = RE_NL2BR.sub('<br>\n', unicode(escape(value)))
     if eval_ctx.autoescape:
-        result = Markup(result)
-    return result
+        res = Markup(res)
+    return res
