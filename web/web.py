@@ -14,6 +14,7 @@ from imgtl.db import *
 from imgtl.const import *
 from imgtl.i18n import i18n
 from imgtl.common import do_upload_image, do_delete_image
+from imgtl.template import jinja2_filter_nl2br
 import imgtl.lib
 import imgtl.validator
 
@@ -22,6 +23,7 @@ app = Flask(__name__)
 app.config.from_pyfile('imgtl.cfg')
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+app.jinja_env.filters['nl2br'] = jinja2_filter_nl2br
 
 db.init_app(app)
 db.app = app
