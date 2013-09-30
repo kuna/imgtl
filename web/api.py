@@ -6,7 +6,6 @@ import os
 from flask import Flask, request
 from flask.ext.restful import Api, Resource
 
-from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 
 from imgtl.db import *

@@ -7,7 +7,6 @@ from flask import Flask, request, redirect, url_for, render_template, abort, mak
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
 from flask.ext.oauthlib.client import OAuth
 
-from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 
 from imgtl.db import *
@@ -172,7 +171,7 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     elif request.method == 'POST':
-        user = User.query.filter(or_(User.email==request.form['emailuser'], User.name==request.form['emailuser'])).first()
+        user = User.query.filter((User.email==request.form['emailuser']) | (User.name==request.form['emailuser'])).first()
         if user and user.password and imgtl.lib.pw_verify(user.password, request.form['password']):
             login_user(user)
             return redirect(request.args.get('next') or url_for('index'))
@@ -222,7 +221,7 @@ def oauth_signup():
         if not imgtl.validator.username(request.form['username']):
             flash(i18n('invalidusername'))
             return redirect(url_for('oauth_signup'))
-        user = User.query.filter(or_(User.email==request.form['email'], User.name==request.form['username'])).first()
+        user = User.query.filter((User.email==request.form['email']) | (User.name==request.form['username'])).first()
         if user:
             if user.email == request.form['email']:
                 flash(i18n('alreadyexistemail'))
