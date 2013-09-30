@@ -69,6 +69,10 @@ class Upload(db.Model):
     private = db.Column('upload_private', db.Boolean, nullable=False, default=False)
     deleted = db.Column('upload_deleted', db.Boolean, nullable=False, default=False)
 
+    @property
+    def direct_url(self):
+        return BASE_URL % ('%s.%s' % (self.url, self.object.ext))
+
     def __repr__(self):
         return '<Upload %r>' % self.id
 
