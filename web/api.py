@@ -4,7 +4,7 @@
 import os
 
 from flask import Flask, request
-from flask.ext.restful import Api, Resource
+from flask.ext.restful import Api, Resource, reqparse
 
 from sqlalchemy.exc import IntegrityError
 
@@ -23,6 +23,10 @@ log_db.init_app(app)
 log_db.app = app
 
 api = Api(app)
+parser = reqparse.RequestParser()
+parser.add_argument('X-IMGTL-TOKEN', type=str, location='headers', dest='token')
+parser.add_argument('desc', type=unicode, location='form')
+parser.add_argument('with_uploads', type=int, location='args')
 
 
 def success(data):
@@ -34,14 +38,16 @@ def error(msg):
 
 class Upload(Resource):
     def post(self):
-        user = request.headers.get('X-IMGTL-TOKEN')
+        args = parser.parse_args()
+        f = request.files.get('file')
+        user = args['token']
         if user:
             user = User.query.filter_by(token=user).first()
             if not user:
                 return error('wrongtoken'), 403
-        if 'image' not in request.files:
+        if not f:
             return error('imagenotattached'), 400
-        upload = do_upload_image(user, request.files['image'], request.form['desc'] if 'desc' in request.form else None)
+        upload = do_upload_image(user, f, args['desc'])
         if isinstance(upload, str):
             return error(upload), 403
         else:
@@ -57,10 +63,10 @@ class Url(Resource):
         return success({'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url, 'original': upload.object.original_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count})
 
     def delete(self, url):
-        token = request.headers.get('X-IMGTL-TOKEN')
-        if not token:
+        args = parser.parse_args()
+        if not args['token']:
             return error('notoken'), 403
-        user = User.query.filter_by(token=token).first()
+        user = User.query.filter_by(token=args['token']).first()
         if not user:
             return error('wrongtoken'), 403
         res = do_delete_image(user, url)
@@ -71,10 +77,10 @@ class Url(Resource):
 
 class UserInfo(Resource):
     def get(self):
-        token = request.headers.get('X-IMGTL-TOKEN')
-        if not token:
+        args = parser.parse_args()
+        if not args['token']:
             return error('notoken'), 403
-        user = User.query.filter_by(token=token).first()
+        user = User.query.filter_by(token=args['token']).first()
         if not user:
             return error('wrongtoken'), 403
         return {'name': user.name, 'email': user.email, 'profile_image_url': user.profile_image_url, 'uploads_count': len(user.uploads.all())}
