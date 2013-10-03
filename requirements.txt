@@ -14,4 +14,5 @@ itsdangerous==0.23
 oauthlib==0.5.1
 py-bcrypt==0.4
 shortuuid==0.4
+six==1.4.1
 wsgiref==0.1.2
