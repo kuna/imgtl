@@ -12,7 +12,7 @@ from .const import SERVER_S1
 from .db import *
 
 
-def do_log(target, action, action_id, user):
+def do_log(target, action, action_id, user=None):
     if user:
         log = Log(target=target, action=action, action_id=action_id, user_id=user.id)
     else:

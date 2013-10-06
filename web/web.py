@@ -12,7 +12,7 @@ from sqlalchemy.exc import IntegrityError
 from imgtl.db import *
 from imgtl.const import *
 from imgtl.i18n import i18n
-from imgtl.common import do_upload_image, do_delete_image
+from imgtl.common import do_upload_image, do_delete_image, do_log
 from imgtl.template import jinja2_filter_nl2br
 import imgtl.lib
 import imgtl.validator
@@ -145,6 +145,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
         login_user(user)
+        do_log('web', 'signup', user.id)
         return redirect(url_for('index'))
 
 @app.route('/signup/check', methods=['POST'])
@@ -242,6 +243,7 @@ def oauth_signup():
         db.session.add(user)
         db.session.commit()
         login_user(user)
+        do_log('web', 'signup_by_oauth', user.id)
         del session['oauth_signup']
         return redirect(url_for('index'))
 
