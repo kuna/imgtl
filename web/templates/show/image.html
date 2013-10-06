@@ -9,7 +9,7 @@
 {% endblock %}
 {% block container %}
 	<aside class="sidebar">
-		<div class="panel panel-default sidebar-element">
+		<div class="panel sidebar-element">
 			<div class="panel-heading">
 				<small>URL</small>
 			</div>
@@ -21,7 +21,7 @@
 			<input type="text" value="https://img.tl/{{ upload.url }}" class="input-block-level url-text" readonly />
 		</div>
 		
-		<div class="panel panel-default sidebar-element">
+		<div class="panel sidebar-element">
 			<div class="panel-heading second-header">
 				<small>Information</small>
 			</div>
@@ -45,7 +45,7 @@
 			-->
 		</div>
 		{% if user == upload.user %}
-		<div class="panel panel-default sidebar-element">
+		<div class="panel sidebar-element">
 			<div class="panel-heading third-header">
 				<small>Operation</small>
 			</div>
@@ -57,7 +57,7 @@
 		{% endif %}
 	</aside>
 
-	<section class="panel panel-default content-area">
+	<section class="panel content-area">
 		<div class="panel-heading">
 			{{ upload.title }}
 		</div>
