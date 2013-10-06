@@ -4,7 +4,7 @@ $(function () {
     });
 
     $("#delete-btn").click(function() {
-        $('#myModal').modal({ show: true });
+        $('#delete-modal').modal({ show: true });
     });
     
     $("#delete-confirm-btn").click(function () {
