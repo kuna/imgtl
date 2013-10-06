@@ -51,7 +51,7 @@
 			</div>
 			
 			<div class="image-delete">
-				<button type="button" id='delete-btn' class="btn btn-danger btn-block">DELETE THIS IMAGE</button>
+				<button type="button" id="delete-btn" class="btn btn-danger btn-block">DELETE THIS IMAGE</button>
 			</div>
 		</div>
 		{% endif %}
@@ -68,4 +68,18 @@
 			</a>
 		</div>
 	</section>
+    
+    <div class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Delete Image</h3>
+        </div>
+        <div class="modal-body">
+            <p>이미지를 삭제 하시겠습니까? 삭제된 이미지는 복구할 수 없습니다.</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn">Close</a>
+            <a href="#" class="btn btn-danger" id="delete-confirm-btn" data-dismiss="modal" aria-hidden="true">Delete!</a>
+        </div>
+    </div>
 {% endblock %}

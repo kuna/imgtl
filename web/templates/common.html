@@ -22,15 +22,19 @@
 	<body>
 	{% block body %}{% endblock %}
 	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			<div id="error-wrap">
-				<div id="error-alert">
-					{{ messages | first }}
-				</div>
-				<div id="error-overlay"></div>
-				<script src="/js/error.js"></script>
-			</div>
-		{% endif %}
+		<div class="alert alert-danger alert-area" id="error-area">
+            <strong>Error! </strong><span id="msg-text"></span>
+        </div>
+        
+        <div class="alert alert-success alert-area" id="success-area">
+            <strong>Success! </strong><span id="msg-text"></span>
+        </div>
+        
+        <div class="white-overlay"></div>
+        
+        {% if messages %}
+        <script>showWhiteOverlay(); showError("{{ message }}");</script>
+        {% endif %}
 	{% endwith %}
 	</body>
 </html>

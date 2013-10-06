@@ -1,16 +1,37 @@
-function error_show() {
-    $(".error").click(function () { error_hide(); });
-    $(".overlay").click(function () { error_hide(); });
-    setTimeout(function() { error_hide(); }, 3000);
-
-    $(".error").animate({ top: "0" }, 800);
+function showError(msg) {
+    showAlert("error-area", msg);
 }
 
-function error_hide() {
-    $(".error").animate({ top: "-140px" }, 600);
-    $(".overlay").animate({ opacity: "0" }, 600);
-    setTimeout(function() {
-        $(".overlay").remove();
-    $(".error_parent").remove();
-    }, 700);
+function showSuccess(msg) {
+    showAlert("success-area", msg);
+}
+
+function showAlert(id, msg) {
+    $("#" + id + " > #msg-text").text(msg);
+    $("#" + id).animate({
+        opacity: 1,
+        top: 0
+    }, 500);
+    
+    setTimeout(function () {
+        $("#" + id).animate({
+            opacity: 0,
+            top: "-50"
+        }, 500);
+    }, 3000);
+}
+
+function showWhiteOverlay() {
+    $(".white-overlay").css("display", "block");
+    $(".white-overlay").animate({
+        opacity: 0.7
+    }, 500);
+    
+    setTimeout(function () {
+        $(".white-overlay").animate({
+            opacity: 0,
+        }, 500, function () {
+            $(".white-overlay").css("display", "none");
+        });
+    }, 3000);
 }
