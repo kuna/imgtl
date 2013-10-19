@@ -11,6 +11,7 @@ body {
 
 .myinfo > .top-desc {
     margin-left: 60px;
+    overflow: hidden;
 }
 
 .myinfo > .top-desc > .user-icon {

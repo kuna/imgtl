@@ -23,6 +23,11 @@
     cursor: pointer;
 }
 
+.grid-item:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
 .upload-area {
     text-align: center;
 }
