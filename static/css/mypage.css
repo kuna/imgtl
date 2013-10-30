@@ -4,13 +4,13 @@
 }
 
 .image-area {
-    margin: -10px -10px 0 0;
+    font-size: 0px;
 }
 
 .grid-item {
     width: 135px;
     height: 135px;
-    margin: 7px 7px 0 0;
+    margin: 5px;
     
     display: inline-block;
     
