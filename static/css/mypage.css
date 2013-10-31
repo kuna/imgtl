@@ -35,9 +35,6 @@
 
 /* width>=760;tablet */
 @media screen and (max-width: 959px) {
-	.container {
-		width: calc(100% - 42px);
-	}
 
 	.grid-item {
 		width: 124px;
