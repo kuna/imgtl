@@ -38,6 +38,9 @@ nosetests.xml
 *.swp
 *.swo
 
+# backups
+*~
+
 # configurations
 *.cfg
 
