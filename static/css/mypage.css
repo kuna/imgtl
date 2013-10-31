@@ -1,5 +1,6 @@
+/* width>=1260;default */
+
 .image-grid {
-    min-height: 500px;
     margin-right: 285px;
 }
 
@@ -26,4 +27,28 @@
 .grid-item:hover {
     color: inherit;
     text-decoration: none;
+}
+
+/* width>=960;medium */
+@media screen and (max-width: 1259px) {
+}
+
+/* width>=760;tablet */
+@media screen and (max-width: 959px) {
+	.container {
+		width: calc(100% - 42px);
+	}
+
+	.grid-item {
+		width: 124px;
+		height: 124px;
+	}
+}
+
+/* width<760;phone */
+@media screen and (max-width: 759px) {
+	.grid-item {
+		width: 70px;
+		height: 70px;
+	}
 }

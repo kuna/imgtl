@@ -1,3 +1,5 @@
+/* width>=1260;default */
+
 body {
     overflow: auto;
 }
@@ -12,9 +14,10 @@ body {
 
     text-align: center;
 
-    position: relative;
-    top: 120px;
-    margin: 0 auto 20px auto;
+    position: absolute;
+	left: 50%;
+	top: 50%;
+    margin: -225px auto 20px -325px;
 
     border: 1px solid #ddd;
     box-shadow: 5px 5px 20px #aaa;
@@ -77,4 +80,35 @@ body {
 	margin: 7px 7px 0 0;
 	
 	text-align: right;
+}
+
+#submit-btn {
+	display: block;
+	margin: auto;
+}
+
+/* width>=960;medium */
+@media screen and (max-width: 1259px) {
+}
+
+/* width>=760;tablet */
+@media screen and (max-width: 959px) {
+}
+
+/* width<760;phone */
+@media screen and (max-width: 759px) {
+	.center-box {
+		left: auto;
+		top: auto;
+		margin: 5px;
+		width: calc(100% - 10px);
+	}
+
+	#filename-text {
+		width: 200px;
+	}
+
+	#submit-btn {
+		width: 265px !important;
+	}
 }

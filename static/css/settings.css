@@ -1,3 +1,5 @@
+/* width>=1260;default */
+
 .sidebar {
     padding: 0 !important;
 }
@@ -21,4 +23,20 @@
 #inputToken {
     background-color: white;
     cursor: default;
+}
+
+/* width>=960;medium */
+@media screen and (max-width: 1259px) {
+}
+
+/* width>=760;tablet */
+@media screen and (max-width: 959px) {
+	.settings-area {
+		width: initial;
+		margin: auto;
+	}
+}
+
+/* width<760;phone */
+@media screen and (max-width: 759px) {
 }

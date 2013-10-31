@@ -1,3 +1,5 @@
+/* width>=1260;default */
+
 body {
     background-color: #f5f5f5;
 }
@@ -10,34 +12,37 @@ body {
 }
 
 .myinfo > .top-desc {
-    margin-left: 60px;
     overflow: hidden;
+}
+
+.myinfo > .top-desc:after {
+	content: '';
+	display: block;
+	clear: both;
 }
 
 .myinfo > .top-desc > .user-icon {
     width: 48px;
     height: 48px;
-    margin-left: -62px;
-    position: absolute;
+	float: left;
+	margin: 0 10px 10px 0;
 }
 
 .myinfo > .top-desc > .username {
     font-size: 16pt;
     display: block;
+	white-space: nowrap;
 }
 
 .myinfo > .top-desc > .email {
     font-size: 12pt;
     display: block;
-}
-
-.image-grid {
-    min-height: 500px;
-    margin-right: 285px;
+	white-space: nowrap;
 }
 
 .upload-area {
     text-align: center;
+	position: relative;
 }
 
 #upload-icon-frame {
@@ -69,4 +74,63 @@ body {
 hr.divider {
     border-top: 1px solid #ddd;
     margin: 0 -10px 10px -10px;
+}
+
+
+/* width>=960;medium */
+@media screen and (max-width: 1259px) {
+}
+
+/* width>=760;tablet */
+@media screen and (max-width: 959px) {
+	.sidebar {
+		float: none;
+		width: initial;
+	}
+
+	.image-grid {
+		margin-right: inherit;
+	}
+
+	#upload-icon-frame {
+		padding: 6px;
+		margin: 2px auto 8px auto;
+	}
+
+	#upload-icon {
+		width: 160px;
+		height: 160px;
+	}
+
+	.input-append {
+		display: none;
+	}
+
+	#submit-btn {
+		margin: auto;
+		max-width: 250px;
+	}
+
+	.myinfo>:not(:first-child) {
+		display: none;
+	}
+
+	.myinfo>.top-desc>.user-icon {
+		margin-bottom: auto;
+	}
+
+	hr.divider {
+		margin-top: 10px;
+	}
+
+/* width<760;phone */
+@media screen and (max-width: 759px) {
+	#upload-icon-frame {
+		padding: 5px;
+	}
+
+	#upload-icon {
+		width: 90px;
+		height: 90px;
+	}
 }
