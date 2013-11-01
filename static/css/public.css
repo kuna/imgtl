@@ -1,3 +1,5 @@
+/* width>=1260;default */
+
 html, body {
     height: 100%;
     margin: 0;
@@ -5,7 +7,7 @@ html, body {
 }
 
 h1, h2, h3, div, p, header, aside, section, footer, span, input {
-    font-family: NanumGothic;
+    font-family: 'NanumGothic', sans-serif;
 }
 
 .container {
@@ -69,4 +71,34 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
     background-color: white;
     
     z-index: 11999;
+}
+
+/* width>=960;medium */
+@media screen and (max-width: 1259px) {
+	.container {
+		width: 905px;
+	}
+}
+
+/* width>=760;tablet */
+@media screen and (max-width: 959px) {
+	.container {
+		width: calc(100% - 56px);
+	}
+}
+
+/* width<760;phone */
+@media screen and (max-width: 759px) {
+	.container {
+		width: calc(100% - 42px);
+	}
+
+	.header .btn {
+		font-size: 0px;
+		color: transparent;
+	}
+
+	.header .btn>i {
+		vertical-align: middle;
+	}
 }
