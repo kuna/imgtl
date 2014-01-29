@@ -35,7 +35,7 @@ class User(db.Model):
 
     @property
     def uploads(self):
-        return self.all_uploads.filter_by(deleted=0)
+        return self.all_uploads.filter_by(deleted=False)
 
     def get_id(self):
         return self.id
