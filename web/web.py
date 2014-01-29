@@ -77,7 +77,7 @@ def settings():
             return jsonify({'token': current_user.token})
         elif request.form['what'] == 'update':
             if 'password' in request.form and request.form['password'] is not '':
-                if not imgtl.validator.password(request.form['passowrd']):
+                if not imgtl.validator.password(request.form['password']):
                     flash(i18n('invalidpassowrd'))
                     return redirect(url_for('settings'))
                 elif request.form['password'] != request.form['passwordconfirm']:
