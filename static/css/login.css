@@ -1,52 +1,52 @@
 /* width>=1260;default */
 
 body {
-    overflow: auto;
+	overflow: auto;
 }
 
 .center-box {
-    height: 435px;
-    width: 650px;
+	height: 435px;
+	width: 650px;
 
-    position: relative;
-    top: 10%;
+	position: relative;
+	top: 10%;
 	left: 50%;
-    margin: auto auto 20px -325px;
+	margin: auto auto 20px -325px;
 
-    border: 1px solid #ddd;
-    box-shadow: 5px 5px 20px #aaa;
+	border: 1px solid #ddd;
+	box-shadow: 5px 5px 20px #aaa;
 
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .logo-wrapper {
-    text-align: center;
+	text-align: center;
 }
 
 .login-form, .register-form {
-    margin: 25px 50px;
+	margin: 25px 50px;
 }
 
 .register-form {
-    display: none;
+	display: none;
 }
 
 .form-title {
-    height: 45px;
-    font-size: 17pt;
+	height: 45px;
+	font-size: 17pt;
 }
 
 hr.divider {
-    border-top: 1px solid #ddd;
-    margin: 0 -50px 18px -50px;
+	border-top: 1px solid #ddd;
+	margin: 0 -50px 18px -50px;
 }
 
 .error-help {
-    display: none;
-    margin-top: -20px;
-    font-size: 12px;
-    color: #b94a48;
-    text-align: right;
+	display: none;
+	margin-top: -16px;
+	font-size: 12px;
+	color: #b94a48;
+	text-align: right;
 }
 
 /* width>=960;medium */
@@ -70,6 +70,6 @@ hr.divider {
 	}
 	
 	.login-form, .register-form {
-    margin: 25px;
+	margin: 25px;
 	}
 }

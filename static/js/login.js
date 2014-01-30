@@ -2,118 +2,123 @@ var re_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@
 var re_username = /^[a-zA-Z0-9_]{4,16}$/;
 
 $(function () {
-    if (location.hash == "#register") {
-        $(".login-form").hide();
-        $(".register-form").show();
-        $(".login-area").css("height", "585px");
-    }
-    
-    $(window).on('hashchange', function () {
-        if (location.hash == "#register") {
-            $(".login-area").animate({
-                height: "65px"
-            }, 400, function () {
-                $(".login-form").hide();
-                $(".register-form").show();
+	if (location.hash == "#register") {
+		$(".login-form").hide();
+		$(".register-form").show();
+		$(".login-area").css("height", "585px");
+	}
 
-                $(".login-area").animate({
-                    height: "585px"
-                }, 300);
-            });
-        } else if (location.hash == "#login") {
-            $(".login-area").animate({
-                height: "65px"
-            }, 400, function () {
-                $(".register-form").hide();
-                $(".login-form").show();
+	$(window).on('hashchange', function () {
+		if (location.hash == "#register") {
+			$(".login-area").animate({
+				height: "65px"
+			}, 400, function () {
+				$(".login-form").hide();
+				$(".register-form").show();
 
-                $(".login-area").animate({
-                    height: "435px"
-                }, 300);
-            });
-        }
-    });
-    
-    // -- sign up value check event listener
-    
-    $("#inputREmail").change(function () {
-        val = $(this).val();
+				$(".login-area").animate({
+					height: "585px"
+				}, 300);
+			});
+		} else if (location.hash == "#login") {
+			$(".login-area").animate({
+				height: "65px"
+			}, 400, function () {
+				$(".register-form").hide();
+				$(".login-form").show();
 
-        if (val.length > 120) {
-            error($(this), "email address must be at most 120 characters long");
-        } else if (!re_email.test(val)) {
-            error($(this), "invalid email address");
-        } else if (valueCheck(val, 'email', $(this).attr('except'))) {
-            error($(this), "email address already exists");
-        } else {
-            ok($(this));
-        }
-    });
+				$(".login-area").animate({
+					height: "435px"
+				}, 300);
+			});
+		}
+	});
 
-    $("#inputRUsername").change(function () {
-        val = $(this).val();
+	// -- sign up value check event listener
 
-        if (val.length < 4) {
-            error($(this), "username must be at least 4 characters long");
-        } else if (val.length > 16) {
-            error($(this), "username must be at most 16 characters long");
-        } else if (!re_username.test(val)) {
-            error($(this), "username must contain only alphanumeric characters");
-        } else if (valueCheck(val, 'username', $(this).attr('except'))) {
-            error($(this), "username already exists");
-        } else {
-            ok($(this));
-        }
-    });
+	$("#inputREmail").change(function () {
+		val = $(this).val();
+
+		if (val.length > 120) {
+			error($(this), "이메일 길이는 120자를 넘을 수 없습니다");
+		} else if (!re_email.test(val)) {
+			error($(this), "잘못된 이메일 주소입니다");
+		} else if (valueCheck(val, 'email', $(this).attr('except'))) {
+			error($(this), "이미 사용중인 이메일 주소입니다");
+		} else {
+			ok($(this));
+		}
+	});
+
+	$("#inputRUsername").change(function () {
+		val = $(this).val();
+
+		if (val.length < 4) {
+			error($(this), "사용자명은 최소 4자 이상이어야 합니다");
+		} else if (val.length > 16) {
+			error($(this), "사용자명은 16자를 넘을 수 없습니다");
+		} else if (!re_username.test(val)) {
+			error($(this), "사용자명에는 숫자, 알파벳, _ 기호만이 사용 가능합니다");
+		} else if (valueCheck(val, 'username', $(this).attr('except'))) {
+			error($(this), "이미 사용중인 사용자명입니다");
+		} else {
+			ok($(this));
+		}
+	});
 
 
-    $("#inputRPassword").keyup(function () {
-        if ($(this).val().length < 8) {
-            error($(this), "password must be least 8 characters");
-        } else {
-            ok($(this));
-            $("#inputRPasswordConfirm").trigger("keyup");
-        }
-    });
+	$("#inputRPassword").keyup(function () {
+		if ($(this).val().length < 8) {
+			error($(this), "비밀번호는 최소 8자 이상이어야 합니다");
+		} else {
+			ok($(this));
+			$("#inputRPasswordConfirm").trigger("keyup");
+		}
+	});
 
-    $("#inputRPasswordConfirm").keyup(function () {
-        var $p = $(this).parent();
+	$("#inputRPasswordConfirm").keyup(function () {
+		var $p = $(this).parent();
 
-        if ($(this).val() != $("#inputRPassword").val()) {
-            error($(this), "password did not match")
-        } else {
-            ok($(this));
-        }
-    });
+		if ($(this).val() != $("#inputRPassword").val()) {
+			error($(this), "비밀번호가 일치하지 않습니다")
+		} else {
+			ok($(this));
+		}
+	});
 });
 
 function valueCheck(val, what, except) {
-    if (val == except) return false;
-    res = false;
-    $.ajax({
-        type: "POST",
-        url: "/signup/check",
-        async: false,
-        data: "what=" + what + "&value=" + val,
-        success: function (data) {
-            res = data.res;
-        }
-    });
-    return res;
+	if (val == except) return false;
+	res = false;
+	$.ajax({
+		type: "POST",
+		url: "/signup/check",
+		async: false,
+		data: "what=" + what + "&value=" + val,
+		success: function (data) {
+			res = data.res;
+		}
+	});
+	return res;
 }
 
 function error($this, text) {
-    var $p = $this.parent();
-    $p.removeClass("success");
-    $p.addClass("error");
-    $p.children('.error-help').text(text).show();
-    $('#register-submit-btn').attr('disabled', '');
+	var $p = $this.parent();
+	$p.removeClass("has-success");
+	$p.addClass("has-error");
+	$p.children('.error-help').text(text).show();
+	$('#register-submit-btn').attr('disabled', 'disabled');
 }
 
 function ok($this) {
-    var $p = $this.parent();
-    $p.children('.error-help').hide();
-    $p.removeClass("error");
-    $p.addClass("success");
-    $('#register-submit-btn').removeAttr('disabled');
+	var $p = $this.parent();
+	$p.children('.error-help').hide();
+	$p.removeClass("has-error");
+	$p.addClass("has-success");
+	var flag = true;
+	$(".register-form > div.form-group").each(function () {
+		if ($(this).hasClass('has-error'))
+			flag = false;
+	});
+	if (flag) $('#register-submit-btn').removeAttr('disabled');
 }

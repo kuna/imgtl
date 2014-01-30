@@ -6,7 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		{% block meta %}{% endblock %}
 		
-		<link href="/css/bootstrap.css" rel="stylesheet" />
+		<link href="/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="/css/bootstrap-responsive.min.css" rel="stylesheet" />
 		<link href="/css/todc-bootstrap.min.css" rel="stylesheet" />
 		
 		<link href="/css/public.css" rel="stylesheet" />
@@ -17,25 +18,27 @@
 		
 		<script src="/js/common.js"></script>
 		<script src="/js/{{ active_page }}.js"></script>
+
 		{% block head %}{% endblock %}
 	</head>
 
 	<body>
 	{% block body %}{% endblock %}
-	{% with messages = get_flashed_messages() %}
+	{% with messages = get_flashed_messages(with_categories=true) %}
 		<div class="alert alert-danger alert-area" id="error-area">
-            <strong>Error! </strong><span id="msg-text"></span>
-        </div>
-        
-        <div class="alert alert-success alert-area" id="success-area">
-            <strong>Success! </strong><span id="msg-text"></span>
-        </div>
-        
-        <div class="white-overlay"></div>
-        
-        {% if messages %}
-        <script>showWhiteOverlay(); showError("{{ message }}");</script>
-        {% endif %}
+			<span id="msg-text"></span>
+		</div>
+
+		<div class="alert alert-success alert-area" id="success-area">
+			<span id="msg-text"></span>
+		</div>
+
+		<div class="white-overlay"></div>
+
+		{% if messages %}
+		{% set category, message = messages[0] %}
+		<script>show{{ category | capitalize }}("{{ message }}");</script>
+		{% endif %}
 	{% endwith %}
 	</body>
 </html>

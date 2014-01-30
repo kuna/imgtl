@@ -6,6 +6,7 @@ import shortuuid
 import md5 as md5module
 from wand.image import Image as wImage
 from json import dumps
+from struct import unpack
 
 from flaskext.bcrypt import Bcrypt
 
@@ -53,13 +54,26 @@ def get_spath(path, code):
 
 def create_thumbnail(fs):
     im = wImage(blob=fs)
-    im.transform(resize='%dx%d^' % (135, 135))
+    im.transform(resize='x150>')
     return im
 
 def get_prop(fs):
+    exif = {}
     im = wImage(blob=fs)
+    exif.update((k[5:], v) for k, v in im.metadata.items() if k.startswith('exif:'))
     p = {
             'width': im.width,
             'height': im.height,
+            'exif': exif,
         }
     return dumps(p)
+
+# code from https://dpk.net/2013/02/21/simple-python-script-to-strip-exif-data-from-a-jpeg/
+def strip_exif(image):
+    begin_exif = image.find(b'\xff\xe1')
+    if begin_exif >= 0:
+        ret = image[0:begin_exif]
+        exif_size = unpack('>H', image[begin_exif+2:begin_exif+4])[0]
+        ret += image[begin_exif+exif_size+2:]
+        return ret
+    return image

@@ -12,7 +12,7 @@ from sqlalchemy.exc import IntegrityError
 from imgtl.db import *
 from imgtl.const import *
 from imgtl.i18n import i18n
-from imgtl.common import do_upload_image, do_delete_image, do_log
+from imgtl.common import do_upload_image, do_update_image, do_delete_image, do_log
 from imgtl.template import jinja2_filter_nl2br
 import imgtl.lib
 import imgtl.validator
@@ -76,12 +76,12 @@ def settings():
                     break
             return jsonify({'token': current_user.token})
         elif request.form['what'] == 'update':
-            if 'password' in request.form and request.form['password'] is not '':
+            if request.form.get('password', '') != '':
                 if not imgtl.validator.password(request.form['password']):
-                    flash(i18n('invalidpassowrd'))
+                    flash(i18n('invalidpassowrd'), 'error')
                     return redirect(url_for('settings'))
                 elif request.form['password'] != request.form['passwordconfirm']:
-                    flash(i18n('passwordmismatch'))
+                    flash(i18n('passwordmismatch'), 'error')
                     return redirect(url_for('settings'))
                 else:
                     current_user.password = request.form['password']
@@ -89,22 +89,23 @@ def settings():
             new_email = request.form['email']
             new_username = request.form['username']
             if not imgtl.validator.email(new_email):
-                flash(i18n('invalidemail'))
+                flash(i18n('invalidemail'), 'error')
                 return redirect(url_for('settings'))
             if not imgtl.validator.username(new_username):
-                flash(i18n('invalidusername'))
+                flash(i18n('invalidusername'), 'error')
                 return redirect(url_for('settings'))
             if current_user.email != new_email:
                 if User.query.filter_by(email=new_email).first():
-                    flash(i18n('alreadyexistemail'))
+                    flash(i18n('alreadyexistemail'), 'error')
                     return redirect(url_for('settings'))
             if current_user.name != new_username:
                 if User.query.filter_by(name=new_username).first():
-                    flash(i18n('alreadyexistname'))
+                    flash(i18n('alreadyexistname'), 'error')
                     return redirect(url_for('settings'))
             current_user.email = new_email
             current_user.name = new_username
             db.session.commit()
+            flash(i18n('accupdatesuccess'), 'success')
             return redirect(url_for('settings'))
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -113,24 +114,24 @@ def signup():
         return redirect(url_for('login', _anchor='register'))
     elif request.method == 'POST':
         if not imgtl.validator.email(request.form['email']):
-            flash(i18n('invalidemail'))
+            flash(i18n('invalidemail'), 'error')
             return redirect(url_for('signup'))
         if not imgtl.validator.username(request.form['username']):
-            flash(i18n('invalidusername'))
+            flash(i18n('invalidusername'), 'error')
             return redirect(url_for('signup'))
         if not imgtl.validator.password(request.form['password']):
-            flash(i18n('invalidpassword'))
+            flash(i18n('invalidpassword'), 'error')
             return redirect(url_for('signup'))
         if request.form['password'] != request.form['passwordconfirm']:
-            flash(i18n('passwordmismatch'))
+            flash(i18n('passwordmismatch'),'error')
             return redirect(url_for('signup'))
         user = User.query.filter((User.email==request.form['email']) | (User.name==request.form['username'])).first()
         if user:
             if user.email == request.form['email']:
-                flash(i18n('alreadyexistemail'))
+                flash(i18n('alreadyexistemail'), 'error')
                 return redirect(url_for('signup'))
             elif user.name == request.form['username']:
-                flash(i18n('alreadyexistname'))
+                flash(i18n('alreadyexistname'), 'error')
                 return redirect(url_for('signup'))
         user = User(email=request.form['email'], name=request.form['username'], password=imgtl.lib.pw_hash(request.form['password']))
         while 1:
@@ -146,6 +147,7 @@ def signup():
         db.session.commit()
         login_user(user)
         do_log('web', 'signup', user.id)
+        flash(i18n('signupsuccess'), 'success')
         return redirect(url_for('index'))
 
 @app.route('/signup/check', methods=['POST'])
@@ -177,7 +179,7 @@ def login():
             login_user(user)
             return redirect(request.args.get('next') or url_for('index'))
         else:
-            flash(i18n('loginfailed' if not user or user.password else 'loginfailed-oauthuser'))
+            flash(i18n('loginfailed' if not user or user.password else 'loginfailed-oauthuser'), 'error')
             return redirect(url_for('login'))
 
 @app.route('/oauth/login')
@@ -211,24 +213,24 @@ def oauth_authorized(resp):
 @app.route('/oauth/signup', methods=['GET', 'POST'])
 def oauth_signup():
     if not session.has_key('oauth_signup'):
-        flash(i18n('invalidaccess'))
+        flash(i18n('invalidaccess'), 'error')
         return redirect(url_for('index'))
     if request.method == 'GET':
         return render_template('oauth_signup.html', user=current_user, sess=session['oauth_signup'])
     elif request.method == 'POST':
         if not imgtl.validator.email(request.form['email']):
-            flash(i18n('invalidemail'))
+            flash(i18n('invalidemail'), 'error')
             return redirect(url_for('oauth_signup'))
         if not imgtl.validator.username(request.form['username']):
-            flash(i18n('invalidusername'))
+            flash(i18n('invalidusername'), 'error')
             return redirect(url_for('oauth_signup'))
         user = User.query.filter((User.email==request.form['email']) | (User.name==request.form['username'])).first()
         if user:
             if user.email == request.form['email']:
-                flash(i18n('alreadyexistemail'))
+                flash(i18n('alreadyexistemail'), 'error')
                 return redirect(url_for('oauth_signup'))
             elif user.name == request.form['username']:
-                flash(i18n('alreadyexistname'))
+                flash(i18n('alreadyexistname'), 'error')
                 return redirect(url_for('oauth_signup'))
         user = User(email=request.form['email'], name=request.form['username'], oauth_uid=session['oauth_signup']['oauth_uid'])
         while 1:
@@ -245,6 +247,7 @@ def oauth_signup():
         login_user(user)
         do_log('web', 'signup_by_oauth', user.id)
         del session['oauth_signup']
+        flash(i18n('signupsuccess'), 'success')
         return redirect(url_for('index'))
 
 @twitter.tokengetter
@@ -264,17 +267,28 @@ def upload():
         user = current_user
     else:
         user = None
-    upload = do_upload_image(user, request.files['image'], request.form['desc'] if 'desc' in request.form else None)
+    upload = do_upload_image(user, request.files['image'], request.form.get('desc'),
+                                request.form.get('nsfw') == 'on', request.form.get('anonymous') == 'on', request.form.get('private') == 'on',
+                                request.form.get('keep-exif') == 'on')
     if isinstance(upload, str):
-        flash(i18n(upload))
+        flash(i18n(upload), 'error')
         return redirect(url_for('index'))
     else:
+        if current_user.is_anonymous():
+            if 'anon_uploads' not in session: session['anon_uploads'] = []
+            session['anon_uploads'].append(upload.id)
+        flash(i18n('uploadsuccess'), 'success')
         return redirect(url_for('show', url=upload.url))
 
-@app.route('/<url>', methods=['GET', 'DELETE'])
+@app.route('/<url>', methods=['GET', 'PUT', 'DELETE'])
 def show(url):
     if request.method == 'DELETE':
         res = do_delete_image(current_user, url)
+        if res == 'success':
+            flash(i18n('deletesuccess'), 'success')
+        return jsonify({'res': res})
+    elif request.method == 'PUT':
+        res = do_update_image(current_user, url, request.form.get('nsfw') == 'true', request.form.get('anonymous') == 'true', request.form.get('private') == 'true')
         return jsonify({'res': res})
     elif request.method == 'GET':
         upload = Upload.query.filter_by(url=url).first()
@@ -283,6 +297,11 @@ def show(url):
         if upload.private and (current_user != upload.user):
             abort(403)
         obj = Object.query.get(upload.object_id)
+        if 'views' not in session: session['views'] = []
+        if upload.id not in session.get("views"):
+            session['views'].append(upload.id)
+            upload.view_count += 1
+            db.session.commit()
         if isinstance(obj, Image):
             return render_template('show/image.html', user=current_user, upload=upload)
 

@@ -1,37 +1,57 @@
+var lastid = null;
+var timeoutobj = null;
+
 function showError(msg) {
-    showAlert("error-area", msg);
+	showAlert("error-area", msg);
 }
 
 function showSuccess(msg) {
-    showAlert("success-area", msg);
+	showAlert("success-area", msg);
 }
 
 function showAlert(id, msg) {
-    $("#" + id + " > #msg-text").text(msg);
-    $("#" + id).animate({
-        opacity: 1,
-        top: 0
-    }, 500);
-    
-    setTimeout(function () {
-        $("#" + id).animate({
-            opacity: 0,
-            top: "-50"
-        }, 500);
-    }, 3000);
+	showWhiteOverlay();
+	$("#" + id + " > #msg-text").text(msg);
+	$("#" + id).animate({
+		opacity: 1,
+		top: 0
+	}, 500);
+
+	lastid = id;
+	setTimeout(hideAlertAndWhiteOverlay, 2000);
+}
+
+function hideAlert() {
+	$("#" + lastid).animate({
+		opacity: 0,
+		top: "-50"
+	}, 500);
 }
 
 function showWhiteOverlay() {
-    $(".white-overlay").css("display", "block");
-    $(".white-overlay").animate({
-        opacity: 0.7
-    }, 500);
-    
-    setTimeout(function () {
-        $(".white-overlay").animate({
-            opacity: 0,
-        }, 500, function () {
-            $(".white-overlay").css("display", "none");
-        });
-    }, 3000);
+	$(".white-overlay").css("display", "block");
+	$(".white-overlay").animate({
+		opacity: 0.7
+	}, 500);
 }
+
+function hideWhiteOverlay() {
+	$(".white-overlay").animate({
+		opacity: 0,
+	}, 500, function () {
+		$(".white-overlay").css("display", "none");
+	});
+}
+
+function hideAlertAndWhiteOverlay() {
+	hideAlert();
+	hideWhiteOverlay();
+}
+
+
+$(function() {
+	$(".white-overlay, .alert-area").click(function() {
+		clearTimeout(timeoutobj);
+		hideAlertAndWhiteOverlay();
+	});
+});

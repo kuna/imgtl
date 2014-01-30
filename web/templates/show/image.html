@@ -2,84 +2,140 @@
 {% set active_page = "show" %}
 {% block title %} : {{ upload.title }}{% endblock %}
 {% block meta %}
-	<meta name="twitter:card" content="photo">
-	<meta name="twitter:site" content="@img_tl">
-	<meta name="twitter:title" content="{{ upload.title }}">
-	<meta name="twitter:image:src" content="{{ upload.object.original_url }}">
+		<meta name="twitter:card" content="photo">
+		<meta name="twitter:site" content="@img_tl">
+		<meta name="twitter:title" content="{{ upload.title }}">
+		<meta name="twitter:image:src" content="{{ upload.object.original_url }}">
 {% endblock %}
-{% block container %}
+{% block wrap %}
 	<aside class="sidebar">
-		<div class="panel sidebar-element">
+		<div class="panel panel-info sidebar-element">
 			<div class="panel-heading">
-				<small>URL</small>
+				<small>링크</small>
 			</div>
-			
-			<p>Direct link</p>
-			<input type="text" value="https://img.tl/{{ upload.url }}.{{ upload.object.ext }}" class="input-block-level url-text" readonly />
-			
-			<p>Page</p>
-			<input type="text" value="https://img.tl/{{ upload.url }}" class="input-block-level url-text" readonly />
+
+			<p>이미지 직접 링크</p>
+			<input type="text" value="https://img.tl/{{ upload.url }}.{{ upload.object.ext }}" class="form-control url-text" readonly />
+
+			<p>페이지 링크</p>
+			<input type="text" value="https://img.tl/{{ upload.url }}" class="form-control url-text" readonly />
 		</div>
-		
-		<div class="panel sidebar-element">
+
+		<div class="panel panel-info sidebar-element">
 			<div class="panel-heading second-header">
-				<small>Information</small>
+				<small>이미지 정보</small>
 			</div>
-			
+
 			<div class="image-desc">
 				{{ (upload.desc or '') | nl2br }}
 			</div>
-			
+
 			<div class="image-time">
 				At {{ upload.time }} (KST)
 			</div>
 
 			<div class="image-author">
-				By {{ upload.user.name or 'Anonymous' }}
+				By {{ '(숨겨짐)' if upload.anonymous else (upload.user.name or '익명 사용자') }}
 			</div>
 
-			<!--
 			<div class="image-view-count">
 				Viewed {{ upload.view_count }} times
 			</div>
-			-->
 		</div>
-		{% if user == upload.user %}
-		<div class="panel sidebar-element">
+		{% if (user == upload.user) or (upload.id in session['anon_uploads']) %}
+		<div class="panel panel-warning sidebar-element">
 			<div class="panel-heading third-header">
-				<small>Operation</small>
+				<small>이미지 옵션</small>
 			</div>
-			
-			<div class="image-delete">
-				<button type="button" id="delete-btn" class="btn btn-danger btn-block">DELETE THIS IMAGE</button>
+
+			<div class="operation">
+				<div class="upload-options">
+					<div class="checkbox">
+						<label>
+							<input name="nsfw" type="checkbox"{{ (' checked="checked"' | safe) if upload.nsfw }}> <span class="tool-tip" data-toggle="tooltip" data-placement="right" title=" = 후방주의">민감한 내용으로 표시</span>
+						</label>
+					</div>
+					{% if user == upload.user %}
+					<div class="checkbox">
+						<label>
+							<input name="anonymous" type="checkbox"{{ (' checked="checked"' | safe) if upload.anonymous }}> 누가 올렸는지 숨기기
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input name="private" type="checkbox"{{ (' checked="checked"' | safe) if upload.private }}> 나만 보기
+						</label>
+					</div>
+					{% endif %}
+				</div>
+
+				<button id="update-submit-btn" class="btn btn-info btn-block">저장</button>
+			</div>
+		</div>
+
+		<div class="panel panel-danger sidebar-element">
+			<div class="panel-heading third-header">
+				<small>이미지 관리</small>
+			</div>
+
+			<div class="operation">
+				<!--<button type="button" id="delete-exif-btn" class="btn btn-warning btn-block">EXIF 정보 지우기</button>-->
+				<button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#delete-modal">이미지 지우기</button>
 			</div>
 		</div>
 		{% endif %}
 	</aside>
 
-	<section class="panel content-area">
+	<section class="panel panel-success content-area">
 		<div class="panel-heading">
-			{{ upload.title }}
+			<h2 class="panel-title">{{ upload.title }}</title>
 		</div>
-		
-		<div class="panel-content">
-			<a href="https://img.tl/{{ upload.url }}.{{ upload.object.ext }}">
-				<img src="{{ upload.object.original_url }}" class="content-image" />
-			</a>
+
+		<div class="panel-body">
+			<div class="image-area">
+				<a href="https://img.tl/{{ upload.url }}.{{ upload.object.ext }}">
+					<img src="{{ upload.object.original_url }}" class="content-image{{ ' nsfw' if upload.nsfw }}" />
+				</a>
+			</div>
 		</div>
 	</section>
-    
-    <div class="modal hide fade" id="delete-modal">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>Delete Image</h3>
-        </div>
-        <div class="modal-body">
-            <p>이미지를 삭제 하시겠습니까? 삭제된 이미지는 복구할 수 없습니다.</p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn">Close</a>
-            <a href="#" class="btn btn-danger" id="delete-confirm-btn" data-dismiss="modal" aria-hidden="true">Delete!</a>
-        </div>
-    </div>
+
+	 <div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-modal-label" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title" id="delete-modal-label">이미지 지우기</h3>
+				</div>
+				<div class="modal-body">
+					<p>이미지를 지우시겠습니까? 지워진 이미지는 복구할 수 없습니다.</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-default" data-dismiss="modal">취소</button>
+					<button class="btn btn-danger" id="delete-confirm-btn">지우기</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if upload.nsfw %}
+	<div id="nsfw-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="nsfw-modal-label" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title" id="nsfw-modal-label">민감한 내용의 이미지입니다.</h3>
+				</div>
+				<div class="modal-body">
+					<p>이 이미지를 올린 사용자가 이 이미지를 민감한 내용이라고 표시했습니다. 열기 전 주의해주세요.</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-default" data-dismiss="modal">안 열기</button>
+					<button class="btn btn-warning" id="shownsfw-confirm-btn">그래도 열기</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>$("#nsfw-modal").modal("show");</script>
+	{% endif %}
+
 {% endblock %}

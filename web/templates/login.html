@@ -9,61 +9,61 @@
 		</div>
 		
 		<form class="login-form" action="{{ url_for('login') }}" method="post">
-			<div class="form-title">Login</div>
+			<div class="form-title">로그인</div>
 			
-			<div class="control-group">
-				<label class="control-label" for="inputEmail">E-Mail or Username</label>
-				<input type="text" id="inputEmail" name="emailuser" class="input-block-level" placeholder="E-Mail" maxlength="120" autofocus />
+			<div class="form-group">
+				<label class="control-label" for="inputEmail">이메일 또는 사용자명</label>
+				<input type="text" id="inputEmail" name="emailuser" class="form-control" placeholder="이메일" maxlength="120" autofocus />
 			</div>
 			
-			<div class="control-group">
-				<label class="control-label" for="inputPassword" style="margin-top: 7px;">Password</label>
-				<input type="password" id="inputPassword" name="password" class="input-block-level" placeholder="Password" />
+			<div class="form-group">
+				<label class="control-label" for="inputPassword" style="margin-top: 7px;">비밀번호</label>
+				<input type="password" id="inputPassword" name="password" class="form-control" placeholder="비밀번호" />
 			</div>
 			
 			<div style="margin: 10px 0 70px 0;">
-				<button type="submit" class="btn btn-large btn-primary pull-right">Sign in</button>
+				<button type="submit" class="btn btn-lg btn-primary pull-right">로그인</button>
 			</div>
 			
 			<hr class="divider" />
 			
-			<a href="#register" class="btn btn-large btn-info btn-block">Register</a>
+			<a href="#register" class="btn btn-lg btn-info btn-block">가입</a>
 		</form>
 		
 		<form class="register-form" action="{{ url_for('signup') }}" method="post">
-			<div class="form-title">Register</div>
+			<div class="form-title">가입</div>
 			
-			<div class="control-group">
-				<label class="control-label" for="inputREmail">E-Mail</label>
+			<div class="form-group">
+				<label class="control-label" for="inputREmail">이메일</label>
 				<div class="error-help"></div>
-				<input type="text" id="inputREmail" name="email" class="input-block-level" maxlength="120" placeholder="E-Mail" />
+				<input type="text" id="inputREmail" name="email" class="form-control" maxlength="120" placeholder="이메일" />
 			</div>
 			
-			<div class="control-group">
-				<label class="control-label" for="inputRUsername">Username</label>
+			<div class="form-group">
+				<label class="control-label" for="inputRUsername">사용자명</label>
 				<div class="error-help"></div>
-				<input type="text" id="inputRUsername" name="username" class="input-block-level" maxlength="16" placeholder="Username" />
+				<input type="text" id="inputRUsername" name="username" class="form-control" maxlength="16" placeholder="사용자명" />
 			</div>
 			
-			<div class="control-group">
-				<label class="control-label" for="inputRPassword" style="margin-top: 7px;">Password</label>
+			<div class="form-group">
+				<label class="control-label" for="inputRPassword" style="margin-top: 7px;">비밀번호</label>
 				<div class="error-help"></div>
-				<input type="password" id="inputRPassword" name="password" class="input-block-level" placeholder="Password" />
+				<input type="password" id="inputRPassword" name="password" class="form-control" placeholder="비밀번호" />
 			</div>
 			
-			<div class="control-group">
-				<label class="control-label" for="inputRPasswordConfirm" style="margin-top: 7px;">Password confirm</label>
+			<div class="form-group">
+				<label class="control-label" for="inputRPasswordConfirm" style="margin-top: 7px;">비밀번호 확인</label>
 				<div class="error-help"></div>
-				<input type="password" id="inputRPasswordConfirm" name="passwordconfirm" class="input-block-level" placeholder="Password confirm" />
+				<input type="password" id="inputRPasswordConfirm" name="passwordconfirm" class="form-control" placeholder="비밀번호 확인" />
 			</div>
 			
 			<div style="margin: 10px 0 70px 0;">
-				<button type="submit" id="register-submit-btn" class="btn btn-large btn-primary pull-right">Register</button>
+				<button type="submit" id="register-submit-btn" class="btn btn-lg btn-primary pull-right">가입</button>
 			</div>
 			
 			<hr class="divider" />
 			
-			<a href="#login" class="btn btn-large btn-info btn-block">Login</a>
+			<a href="#login" class="btn btn-lg btn-info btn-block">로그인</a>
 		</form>
 	</div>
 {% endblock %}

@@ -1,18 +1,17 @@
 /* width>=1260;default */
 
 body {
-    background-color: #f5f5f5;
+	background-color: #f5f5f5;
 }
 
 .sidebar {
-    width: 250px;
-    min-height: 68px;
-    float: right;
-    padding: 10px;
+	width: 250px;
+	min-height: 68px;
+	float: right;
 }
 
 .myinfo > .top-desc {
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .myinfo > .top-desc:after {
@@ -22,58 +21,65 @@ body {
 }
 
 .myinfo > .top-desc > .user-icon {
-    width: 48px;
-    height: 48px;
+	width: 48px;
+	height: 48px;
 	float: left;
 	margin: 0 10px 10px 0;
 }
 
 .myinfo > .top-desc > .username {
-    font-size: 16pt;
-    display: block;
+	font-size: 16pt;
+	display: block;
 	white-space: nowrap;
 }
 
 .myinfo > .top-desc > .email {
-    font-size: 12pt;
-    display: block;
+	font-size: 12pt;
+	display: block;
 	white-space: nowrap;
 }
 
 .upload-area {
-    text-align: center;
+	text-align: center;
 	position: relative;
 }
 
 #upload-icon-frame {
-    display: inline-block;
+	display: inline-block;
 
-    border: 4px dashed #aaa;
-    border-radius: 10px;
+	border: 4px dashed #aaa;
+	border-radius: 10px;
 
-    padding: 15px;
-    margin: 20px auto 20px auto;
+	padding: 20px;
+	margin: 20px auto 5px auto;
 }
 
 #upload-icon {
-    width: 180px;
-    height: 180px;
+	width: 160px;
+	height: 160px;
 
-    border-radius: 10px;
+	border-radius: 10px;
 
-    background-image: url('/img/upload_icon.png');
-    background-size: cover;
-    background-repeat: no-repeat;
+	background-image: url('/img/upload_icon.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.upload-options {
+	text-align: left;
 }
 
 #filename-text {
-    width: 185px;
-    border-radius: 4px 0 0 4px;
+	border-radius: 4px 0 0 4px;
 }
 
 hr.divider {
-    border-top: 1px solid #ddd;
-    margin: 0 -10px 10px -10px;
+	border-top: 1px solid #ddd;
+	margin: 0 -10px 10px -10px;
+}
+
+#submit-btn {
+	margin: 15px 0px 0px 0px;
 }
 
 

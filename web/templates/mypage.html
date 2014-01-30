@@ -1,60 +1,99 @@
 {% extends "layout.html" %}
 {% set active_page = "mypage" %}
-{% block title %}: My Page{% endblock %}
+{% block title %}: 내 이미지{% endblock %}
 
 {% block head %}
 <link href="/css/userinfo.css" rel="stylesheet" />
 
 <script type="text/javascript" src="/js/upload.js"></script>
+<script type="text/javascript" src="/js/freewall.js"></script>
 {% endblock %}
 
-{% block container %}
-	<aside class="panel sidebar">
-		<div class="myinfo">
-			<div class="top-desc">
-				<img class="user-icon" src="{{ user.profile_image_url }}" />
-				<span class="username">{{ user.name }}</span>
-				<span class="email">{{ user.email }}</span>
-			</div>
-			<div class="desc">
-				<dl>
-					<dt>Image count</dt>
-					<dd>{{ user.uploads.all() | count }}</dd>
-				</dl>
-			</div>
-		</div>
-		
-		<hr class="divider" />
-		
-		<div class="upload-area">
-			<div>
-				<div id="upload-icon-frame">
-					<div id="upload-icon"></div>
+{% block wrap %}
+	<aside class="panel panel-default sidebar">
+		<div class="panel-body">
+			<div class="myinfo">
+				<div class="top-desc">
+					<img class="user-icon" src="{{ user.profile_image_url }}" />
+					<span class="username">{{ user.name }}</span>
+					<span class="email">{{ user.email }}</span>
+				</div>
+				<div class="desc">
+					<dl>
+						<dt>올린 이미지 수</dt>
+						<dd>{{ user.uploads.all() | count }}</dd>
+					</dl>
 				</div>
 			</div>
-			
-			<div class="input-append">
-				<input class="input-block-level" id="filename-text" type="text" />
-				<button id="select-btn" class="btn" type="button">Select</button>
+
+			<hr class="divider" />
+
+			<div class="imagegrid-options">
+				<b>내 이미지들 표시 옵션</b>
+				<div class="checkbox">
+					<label>
+						<input id="show-nsfw" type="checkbox"> 민감한 내용의 사진 표시
+					</label>
+				</div>
 			</div>
-			
-			<button id="submit-btn" class="btn btn-info btn-large btn-block">Upload!</button>
-			
-			<form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" hidden>
-				<input type="file" id="file-input" name="image" />
-			</form>
+
+			<hr class="divider" />
+
+			<div class="upload-area">
+				<form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+					<div>
+						<div id="upload-icon-frame">
+							<div id="upload-icon"></div>
+						</div>
+					</div>
+
+					<div class="input-group">
+						<input class="form-control" id="filename-text" type="text" />
+						<span class="input-group-btn">
+							<button id="select-btn" class="btn btn-default" type="button">선택</button>
+						</span>
+					</div>
+
+					<div class="upload-options">
+						<div class="checkbox">
+							<label>
+								<input name="nsfw" type="checkbox"> <span class="tool-tip" data-toggle="tooltip" data-placement="right" title=" = 후방주의">민감한 내용으로 표시</span>
+							</label>
+						</div>
+						<div class="checkbox">
+							<label>
+								<input name="anonymous" type="checkbox"> 누가 올렸는지 숨기기
+							</label>
+						</div>
+						<div class="checkbox">
+							<label>
+								<input name="private" type="checkbox"> 나만 보기
+							</label>
+						</div>
+						<div class="checkbox">
+							<label>
+								<input name="keep-exif" type="checkbox" checked='checked'> EXIF 태그 유지
+							</label>
+						</div>
+					</div>
+
+					<button id="submit-btn" class="btn btn-info btn-lg btn-block">올리기</button>
+					<input type="file" id="file-input" name="image" />
+				</form>
+			</div>
 		</div>
 	</aside>
 	
-	<section class="panel image-grid">
+	<section class="panel panel-info image-grid">
 		<div class="panel-heading">
-			My Images
+			<h3 class="panel-title">내 이미지들</h3>
 		</div>
-		
-		<div class="image-area">
-		{% for upload in user.uploads | reverse %}
-			<a class="grid-item" href="/{{upload.url}}" style="background-image: url('{{upload.object.thumbnail_url}}')">&nbsp;</a>
-		{% endfor %}
-		<div>
+		<div class="panel-body">
+			<div class="image-area">
+			{% for upload in user.uploads | reverse %}
+			<a href="/{{ upload.url }}"{{ (' class="nsfw"' | safe) if upload.nsfw }}><div class="grid-item" style="width: {{ range(150, 300) | random }}px; height: 200px; background-image: url('{{ upload.object.thumbnail_url}}');"></div></a>
+			{% endfor %}
+			</div>
+		</div>
 	</section>
 {% endblock %}

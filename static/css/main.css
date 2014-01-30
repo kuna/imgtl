@@ -1,73 +1,75 @@
 /* width>=1260;default */
 
 body {
-    overflow: auto;
+	overflow: auto;
 }
 
 .logo {
-    margin: 35px auto 30px auto;
+	margin: 35px auto 30px auto;
 }
 
 .center-box {
-    height: 450px;
-    width: 650px;
+	height: 450px;
+	width: 650px;
 
-    text-align: center;
+	text-align: center;
 
-    position: absolute;
+	position: absolute;
 	left: 50%;
 	top: 50%;
-    margin: -225px auto 20px -325px;
+	margin: -225px auto 20px -325px;
 
-    border: 1px solid #ddd;
-    box-shadow: 5px 5px 20px #aaa;
+	border: 1px solid #ddd;
+	box-shadow: 5px 5px 20px #aaa;
 
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .wrapper {
-    position: relative;
+	width: 250px;
+	margin: 15px auto;
+	position: relative;
 }
 
 .main-area {
-    height: 400px;
-    padding: 25px;
+	height: 400px;
+	padding: 25px;
 }
 
 .upload-area {
-    height: 400px;
-    padding: 25px;
+	height: 400px;
+	padding: 25px;
 }
 
 .main-area > .row > .btn {
-    margin: 5px;
-    width: 250px;
+	margin: 5px;
+	width: 250px;
 }
 
 #upload-icon-frame {
-    display: inline-block;
+	display: inline-block;
 
-    border: 4px dashed #aaa;
-    border-radius: 10px;
+	border: 4px dashed #aaa;
+	border-radius: 10px;
 
-    padding: 15px;
-    margin: 30px auto 50px auto;
+	padding: 15px;
+	margin: 30px auto 10px auto;
 }
 
 #upload-icon {
-    width: 180px;
-    height: 180px;
+	width: 170px;
+	height: 170px;
 
-    border-radius: 10px;
+	border-radius: 10px;
 
-    background-image: url('/img/logo_tiny.png');
-    background-position: center;
-    background-repeat: no-repeat;
+	background-image: url('/img/logo_tiny.png');
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
-#filename-text {
-    width: 300px;
-    border-radius: 4px 0 0 4px;
+.upload-options {
+	width: 140px;
+	margin: 0px auto;
 }
 
 .login-link {

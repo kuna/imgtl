@@ -66,6 +66,7 @@ class Upload(db.Model):
     title = db.Column('upload_title', db.String(120), nullable=False)
     desc = db.Column('upload_desc', db.String(320), nullable=True)
     nsfw = db.Column('upload_nsfw', db.Boolean, nullable=False, default=False)
+    anonymous = db.Column('upload_anonymous', db.Boolean, nullable=False, default=False)
     private = db.Column('upload_private', db.Boolean, nullable=False, default=False)
     deleted = db.Column('upload_deleted', db.Boolean, nullable=False, default=False)
 
