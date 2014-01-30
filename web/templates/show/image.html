@@ -2,10 +2,12 @@
 {% set active_page = "show" %}
 {% block title %} : {{ upload.title }}{% endblock %}
 {% block meta %}
+{% if not upload.nsfw %}
 		<meta name="twitter:card" content="photo">
 		<meta name="twitter:site" content="@img_tl">
 		<meta name="twitter:title" content="{{ upload.title }}">
 		<meta name="twitter:image:src" content="{{ upload.object.original_url }}">
+{% endif %}
 {% endblock %}
 {% block wrap %}
 	<aside class="sidebar">
