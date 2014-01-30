@@ -10,7 +10,7 @@ BASE_URL = 'https://img.tl/%s'
 
 # OBJECT_URL
 OBJECT_URL = {
-    SERVER_S1: 'http://s1.img.tl/%s',
+    SERVER_S1: 'https://s1.img.tl/%s',
     SERVER_S2: 'http://s2.img.tl/%s',
 }
 
