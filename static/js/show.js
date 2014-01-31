@@ -60,8 +60,10 @@ $(function () {
 	});
 
 	$("#nsfw-modal").on('hide.bs.modal', function(e) {
-		if ($(".content-image").hasClass("nsfw"))
+		if ($(".content-image").hasClass("nsfw")) {
 			$(".content-image").css('visibility', 'hidden');
+			showError("이미지를 표시하지 않습니다");
+		}
 	});
 
 });
