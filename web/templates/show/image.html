@@ -9,6 +9,10 @@
 		<meta name="twitter:image:src" content="{{ upload.object.original_url }}">
 {% endif %}
 {% endblock %}
+{% block head %}
+<script src="/js/stackboxblur.js"></script>
+<script src="/js/blur.js"></script>
+{% endblock %}
 {% block wrap %}
 	<section class="panel panel-success content-area">
 		<div class="panel-heading">
