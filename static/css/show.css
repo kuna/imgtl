@@ -21,13 +21,14 @@ body {
 
 img.nsfw {
 	opacity: 0.5;
-	filter: blur(50px) alpha(opacity=50);
-	-webkit-filter: blur(50px);
-	-moz-filter: blur(50px);
-	-o-filter: blur(50px);
-	-ms-filter: blur(50px);
+	filter: blur(30px);
+	-webkit-filter: blur(30px);
+	-moz-filter: blur(30px);
+	-o-filter: blur(30px);
+	-ms-filter: blur(30px);
 	filter: url(/img/blur.svg#blur);
-	filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='50');
+	filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='30');
+	-ms-filter: alpha(opacity=50);
 }
 
 .image-desc {
