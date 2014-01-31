@@ -4,25 +4,19 @@ body {
 	background-color: #f5f5f5;
 }
 
-.content-area {
-	margin-right: 270px;
-	margin-bottom: 10px;
-}
-
 .content-area .panel-heading {
 	overflow: hidden;
 }
 
 .content-area .panel-body {
-	display: table;
+	text-align: center;
 }
 
 .image-area {
-	width: 100%;
-	height: 100%;
-	display: table-cell;
-	text-align: center;
-	vertical-align: middle;
+}
+
+.content-image {
+	max-width: 100%;
 }
 
 img.nsfw {
@@ -35,11 +29,6 @@ img.nsfw {
 	filter: url(/img/blur.svg#blur);
 	filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='50');
 
-}
-
-
-.content-image {
-	max-width: 100%;
 }
 
 .image-desc {
@@ -61,12 +50,6 @@ img.nsfw {
 	float: right;
 	font-size: 9pt;
 	clear: both;
-}
-
-.sidebar {
-	width: 250px;
-	position: relative;
-	float: right;
 }
 
 .sidebar-element {
@@ -106,26 +89,17 @@ img.nsfw {
 
 /* width>=760;tablet */
 @media screen and (max-width: 959px) {
-	.sidebar {
-		float: none;
-		width: initial;
-	}
-
-	.content-area {
-		margin-right: auto;
-	}
-	
-	#delete-btn {
-		max-width: 250px;
-		margin: auto;
-	}
 }
 
 /* width<760;phone */
 @media screen and (max-width: 759px) {
-	#delete-btn {
-		max-width: inherit;
-		margin: auto;
+	.content-area {
+		width: 100%;
+	}
+
+	.sidebar {
+		width: 100%;
+		position: relative;
 	}
 
 	.content-area .panel-heading {

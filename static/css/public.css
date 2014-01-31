@@ -10,7 +10,25 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 	font-family: 'NanumGothic', sans-serif;
 }
 
-.wrap {
+
+.center-box {
+	height: 450px;
+	width: 650px;
+
+	position: relative;
+	left: 50%;
+	top: 50%;
+	margin: -225px 0 0 -325px;
+
+	border: 1px solid #ddd;
+	box-shadow: 5px 5px 20px #aaa;
+
+	overflow: hidden;
+	background-color: white;
+}
+
+
+.outer-wrap {
 	width: 1200px;
 	min-height: 100%;
 
@@ -23,8 +41,37 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 	background-color: white;
 }
 
+.wrap {
+	position: relative;
+}
+
 .header {
 	margin: 0 0 20px 0;
+}
+
+.myinfo > .top-desc > div {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.myinfo > .top-desc > .user-icon {
+	width: 48px;
+	height: 48px;
+	float: left;
+	margin-right: 10px;
+}
+
+.myinfo > .top-desc > .username {
+	height: 24px;
+	line-height: 24px;
+	font-size: 16pt;
+}
+
+.myinfo > .top-desc > .email {
+	height: 24px;
+	line-height: 24px;
+	font-size: 10pt;
 }
 
 .top-logo {
@@ -37,6 +84,18 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 
 .default-cursor {
 	cursor: default;
+}
+
+.content-area {
+	width: calc(100% - 265px);
+	margin-bottom: 10px;
+}
+
+.sidebar {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	width: 250px;
 }
 
 #file-input {
@@ -76,23 +135,40 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 	z-index: 11999;
 }
 
+hr.divider {
+	border-top: 1px solid #ddd;
+	margin: 10px -10px;
+}
+
 /* width>=960;medium */
 @media screen and (max-width: 1259px) {
-	.wrap {
+	.outer-wrap {
 		width: 905px;
 	}
 }
 
 /* width>=760;tablet */
 @media screen and (max-width: 959px) {
-	.wrap {
+	.outer-wrap {
 		width: calc(100% - 56px);
+	}
+
+	.myinfo>:not(:first-child) {
+		display: none;
+	}
+
+	.myinfo>.top-desc>.user-icon {
+		margin-bottom: auto;
+	}
+
+	hr.divider {
+		margin-top: 10px;
 	}
 }
 
 /* width<760;phone */
 @media screen and (max-width: 759px) {
-	.wrap {
+	.outer-wrap {
 		width: calc(100% - 42px);
 	}
 
@@ -103,5 +179,14 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 
 	.header .btn>i {
 		vertical-align: middle;
+	}
+
+	.content-area {
+		width: 100%;
+	}
+
+	.sidebar {
+		width: 100%;
+		position: relative;
 	}
 }

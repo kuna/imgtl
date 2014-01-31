@@ -10,6 +10,20 @@
 {% endif %}
 {% endblock %}
 {% block wrap %}
+	<section class="panel panel-success content-area">
+		<div class="panel-heading">
+			<h2 class="panel-title">{{ upload.title }}</title>
+		</div>
+
+		<div class="panel-body">
+			<div class="image-area">
+				<a href="{{ upload.direct_url }}">
+					<img src="{{ upload.object.original_url }}" class="content-image{{ ' nsfw' if upload.nsfw }}" />
+				</a>
+			</div>
+		</div>
+	</section>
+
 	<aside class="sidebar">
 		<div class="panel panel-info sidebar-element">
 			<div class="panel-heading">
@@ -88,20 +102,6 @@
 		{% endif %}
 	</aside>
 
-	<section class="panel panel-success content-area">
-		<div class="panel-heading">
-			<h2 class="panel-title">{{ upload.title }}</title>
-		</div>
-
-		<div class="panel-body">
-			<div class="image-area">
-				<a href="{{ upload.direct_url }}">
-					<img src="{{ upload.object.original_url }}" class="content-image{{ ' nsfw' if upload.nsfw }}" />
-				</a>
-			</div>
-		</div>
-	</section>
-
 	 <div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-modal-label" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -139,5 +139,4 @@
 	</div>
 	<script>$("#nsfw-modal").modal("show");</script>
 	{% endif %}
-
 {% endblock %}

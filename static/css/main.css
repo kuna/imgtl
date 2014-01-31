@@ -9,20 +9,7 @@ body {
 }
 
 .center-box {
-	height: 450px;
-	width: 650px;
-
 	text-align: center;
-
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin: -225px auto 20px -325px;
-
-	border: 1px solid #ddd;
-	box-shadow: 5px 5px 20px #aaa;
-
-	overflow: hidden;
 }
 
 .wrapper {

@@ -1,7 +1,7 @@
 {% extends "common.html" %}
 {% block head %}{% endblock %}
 {% block body %}
-	<div class="wrap">
+	<div class="outer-wrap">
 		<header class="header">
 			<a href="/">
 				<img src="/img/logo_small.png" class="top-logo" />
@@ -21,7 +21,9 @@
 				</ul>
 			</div>
 		</header>
+		<div class="wrap">
 		{% block wrap %}{% endblock %}
+		</div>
 	</div>
 	{% block content %}{% endblock %}
 {% endblock %}

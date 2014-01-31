@@ -4,21 +4,6 @@ body {
 	overflow: auto;
 }
 
-.center-box {
-	height: 435px;
-	width: 650px;
-
-	position: relative;
-	top: 10%;
-	left: 50%;
-	margin: auto auto 20px -325px;
-
-	border: 1px solid #ddd;
-	box-shadow: 5px 5px 20px #aaa;
-
-	overflow: hidden;
-}
-
 .logo-wrapper {
 	text-align: center;
 }

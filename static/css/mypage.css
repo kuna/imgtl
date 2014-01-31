@@ -1,9 +1,5 @@
 /* width>=1260;default */
 
-.image-grid {
-	margin: auto 285px auto auto;
-}
-
 .image-area {
 	font-size: 0px;
 }
@@ -29,23 +25,86 @@
 	text-decoration: none;
 }
 
+.upload-area {
+	text-align: center;
+	position: relative;
+}
+
+#upload-icon-frame {
+	display: inline-block;
+
+	border: 4px dashed #aaa;
+	border-radius: 10px;
+
+	padding: 20px;
+	margin: 20px auto 5px auto;
+}
+
+#upload-icon {
+	width: 160px;
+	height: 160px;
+
+	border-radius: 10px;
+
+	background-image: url('/img/upload_icon.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.upload-options {
+	text-align: left;
+}
+
+#filename-text {
+	border-radius: 4px 0 0 4px;
+}
+
+#submit-btn {
+	margin: 15px 0px 0px 0px;
+}
+
+
 /* width>=960;medium */
 @media screen and (max-width: 1259px) {
 }
 
 /* width>=760;tablet */
 @media screen and (max-width: 959px) {
+	.image-grid {
+		margin-right: inherit;
+	}
 
-	.grid-item {
-		width: 124px;
-		height: 124px;
+	#upload-icon-frame {
+		padding: 6px;
+		margin: 2px auto 8px auto;
+	}
+
+	#upload-icon {
+		width: 140px;
+		height: 140px;
+	}
+
+	.myinfo>:not(:first-child) {
+		display: none;
+	}
+
+	.myinfo>.top-desc>.user-icon {
+		margin-bottom: auto;
+	}
+
+	hr.divider {
+		margin-top: 10px;
 	}
 }
 
 /* width<760;phone */
 @media screen and (max-width: 759px) {
-	.grid-item {
-		width: 70px;
-		height: 70px;
+	#upload-icon-frame {
+		padding: 5px;
+	}
+
+	#upload-icon {
+		width: 90px;
+		height: 90px;
 	}
 }

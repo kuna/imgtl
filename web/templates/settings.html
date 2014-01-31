@@ -7,25 +7,7 @@
 {% endblock %}
 
 {% block wrap %}
-	<aside class="panel panel-default sidebar">
-		<div class="panel-body">
-			<div class="myinfo">
-				<div class="top-desc">
-					<img class="user-icon" src="{{ user.profile_image_url }}" />
-					<span class="username">{{ user.name }}</span>
-					<span class="email">{{ user.email }}</span>
-				</div>
-				<div class="desc">
-					<dl>
-						<dt>올린 이미지 수</dt>
-						<dd>{{ user.uploads.all() | count }}</dd>
-					</dl>
-				</div>
-			</div>
-		</div>
-	</aside>
-
-	<section class="panel panel-default settings-area">
+	<section class="panel panel-default content-area">
 		<div class="panel-body">
 			<ul class="nav nav-tabs nav-tabs-google" style="height: 39px;">
 				<li class="active"><a href="#account" data-toggle="tab">계정</a></li>
@@ -79,6 +61,18 @@
 			</div>
 		</div>
 	</section>
+
+	<aside class="panel panel-default sidebar">
+		<div class="panel-body">
+			<div class="myinfo">
+				<div class="top-desc">
+					<img class="user-icon" src="{{ user.profile_image_url }}" />
+					<div class="username" title="{{ user.name }}">{{ user.name }}</div>
+					<div class="email" title="{{ user.email }}">{{ user.email }}</div>
+				</div>
+			</div>
+		</div>
+	</aside>
 
 	<div id="token-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="token-modal-label" aria-hidden="true">
 		<div class="modal-dialog">

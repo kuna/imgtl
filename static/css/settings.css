@@ -1,9 +1,5 @@
 /* width>=1260;default */
 
-.settings-area {
-	margin-right: 285px;
-}
-
 .tab-content {
 	margin-top: 15px;
 }
@@ -18,7 +14,6 @@
 
 #inputToken {
 	background-color: white;
-	cursor: default;
 }
 
 /* width>=960;medium */
