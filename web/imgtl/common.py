@@ -7,8 +7,7 @@ from flask import request, session, current_app
 
 from sqlalchemy.exc import IntegrityError
 
-from .lib import md5, is_image, get_ext, get_spath, make_url, create_thumbnail, get_prop, strip_exif
-from .const import SERVER_S1
+from .lib import md5, is_image, get_ext, get_spath, make_url, create_thumbnail, get_prop, strip_exif, get_server_id
 from .db import *
 
 
@@ -32,7 +31,7 @@ def do_upload_image(user, f, desc, is_nsfw, is_anonymous, is_private, keep_exif)
     code = '%s.%s' % (md5(fs), get_ext(fn))
     image = Image.query.filter_by(code=code).first()
     if not image:
-        image = Image(server=SERVER_S1, code=code, prop=get_prop(fs))
+        image = Image(server=get_server_id('S1'), code=code, prop=get_prop(fs))
         fp = get_spath(current_app.config['UPLOAD_DIR'], code)
         tfp = get_spath(os.path.join(current_app.config['UPLOAD_DIR'], 'thumb'), code)
         if not os.path.exists(os.path.dirname(fp)):

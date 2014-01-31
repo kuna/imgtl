@@ -10,7 +10,7 @@ from sqlalchemy.sql import functions as sqlfuncs
 from sqlalchemy.orm import validates
 
 from .const import *
-from .lib import md5, get_spath, get_ext
+from .lib import md5, get_spath, get_ext, get_server_url
 
 
 db = SQLAlchemy()
@@ -71,6 +71,10 @@ class Upload(db.Model):
     deleted = db.Column('upload_deleted', db.Boolean, nullable=False, default=False)
 
     @property
+    def page_url(self):
+        return BASE_URL % (self.url)
+
+    @property
     def direct_url(self):
         return BASE_URL % ('%s.%s' % (self.url, self.object.ext))
 
@@ -95,11 +99,11 @@ class Image(Object):
 
     @property
     def original_url(self):
-        return OBJECT_URL[self.server] % get_spath('', self.code)
+        return get_server_url(self.server) % get_spath('', self.code)
 
     @property
     def thumbnail_url(self):
-        return OBJECT_URL[self.server] % get_spath('thumb', self.code)
+        return get_server_url(self.server) % get_spath('thumb', self.code)
 
     @property
     def ext(self):
