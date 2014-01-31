@@ -43,6 +43,7 @@ nosetests.xml
 
 # configurations
 *.cfg
+const.py
 
 # folders
 uploads
