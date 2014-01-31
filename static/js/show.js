@@ -69,7 +69,7 @@ $(function () {
 	});
 
 	if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) {
-		if (new Number(RegExp.$1) >= 10.0) {
+		if (new Number(RegExp.$1) >= 10.0 || !!navigator.userAgent.match(/Trident.*rv[ :]*11\./)) {
 			if ($(".content-image").hasClass("nsfw")) {
 				$(".content-image").css("visibility", "hidden");
 				$(".content-image").attr('src', $(".content-image").parent().attr('href')).load(function() {
