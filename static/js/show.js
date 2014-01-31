@@ -56,12 +56,14 @@ $(function () {
 
 	$("#shownsfw-confirm-btn").click(function() {
 		$(".content-image").removeClass("nsfw");
+		$(".content-image").css("visibility", "visible");
+		$(".canvas-area").remove();
 		$("#nsfw-modal").modal("hide");
 	});
 
 	$("#nsfw-modal").on('hide.bs.modal', function(e) {
 		if ($(".content-image").hasClass("nsfw")) {
-			$(".content-area > .panel-body").remove();
+			$(".content-area > .panel-body").css('visibility', 'hidden');
 			showError("이미지를 표시하지 않습니다");
 		}
 	});
@@ -73,7 +75,6 @@ $(function () {
 				$(".content-image").attr('src', $(".content-image").parent().attr('href')).load(function() {
 					console.log($(".content-image").parent().attr('href'));
 					$(".content-area > .panel-body").append('<div class="canvas-area"><canvas id="blur-canvas"></canvas></div>');
-					//stackBoxBlurImage( 'content-image', 'blur-canvas', 200, false, 1 );
 					integralBlurImage( 'content-image', 'blur-canvas', 200, false, 1 );
 					$(".canvas-area").offset($(".image-area").offset());
 					$(".canvas-area").width($(".image-area").width()).height($(".image-area").height());
