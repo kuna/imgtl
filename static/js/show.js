@@ -56,14 +56,31 @@ $(function () {
 
 	$("#shownsfw-confirm-btn").click(function() {
 		$(".content-image").removeClass("nsfw");
+		$(".canvas-area").remove();
+		$(".content-image").css("visibility", "visible");
 		$("#nsfw-modal").modal("hide");
 	});
 
 	$("#nsfw-modal").on('hide.bs.modal', function(e) {
 		if ($(".content-image").hasClass("nsfw")) {
-			$(".content-image").css('visibility', 'hidden');
+			$(".content-area > .panel-body").css('visibility', 'hidden');
 			showError("이미지를 표시하지 않습니다");
 		}
 	});
 
+	if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) {
+		if (new Number(RegExp.$1) >= 10.0) {
+			if ($(".content-image").hasClass("nsfw")) {
+				$(".content-image").css("visibility", "hidden");
+				$(".content-image").attr('src', $(".content-image").parent().attr('href')).load(function() {
+					console.log($(".content-image").parent().attr('href'));
+					$(".content-area > .panel-body").append('<div class="canvas-area"><canvas id="blur-canvas"></canvas></div>');
+					stackBlurImage( 'content-image', 'blur-canvas', 180, false );
+					$(".canvas-area").offset($(".image-area").offset());
+					$(".canvas-area").width($(".image-area").width()).height($(".image-area").height());
+					$("#blur-canvas").width($(".image-area").width()).height($(".image-area").height());
+				});
+			}
+		}
+	}
 });
