@@ -21,7 +21,7 @@ def do_log(target, action, action_id, user=None):
 
 def get_upload(url):
     upload = Upload.query.filter_by(url=url).first()
-    if upload.is_expired:
+    if upload and upload.is_expired:
         b = get_expire_behavior(upload.expire_behavior)
         if b == 'delete':
             upload.deleted = True
