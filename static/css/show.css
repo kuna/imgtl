@@ -87,6 +87,10 @@ img.nsfw {
 	margin: 10px auto;
 }
 
+#update-submit-btn {
+	margin-top: 10px;
+}
+
 /* width>=960;medium */
 @media screen and (max-width: 1259px) {
 }

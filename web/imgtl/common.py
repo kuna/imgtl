@@ -7,7 +7,7 @@ from flask import request, session, current_app
 
 from sqlalchemy.exc import IntegrityError
 
-from .lib import md5, is_image, get_ext, get_spath, make_url, create_thumbnail, get_prop, strip_exif, get_server_id
+from .lib import md5, is_image, get_ext, get_spath, make_url, create_thumbnail, get_prop, strip_exif, get_server_id, get_expire_behavior_id, get_expire_behavior
 from .db import *
 
 
@@ -19,7 +19,20 @@ def do_log(target, action, action_id, user=None):
     log_db.session.add(log)
     log_db.session.flush()
 
-def do_upload_image(user, f, desc, is_nsfw, is_anonymous, is_private, keep_exif):
+def get_upload(url):
+    upload = Upload.query.filter_by(url=url).first()
+    if upload.is_expired:
+        b = get_expire_behavior(upload.expire_behavior)
+        if b == 'delete':
+            upload.deleted = True
+        elif b == 'private':
+            upload.private = True
+        upload.expire_time = None
+        upload.expire_behavior = None
+        db.session.commit()
+    return upload
+
+def do_upload_image(user, f, desc, is_nsfw=False, is_anonymous=False, is_private=False, keep_exif=True, expire=None, expire_behavior=None):
     if not f:
         return 'wrongimage'
     fn = f.filename
@@ -41,7 +54,9 @@ def do_upload_image(user, f, desc, is_nsfw, is_anonymous, is_private, keep_exif)
         with open(fp, 'w') as fi:
             fi.write(fs)
         create_thumbnail(fs).save(filename=tfp)
-    upload = Upload(object=image, user=user, title=fn, desc=desc, nsfw=is_nsfw, anonymous=is_anonymous, private=is_private)
+    if not user:
+        expire_behavior = 'delete'
+    upload = Upload(object=image, user=user, title=fn, desc=desc, nsfw=is_nsfw, anonymous=is_anonymous, private=is_private, expire_time=expire, expire_behavior=get_expire_behavior_id(expire_behavior))
     while 1:
         try:
             upload.url = make_url()
@@ -58,7 +73,7 @@ def do_upload_image(user, f, desc, is_nsfw, is_anonymous, is_private, keep_exif)
     return upload
 
 def do_update_image(user, upload_url, is_nsfw, is_anonymous, is_private):
-    upload = Upload.query.filter_by(url=upload_url).first()
+    upload = get_upload(upload_url)
     if not upload or upload.deleted:
         return 'nosuchimage'
     if (upload.user != user) and (upload.id not in session.get('anon_uploads', [])):
@@ -71,7 +86,7 @@ def do_update_image(user, upload_url, is_nsfw, is_anonymous, is_private):
     return 'success'
 
 def do_delete_image(user, upload_url):
-    upload = Upload.query.filter_by(url=upload_url).first()
+    upload = get_upload(upload_url)
     if not upload or upload.deleted:
         return 'nosuchimage'
     if (upload.user != user) and (upload.id not in session.get('anon_uploads', [])):

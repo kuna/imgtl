@@ -12,7 +12,7 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 
 
 .center-box {
-	height: 450px;
+	height: 500px;
 	width: 650px;
 
 	position: relative;
@@ -23,7 +23,7 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 	border: 1px solid #ddd;
 	box-shadow: 5px 5px 20px #aaa;
 
-	overflow: hidden;
+	overflow: visible;
 	background-color: white;
 }
 
@@ -138,6 +138,18 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 hr.divider {
 	border-top: 1px solid #ddd;
 	margin: 10px -10px;
+}
+
+#expire-custom {
+	text-align: right;
+}
+
+#expire-custom-unitdd {
+	text-align: left;
+}
+
+#expire-behavior-wrap {
+	margin-bottom: 15px;
 }
 
 /* width>=960;medium */

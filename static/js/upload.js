@@ -46,6 +46,19 @@ $(function () {
 	});
 
 	$("#submit-btn").click(function () {
+		exp = ($("#expire option:selected").val());
+		if (exp != '-1') {
+			if (exp == '0') {
+				cst_exp = $("#expire-custom").val() * $("#expire-custom-unit").val();
+				if (!(cst_exp > 0)) {
+					showError("만료 시간을 정확히 입력해주세요.");
+					return false;
+				} else if (cst_exp > 518400) {
+					showError("만료 시간은 1년을 넘을 수 없습니다.");
+					return false;
+				}
+			}
+		}
 		$("#upload-form").submit();
 	});
 });

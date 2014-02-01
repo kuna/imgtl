@@ -16,6 +16,12 @@ TYPE_IMAGE  = 1
 TYPE_FILE   = 2
 TYPE_TEXT   = 3
 
+# EXPIRE_BEHAVIOR
+EXPIRE_BEHAVIORS = {
+        'delete': 1,
+        'private': 2,
+}
+
 USER_DEFAULT_ICON = BASE_URL % 'img/user_icon.png'
 
 USERNAME_BLACKLIST = ['admin', 'root', 'mail', 'beta', 'test', 'static']

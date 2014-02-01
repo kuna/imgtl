@@ -7,10 +7,11 @@ import md5 as md5module
 from wand.image import Image as wImage
 from json import dumps
 from struct import unpack
+from datetime import datetime, timedelta
 
 from flaskext.bcrypt import Bcrypt
 
-from .const import URL_BLACKLIST, AVAILABLE_FORMAT, SERVERS
+from .const import URL_BLACKLIST, AVAILABLE_FORMAT, SERVERS, EXPIRE_BEHAVIORS
 
 
 bcrypt = Bcrypt()
@@ -70,6 +71,15 @@ def get_prop(fs):
 
 def get_server_id(name):
     return SERVERS.keys().index(name) + 1
+
+def calc_expire_time(minute):
+    return datetime.now() + timedelta(minutes=minute)
+
+def get_expire_behavior_id(behavior_str):
+    return EXPIRE_BEHAVIORS.index(behavior_str)
+
+def get_expire_behavior(behavior_id):
+    return EXPIRE_BEHAVIORS[behavior_id]
 
 # code from https://dpk.net/2013/02/21/simple-python-script-to-strip-exif-data-from-a-jpeg/
 def strip_exif(image):

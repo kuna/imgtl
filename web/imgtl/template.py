@@ -13,3 +13,6 @@ def jinja2_filter_nl2br(eval_ctx, value):
     if eval_ctx.autoescape:
         res = Markup(res)
     return res
+
+def jinja2_filter_dt(value, format='%Y-%m-%d %H:%M:%S'):
+    return value.strftime(format)

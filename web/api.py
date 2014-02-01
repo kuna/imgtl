@@ -10,7 +10,7 @@ from sqlalchemy.exc import IntegrityError
 
 from imgtl.db import *
 from imgtl.const import *
-from imgtl.common import do_upload_image, do_delete_image
+from imgtl.common import get_upload, do_upload_image, do_delete_image
 import imgtl.lib
 
 
@@ -56,7 +56,7 @@ class Upload(Resource):
 
 class Url(Resource):
     def get(self, url):
-        upload = imgtl.db.Upload.query.filter_by(url=url).first()
+        upload = get_upload(url)
         if not upload or upload.deleted:
             return error('nosuchupload'), 404
         user = {'name': upload.user.name, 'profile_image_url': upload.user.profile_image_url} if upload.user else None

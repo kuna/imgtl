@@ -55,7 +55,7 @@ body {
 }
 
 .upload-options {
-	width: 140px;
+	width: 200px;
 	margin: 0px auto;
 }
 
@@ -73,7 +73,7 @@ body {
 
 #submit-btn {
 	display: block;
-	margin: auto;
+	margin: 5px auto;
 }
 
 /* width>=960;medium */

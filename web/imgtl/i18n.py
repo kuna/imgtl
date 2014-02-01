@@ -18,6 +18,8 @@ i18n_dict = {
             'uploadsuccess': '업로드가 완료되었습니다.',
             'signupsuccess': '가입이 완료되었습니다.',
             'deletesuccess': '이미지가 삭제되었습니다.',
+            'invalidexpiretime': '잘못된 만료 시간입니다.',
+            'invalidexpiretime-toolong': '만료 시간은 1년을 넘을 수 없습니다.'
             }
         }
 

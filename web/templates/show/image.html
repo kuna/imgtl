@@ -50,7 +50,7 @@
 			</div>
 
 			<div class="image-time">
-				At {{ upload.time }} (KST)
+				At {{ upload.time | dt }} (KST)
 			</div>
 
 			<div class="image-author">
@@ -60,6 +60,11 @@
 			<div class="image-view-count">
 				Viewed {{ upload.view_count }} times
 			</div>
+			{% if upload.expire_time %}
+			<div class="image-time">
+				{{ upload.expire_time | dt }} (KST) 에 만료
+			</div>
+			{% endif %}
 		</div>
 		{% if (user == upload.user) or (upload.id in session['anon_uploads']) %}
 		<div class="panel panel-warning sidebar-element">

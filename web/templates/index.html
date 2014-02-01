@@ -35,6 +35,38 @@
 							<input name="keep-exif" type="checkbox" checked='checked'> EXIF 태그 유지
 						</label>
 					</div>
+					<select id="expire" name="expire" class="form-control">
+						<option value="-1" selected='selected'>만료되지 않음</option>
+						<option value="2">2분</option>
+						<option value="5">5분</option>
+						<option value="10">10분</option>
+						<option value="30">30분</option>
+						<option value="60">1시간</option>
+						<option value="1440">24시간</option>
+						<option value="0">직접 입력</option>
+					</select>
+					<div id="expire-custom-wrap" class="input-group hidden">
+						<input type="text" pattern="\d*" id="expire-custom" name="expire-custom" class="form-control">
+						<div class="input-group-btn">
+							<input type="hidden" id="expire-custom-unit" name="expire-custom-unit" value="1">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span id="expire-custom-unit-text">분</span> <span class="caret"></span></button>
+							<ul id="expire-custom-unitdd" class="dropdown-menu pull-right">
+								<li><a data-value="1" class="hand-cursor">분</a></li>
+								<li><a data-value="60" class="hand-cursor">시간</a></li>
+								<li><a data-value="1440" class="hand-cursor">일</a></li>
+								<li><a data-value="43200" class="hand-cursor">달 (30일)</a></li>
+							</ul>
+						</div>
+					</div>
+					<div id="expire-behavior-wrap" class="pull-right hidden">
+						만료시:&nbsp;
+						<label class="radio-inline">
+							<input type="radio" name="expire-behavior" value="delete" checked="checked"> 지우기
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="expire-behavior" value="private"> 나만 보기
+						</label>
+					</div>
 				</div>
 
 				<button id="submit-btn" class="btn btn-info btn-lg btn-block">올리기</button>

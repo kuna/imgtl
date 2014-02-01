@@ -12,8 +12,8 @@ from sqlalchemy.exc import IntegrityError
 from imgtl.db import *
 from imgtl.const import *
 from imgtl.i18n import i18n
-from imgtl.common import do_upload_image, do_update_image, do_delete_image, do_log
-from imgtl.template import jinja2_filter_nl2br
+from imgtl.common import get_upload, do_upload_image, do_update_image, do_delete_image, do_log
+from imgtl.template import jinja2_filter_nl2br, jinja2_filter_dt
 import imgtl.lib
 import imgtl.validator
 
@@ -23,6 +23,7 @@ app.config.from_pyfile('imgtl.cfg')
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 app.jinja_env.filters['nl2br'] = jinja2_filter_nl2br
+app.jinja_env.filters['dt'] = jinja2_filter_dt
 
 db.init_app(app)
 db.app = app
@@ -267,9 +268,24 @@ def upload():
         user = current_user
     else:
         user = None
+    expire = None
+    try:
+        exp = int(request.form['expire'])
+        if exp != -1:
+            if exp != 0:
+                expire = int(exp)
+            else:
+                expire = int(request.form['expire-custom']) * int(request.form['expire-custom-unit'])
+            if expire > 518400:
+                flash(i18n('invalidexpiretime-toolong'), 'error')
+                return redirect(url_for('index'))
+            expire = imgtl.lib.calc_expire_time(expire)
+    except ValueError:
+        flash(i18n('invalidexpiretime'), 'error')
+        return redirect(url_for('index'))
     upload = do_upload_image(user, request.files['image'], request.form.get('desc'),
                                 request.form.get('nsfw') == 'on', request.form.get('anonymous') == 'on', request.form.get('private') == 'on',
-                                request.form.get('keep-exif') == 'on')
+                                request.form.get('keep-exif') == 'on', expire, request.form.get('expire-behavior'))
     if isinstance(upload, str):
         flash(i18n(upload), 'error')
         return redirect(url_for('index'))
@@ -291,7 +307,7 @@ def show(url):
         res = do_update_image(current_user, url, request.form.get('nsfw') == 'true', request.form.get('anonymous') == 'true', request.form.get('private') == 'true')
         return jsonify({'res': res})
     elif request.method == 'GET':
-        upload = Upload.query.filter_by(url=url).first()
+        upload = get_upload(url)
         if (not upload) or upload.deleted:
             abort(404)
         if upload.private and (current_user != upload.user):
@@ -307,7 +323,7 @@ def show(url):
 
 @app.route('/<url>.<ext>')
 def show_only_image(url, ext):
-    upload = Upload.query.filter_by(url=url).first()
+    upload = get_upload(url)
     if not upload:
         abort(404)
     obj = Object.query.get(upload.object_id)
@@ -326,7 +342,7 @@ def show_only_image(url, ext):
 
 @app.route('/thumb/<url>')
 def show_thumbnail(url):
-    upload = Upload.query.filter_by(url=url).first()
+    upload = get_upload(url)
     obj = Object.query.get(upload.object_id)
     if (not upload) or upload.deleted:
         abort(404)

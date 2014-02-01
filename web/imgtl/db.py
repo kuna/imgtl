@@ -69,6 +69,8 @@ class Upload(db.Model):
     anonymous = db.Column('upload_anonymous', db.Boolean, nullable=False, default=False)
     private = db.Column('upload_private', db.Boolean, nullable=False, default=False)
     deleted = db.Column('upload_deleted', db.Boolean, nullable=False, default=False)
+    expire_time = db.Column('upload_expire_time', db.DateTime, nullable=True)
+    expire_behavior = db.Column('upload_expire_behavior', db.Integer, nullable=True)
 
     @property
     def page_url(self):
@@ -81,6 +83,12 @@ class Upload(db.Model):
     @property
     def thumbnail_url(self):
         return  BASE_URL % ('thumb/%s' % self.url)
+
+    @property
+    def is_expired(self):
+        if self.expire_time:
+            return (datetime.now() - self.expire_time).total_seconds() >= 0
+        return False
 
     def __repr__(self):
         return '<Upload %r>' % self.id
