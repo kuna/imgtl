@@ -78,6 +78,10 @@ class Upload(db.Model):
     def direct_url(self):
         return BASE_URL % ('%s.%s' % (self.url, self.object.ext))
 
+    @property
+    def thumbnail_url(self):
+        return  BASE_URL % ('thumb/%s' % self.url)
+
     def __repr__(self):
         return '<Upload %r>' % self.id
 
@@ -96,14 +100,6 @@ class Image(Object):
     id = db.Column('image_id', db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
     server = db.Column('image_srv', db.Integer, nullable=False)
     prop = db.Column('image_prop', db.Text, nullable=False)
-
-    @property
-    def original_url(self):
-        return get_server_url(self.server) % get_spath('', self.code)
-
-    @property
-    def thumbnail_url(self):
-        return get_server_url(self.server) % get_spath('thumb', self.code)
 
     @property
     def ext(self):

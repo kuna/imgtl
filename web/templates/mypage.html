@@ -17,7 +17,7 @@
 		<div class="panel-body">
 			<div class="image-area">
 			{% for upload in user.uploads | reverse %}
-			<a href="/{{ upload.url }}"{{ (' class="nsfw"' | safe) if upload.nsfw }}><div class="grid-item" style="width: {{ range(150, 300) | random }}px; height: 200px; background-image: url('{{ upload.object.thumbnail_url}}');"></div></a>
+			<a href="/{{ upload.url }}"{{ (' class="nsfw"' | safe) if upload.nsfw }}><div class="grid-item" style="width: {{ range(150, 300) | random }}px; height: 200px; background-image: url('{{ upload.thumbnail_url}}');"></div></a>
 			{% endfor %}
 			</div>
 		</div>

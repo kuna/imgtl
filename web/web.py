@@ -324,6 +324,22 @@ def show_only_image(url, ext):
         r.headers['X-Accel-Redirect'] = imgtl.lib.get_spath('/x', obj.code)
         return r
 
+@app.route('/thumb/<url>')
+def show_thumbnail(url):
+    upload = Upload.query.filter_by(url=url).first()
+    obj = Object.query.get(upload.object_id)
+    if (not upload) or upload.deleted:
+        abort(404)
+    if upload.private and (current_user != upload.user):
+        abort(403)
+    fpath = imgtl.lib.get_spath(os.path.join(app.config['UPLOAD_DIR'], 'thumb'), obj.code)
+    r = make_response()
+    r.headers['Cache-Control'] = 'public'
+    r.headers['Content-Type'] = ''
+    r.headers['Content-Disposition'] = 'inline; filename="%s"' % upload.title.encode('utf8')
+    r.headers['X-Accel-Redirect'] = imgtl.lib.get_spath('/x/thumb', obj.code)
+    return r
+
 if __name__ == '__main__':
     db.create_all()
     app.run(host='127.0.0.1', port=2560)

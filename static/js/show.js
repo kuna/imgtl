@@ -71,7 +71,7 @@ $(function () {
 	if ((/MSIE (\d+\.\d+);/.test(navigator.userAgent) && new Number(RegExp.$1) >= 10.0) || !!navigator.userAgent.match(/Trident.*rv[ :]*11\./)) {
 		if ($(".content-image").hasClass("nsfw")) {
 			$(".content-image").css("visibility", "hidden");
-			$(".content-image").attr('src', $(".content-image").parent().attr('href')).load(function() {
+			$(".content-image").load(function() {
 				$(".content-area > .panel-body").append('<div class="canvas-area"><canvas id="blur-canvas"></canvas></div>');
 				integralBlurImage( 'content-image', 'blur-canvas', 200, false, 1 );
 				$(".canvas-area").offset($(".image-area").offset());

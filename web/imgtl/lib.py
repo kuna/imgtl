@@ -71,9 +71,6 @@ def get_prop(fs):
 def get_server_id(name):
     return SERVERS.keys().index(name) + 1
 
-def get_server_url(id):
-    return SERVERS.values()[id - 1]
-
 # code from https://dpk.net/2013/02/21/simple-python-script-to-strip-exif-data-from-a-jpeg/
 def strip_exif(image):
     begin_exif = image.find(b'\xff\xe1')

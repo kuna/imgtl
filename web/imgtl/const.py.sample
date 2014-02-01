@@ -7,8 +7,8 @@ BASE_URL = 'https://img.tl/%s'
 
 # SERVERS
 SERVERS = OrderedDict((
-    ('S1', 'https://s1.img.tl/%s'),
-    ('S2', 'http://s2.img.tl/%s'),
+    ('S1', 's1.img.tl'),
+    ('S2', 's2.img.tl'),
 ))
 
 # OBJ_TYPE
