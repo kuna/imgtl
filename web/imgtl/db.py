@@ -56,7 +56,7 @@ class User(db.Model):
 class Upload(db.Model):
     __tablename__ = 'upload'
     id = db.Column('upload_id', db.Integer, primary_key=True, index=True)
-    url = db.Column('url', db.String(8), unique=True, index=True, nullable=True)
+    url = db.Column('url', db.String(8), unique=True, index=True, nullable=False)
     object_id = db.Column('upload_obj_id', db.Integer, db.ForeignKey('object.object_id'), nullable=False)
     object = db.relationship('Object', backref=db.backref('uploads', lazy='dynamic'))
     user_id = db.Column('upload_user_id', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
@@ -82,7 +82,7 @@ class Upload(db.Model):
 
     @property
     def thumbnail_url(self):
-        return  BASE_URL % ('thumb/%s' % self.url)
+        return BASE_URL % ('thumb/%s' % self.url)
 
     @property
     def is_expired(self):
