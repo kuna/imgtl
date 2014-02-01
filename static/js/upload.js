@@ -7,7 +7,7 @@ $(function () {
 		var file = $(this)[0].files[0];
 
 		if (!file.type.match(/image.*/)) {
-			alert("This file is not image!");
+			showError('이미지가 아닙니다.');
 			return;
 		}
 

@@ -25,9 +25,9 @@ $(function () {
 			type: 'DELETE',
 			success: function(res) {
 				if (res.res == 'nosuchimage') {
-					showError("존재하지 않는 이미지입니다");
+					showError("존재하지 않는 이미지입니다.");
 				} else if (res.res == 'notmine') {
-					showError("자신의 이미지가 아닌 이미지는 삭제 할 수 없습니다");
+					showError("자신의 이미지가 아닌 이미지는 삭제 할 수 없습니다.");
 				} else if (res.res == 'success') {
 					if (typeof cb == 'function') { cb(); }
 				}
@@ -44,11 +44,11 @@ $(function () {
 					},
 			success: function(res) {
 				if (res.res == 'success') {
-					showSuccess("설정을 저장하였습니다");
+					showSuccess("설정을 저장하였습니다.");
 				} else if (res.res == 'nosuchimage') {
-					showError("존재하지 않는 이미지입니다");
+					showError("존재하지 않는 이미지입니다.");
 				} else if (res.res == 'notmine') {
-					showError("자신의 이미지가 아닌 이미지의 설정은 바꿀 수 없습니다");
+					showError("자신의 이미지가 아닌 이미지의 설정은 바꿀 수 없습니다.");
 				}
 			}
 		});
@@ -64,7 +64,7 @@ $(function () {
 	$("#nsfw-modal").on('hide.bs.modal', function(e) {
 		if ($(".content-image").hasClass("nsfw")) {
 			$(".content-area > .panel-body").css('visibility', 'hidden');
-			showError("이미지를 표시하지 않습니다");
+			showError("이미지를 표시하지 않습니다.");
 		}
 	});
 
