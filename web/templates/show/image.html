@@ -79,7 +79,7 @@
 							<input name="nsfw" type="checkbox"{{ (' checked="checked"' | safe) if upload.nsfw }}> <span class="tool-tip" data-toggle="tooltip" data-placement="right" title=" = 후방주의">민감한 내용으로 표시</span>
 						</label>
 					</div>
-					{% if user == upload.user %}
+					{% if user.is_authenticated() %}
 					<div class="checkbox">
 						<label>
 							<input name="anonymous" type="checkbox"{{ (' checked="checked"' | safe) if upload.anonymous }}> 누가 올렸는지 숨기기
@@ -110,7 +110,8 @@
 		{% endif %}
 	</aside>
 
-	 <div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-modal-label" aria-hidden="true">
+	{% if (user == upload.user) or (upload.id in session['anon_uploads']) %}
+	<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-modal-label" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -127,6 +128,7 @@
 			</div>
 		</div>
 	</div>
+	{% endif %}
 	{% if upload.nsfw %}
 	<div id="nsfw-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="nsfw-modal-label" aria-hidden="true">
 		<div class="modal-dialog">
