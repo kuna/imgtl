@@ -10,7 +10,7 @@ from sqlalchemy.sql import functions as sqlfuncs
 from sqlalchemy.orm import validates
 
 from .const import *
-from .lib import md5, get_spath, get_ext, get_server_url
+from .lib import md5, get_spath, get_ext
 
 
 db = SQLAlchemy()
