@@ -11,33 +11,33 @@
 			<a href="{{ url_for('oauth_login') }}">트위터 계정을 이용해</a> / <a href="{{ url_for('login') }}">로그인</a>
 		</div>
 		<div class="wrapper">
-			<div>
-				<div id="upload-icon-frame">
-					<div id="upload-icon"></div>
+			<form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+				<div>
+					<div id="upload-icon-frame">
+						<div id="upload-icon"></div>
+					</div>
 				</div>
-			</div>
-			
-			<div class="input-group">
-				<input class="form-control" id="filename-text" type="text" />
-				<span class="input-group-btn">
-					<button id="select-btn" class="btn btn-default" type="button">선택</button>
-				</span>
-			</div>
-			<div class="upload-options">
-				<div class="checkbox">
-					<label>
-						<input name="nsfw" type="checkbox"> <span class="tool-tip" data-toggle="tooltip" data-placement="right" title=" = 후방주의">민감한 내용으로 표시</span>
-					</label>
-				</div>
-				<div class="checkbox">
-					<label>
-						<input name="keep-exif" type="checkbox" checked='checked'> EXIF 태그 유지
-					</label>
-				</div>
-			</div>
 
-			<button id="submit-btn" class="btn btn-info btn-lg btn-block">올리기</button>
-			<form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" hidden>
+				<div class="input-group">
+					<input class="form-control" id="filename-text" type="text" />
+					<span class="input-group-btn">
+						<button id="select-btn" class="btn btn-default" type="button">선택</button>
+					</span>
+				</div>
+				<div class="upload-options">
+					<div class="checkbox">
+						<label>
+							<input name="nsfw" type="checkbox"> <span class="tool-tip" data-toggle="tooltip" data-placement="right" title=" = 후방주의">민감한 내용으로 표시</span>
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input name="keep-exif" type="checkbox" checked='checked'> EXIF 태그 유지
+						</label>
+					</div>
+				</div>
+
+				<button id="submit-btn" class="btn btn-info btn-lg btn-block">올리기</button>
 				<input type="file" id="file-input" name="image" />
 			</form>
 		</div>

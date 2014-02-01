@@ -76,7 +76,7 @@ def do_delete_image(user, upload_url):
         return 'nosuchimage'
     if (upload.user != user) and (upload.id not in session.get('anon_uploads', [])):
         return 'notmine'
-    upload.deleted = 1
+    upload.deleted = True
     db.session.commit()
     do_log(current_app.name, 'delete', upload.id, user)
     return 'success'
