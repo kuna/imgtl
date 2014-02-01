@@ -332,6 +332,11 @@ def show_only_image(url, ext):
             abort(404)
         if upload.private and (current_user != upload.user):
             abort(403)
+        if 'views' not in session: session['views'] = []
+        if upload.id not in session.get("views"):
+            session['views'].append(upload.id)
+            upload.view_count += 1
+            db.session.commit()
         fpath = imgtl.lib.get_spath(app.config['UPLOAD_DIR'], obj.code)
         r = make_response()
         r.headers['Cache-Control'] = 'public'
