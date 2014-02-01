@@ -59,6 +59,10 @@ def index():
     else:
         return render_template('mypage.html', user=current_user)
 
+@app.route('/tos')
+def tos():
+    return render_template('tos.html', user=current_user)
+
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():

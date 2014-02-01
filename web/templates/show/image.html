@@ -108,6 +108,11 @@
 			</div>
 		</div>
 		{% endif %}
+		<div class="panel panel-default">
+			<div class="panel-body text-center">
+				<a href="{{ url_for('tos') }}">이용 약관</a>
+			</div>
+		</div>
 	</aside>
 
 	{% if (user == upload.user) or (upload.id in session['anon_uploads']) %}
