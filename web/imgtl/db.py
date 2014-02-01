@@ -38,7 +38,7 @@ class User(db.Model):
         return self.all_uploads.filter_by(deleted=False)
 
     def get_id(self):
-        return self.id
+        return unicode(self.id)
 
     def is_active(self):
         return True
