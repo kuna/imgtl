@@ -54,7 +54,9 @@ def do_upload_image(user, f, desc, is_nsfw=False, is_anonymous=False, is_private
         with open(fp, 'w') as fi:
             fi.write(fs)
         create_thumbnail(fs).save(filename=tfp)
-    if not user:
+    if not expire:
+        expire_behavior = None
+    elif not user:
         expire_behavior = 'delete'
     upload = Upload(object=image, user=user, title=fn, desc=desc, nsfw=is_nsfw, anonymous=is_anonymous, private=is_private, expire_time=expire, expire_behavior=get_expire_behavior_id(expire_behavior))
     while 1:
