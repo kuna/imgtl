@@ -76,6 +76,8 @@ def calc_expire_time(minute):
     return datetime.now() + timedelta(minutes=minute)
 
 def get_expire_behavior_id(behavior_str):
+    if not behavior_str:
+        return None
     return EXPIRE_BEHAVIORS.index(behavior_str)
 
 def get_expire_behavior(behavior_id):
