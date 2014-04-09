@@ -51,7 +51,7 @@ class Upload(Resource):
         if isinstance(upload, str):
             return error(upload), 403
         else:
-            return success({'url': {'part': upload.url, 'page': BASE_URL % upload.url, 'direct': upload.direct_url, 'original': upload.object.original_url}}), 201
+            return success({'url': {'part': upload.url, 'page': BASE_URL % upload.url, 'direct': upload.direct_url}}), 201
 
 
 class Url(Resource):
@@ -60,7 +60,7 @@ class Url(Resource):
         if not upload or upload.deleted:
             return error('nosuchupload'), 404
         user = {'name': upload.user.name, 'profile_image_url': upload.user.profile_image_url} if upload.user else None
-        return success({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url, 'original': upload.object.original_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count})
+        return success({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count})
 
     def delete(self, url):
         args = parser.parse_args()
@@ -87,7 +87,7 @@ class UserInfo(Resource):
         if args['with_uploads'] == 1:
             uploads = []
             for upload in user.uploads:
-                uploads.append({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url, 'original': upload.object.original_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'view_count': upload.view_count})
+                uploads.append({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'view_count': upload.view_count})
             res['uploads'] = uploads
         return success({'user': res})
 
