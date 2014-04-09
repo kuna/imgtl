@@ -5,7 +5,7 @@ import os
 import shortuuid
 import md5 as md5module
 from wand.image import Image as wImage
-from json import dumps
+from simplejson import dumps
 from struct import unpack
 from datetime import datetime, timedelta
 
