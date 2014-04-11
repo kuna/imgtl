@@ -45,6 +45,12 @@
 				<small>이미지 정보</small>
 			</div>
 
+			<div class="image-prop">
+				{% if (upload.object.prop.exif | count) != 0 %}
+				<button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#exif-modal">EXIF 정보 보기</button>
+				{% endif %}
+			</div>
+
 			<div class="image-desc">
 				{{ (upload.desc or '') | nl2br }}
 			</div>
@@ -103,7 +109,6 @@
 			</div>
 
 			<div class="operation">
-				<!--<button type="button" id="delete-exif-btn" class="btn btn-warning btn-block">EXIF 정보 지우기</button>-->
 				<button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#delete-modal">이미지 지우기</button>
 			</div>
 		</div>
@@ -115,6 +120,31 @@
 		</div>
 	</aside>
 
+	{% if (upload.object.prop.exif | count) != 0 %}
+	<div id="exif-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exif-modal-label" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title" id="delete-modal-label">이미지 EXIF 정보</h3>
+				</div>
+				<div class="modal-body">
+					<table class="table table-striped">
+						{% for k, v in upload.object.prop['exif'] | dictsort %}
+						<tr>
+							<td>{{ k }}</td>
+							<td>{{ v }}</td>
+						</tr>
+						{% endfor %}
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-default" data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
 	{% if (user == upload.user) or (upload.id in session['anon_uploads']) %}
 	<div id="delete-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="delete-modal-label" aria-hidden="true">
 		<div class="modal-dialog">
