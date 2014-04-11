@@ -5,7 +5,6 @@ import os
 import shortuuid
 import md5 as md5module
 from wand.image import Image as wImage
-from simplejson import dumps
 from struct import unpack
 from datetime import datetime, timedelta
 
@@ -67,7 +66,7 @@ def get_prop(fs):
             'height': im.height,
             'exif': exif,
         }
-    return dumps(p)
+    return p
 
 def get_server_id(name):
     return SERVERS.keys().index(name) + 1
