@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import simplejson
 
 from flask import Flask, request
 from flask.ext.restful import Api, Resource, reqparse
@@ -61,7 +60,7 @@ class Url(Resource):
         if not upload or upload.deleted:
             return error('nosuchupload'), 404
         user = {'name': upload.user.name, 'profile_image_url': upload.user.profile_image_url} if upload.user else None
-        return success({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count, 'properties': simplejson.loads(upload.object.prop)})
+        return success({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count, 'properties': upload.object.prop})
 
     def delete(self, url):
         args = parser.parse_args()
@@ -88,7 +87,7 @@ class UserInfo(Resource):
         if args['with_uploads'] == 1:
             uploads = []
             for upload in user.uploads:
-                uploads.append({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'view_count': upload.view_count, 'properties': simplejson.loads(upload.object.prop)})
+                uploads.append({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'view_count': upload.view_count, 'properties': upload.object.prop})
             res['uploads'] = uploads
         return success({'user': res})
 
