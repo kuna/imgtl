@@ -56,6 +56,25 @@ class Upload(Resource):
         else:
             return success({'url': {'part': upload.url, 'page': BASE_URL % upload.url, 'direct': upload.direct_url}}), 201
 
+# http://tapbots.net/tweetbot/custom_media/
+class TweetbotUpload(Resource):
+    def post(self):
+        parser = RequestParser()
+        parser.add_argument('media', type=FileStorage, location='files')
+        parser.add_argument('message', type=unicode, location='form')
+        parser.add_argument('source', type=unicode, location='form')
+        args = parser.parse_args()
+        if args['source'] != 'Tweetbot for iOS':
+            return error('nottweetbot'), 403
+        f = args['media']
+        if not f:
+            return error('imagenotattached'), 400
+        desc = "%s\r\n\r\nFrom Tweetbot for iOS" % args['message']
+        upload = do_upload_image(None, f, desc)
+        if isinstance(upload, str):
+            return error(upload), 403
+        else:
+            return {'url': BASE_URL % upload.url}, 201
 
 class Url(Resource):
     def get(self, url):
