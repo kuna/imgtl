@@ -89,7 +89,7 @@
 			</div>
 			{% endif %}
 		</div>
-		{% if (user == upload.user) or (upload.id in sessio.anon_uploads) %}
+		{% if (user == upload.user) or (upload.id in session.anon_uploads) %}
 		<div class="panel panel-warning sidebar-element">
 			<div class="panel-heading">
 				<small>이미지 옵션</small>
