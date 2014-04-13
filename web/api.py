@@ -5,6 +5,8 @@ import os
 
 from flask import Flask, request
 from flask.ext.restful import Api, Resource, reqparse
+from flask.ext.restful.reqparse import RequestParser, Argument
+from werkzeug.datastructures import FileStorage
 
 from sqlalchemy.exc import IntegrityError
 
@@ -23,10 +25,7 @@ log_db.init_app(app)
 log_db.app = app
 
 api = Api(app)
-parser = reqparse.RequestParser()
-parser.add_argument('X-IMGTL-TOKEN', type=str, location='headers', dest='token')
-parser.add_argument('desc', type=unicode, location='form')
-parser.add_argument('with_uploads', type=int, location='args')
+arg_token = Argument('X-IMGTL-TOKEN', type=str, location='headers', dest='token')
 
 
 def success(data):
@@ -38,8 +37,12 @@ def error(msg):
 
 class Upload(Resource):
     def post(self):
+        parser = RequestParser()
+        parser.add_argument(arg_token)
+        parser.add_argument('file', type=FileStorage, location='files')
+        parser.add_argument('desc', type=unicode, location='form')
         args = parser.parse_args()
-        f = request.files.get('file')
+        f = args['file']
         user = args['token']
         if user:
             user = User.query.filter_by(token=user).first()
@@ -63,6 +66,8 @@ class Url(Resource):
         return success({'type': upload.object.__tablename__, 'url': {'page': BASE_URL % upload.url, 'direct': upload.direct_url}, 'title': upload.title, 'desc': upload.desc, 'upload_at': upload.time.strftime('%s'), 'user': user, 'view_count': upload.view_count, 'properties': upload.object.prop})
 
     def delete(self, url):
+        parser = RequestParser()
+        parser.add_argument(arg_token)
         args = parser.parse_args()
         if not args['token']:
             return error('notoken'), 403
@@ -77,6 +82,9 @@ class Url(Resource):
 
 class UserInfo(Resource):
     def get(self):
+        parser = RequestParser()
+        parser.add_argument(arg_token)
+        parser.add_argument('with_uploads', type=int, location='args')
         args = parser.parse_args()
         if not args['token']:
             return error('notoken'), 403
