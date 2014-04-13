@@ -120,6 +120,7 @@ class UserInfo(Resource):
 
 
 api.add_resource(Upload, '/upload')
+api.add_resource(TweetbotUpload, '/tweetbot')
 api.add_resource(Url, '/url/<string:url>')
 api.add_resource(UserInfo, '/user/info')
 
