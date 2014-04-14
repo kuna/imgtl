@@ -89,13 +89,12 @@ h1, h2, h3, div, p, header, aside, section, footer, span, input {
 .content-area {
 	width: calc(100% - 265px);
 	margin-bottom: 10px;
+	float: left;
 }
 
 .sidebar {
-	position: absolute;
-	top: 0px;
-	right: 0px;
 	width: 250px;
+	float: right;
 }
 
 #file-input {
