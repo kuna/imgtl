@@ -72,13 +72,12 @@ class TweetbotUpload(Resource):
         f = args['media']
         if not f:
             return error('imagenotattached'), 400
-        message = args.get('message')
-        desc = "%svia Tweetbot for iOS" % (('%s\r\n\r\n' % message) if message else '')
         headers = {'Authorization': args['authorization']}
         r = requests.get(args['authorization_url'], headers=headers)
-        user = r.json().get('id')
-        if user:
-            user = User.query.filter_by(oauth_uid=user).first()
+        json = r.json()
+        user = User.query.filter_by(oauth_uid=json['id']).first()
+        message = '' if json['protected'] else args.get('message')
+        desc = "%svia Tweetbot for iOS" % (('%s\r\n\r\n' % message) if message else '')
         upload = do_upload_image(user, f, desc)
         if isinstance(upload, str):
             return error(upload), 403
