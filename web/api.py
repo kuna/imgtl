@@ -73,7 +73,7 @@ class TweetbotUpload(Resource):
         if not f:
             return error('imagenotattached'), 400
         message = args.get('message')
-        desc = "via Tweetbot for iOS" % ('%s\r\n\r\n' % message if message else '')
+        desc = "%svia Tweetbot for iOS" % (('%s\r\n\r\n' % message) if message else ''))
         headers = {'Authorization': args['authorization']}
         r = requests.get(args['authorization_url'], headers=headers)
         user = r.json().get('id')
