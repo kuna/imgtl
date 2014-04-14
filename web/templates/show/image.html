@@ -45,25 +45,25 @@
 				<small>이미지 정보</small>
 			</div>
 
-			<table class="table table-bordered">
-				<thead>
-				</thead>
-				<tbody>
-					<tr>
-						<td>이미지 크기</td>
-						<td>{{ upload.object.prop.width }}px &times; {{ upload.object.prop.height }}px</td>
-					</tr>
-					<tr>
-						<td>파일 크기</td>
-						<td>{{ upload.object.prop.filesize | filesizeformat }}</td>
-					</tr>
-					{% if (upload.object.prop.exif | count) != 0 %}
-					<tr>
-						<td colspan="2"><button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#exif-modal">EXIF 정보 보기</button></td>
-					</tr>
-					{% endif %}
-				</tbody>
-			</table>
+			<div class="image-info">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td class='image-info-key'>이미지 크기</td>
+							<td class='image-info-value'>{{ upload.object.prop.width }}px &times; {{ upload.object.prop.height }}px</td>
+						</tr>
+						<tr>
+							<td class='image-info-key'>파일 크기</td>
+							<td class='image-info-value'>{{ upload.object.prop.filesize | filesizeformat }}</td>
+						</tr>
+						{% if (upload.object.prop.exif | count) != 0 %}
+						<tr>
+							<td colspan="2" class="image-info-button"><button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#exif-modal">EXIF 정보 보기</button></td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
 		</div>
 
 		<div class="panel panel-info sidebar-element">

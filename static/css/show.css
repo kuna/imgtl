@@ -35,6 +35,28 @@ img.nsfw {
 	-ms-filter: alpha(opacity=50);
 }
 
+.image-info > table {
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+	margin-bottom: 8px;
+}
+
+
+.image-info > table > tbody > tr > td.image-info-key {
+	border-left: none;
+}
+
+.image-info > table > tbody > tr > td.image-info-value {
+	border-right: none;
+}
+
+.image-info > table > tbody > tr > td.image-info-button {
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+}
+
 .image-desc {
 	margin-bottom: 15px;
 }
