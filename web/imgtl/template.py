@@ -5,7 +5,7 @@ import re
 
 from jinja2 import evalcontextfilter, Markup, escape
 
-RE_NL2BR = re.compile(r'(\\r)?\\n', re.UNICODE | re.MULTILINE)
+RE_NL2BR = re.compile(r'(\r)?\n', re.UNICODE | re.MULTILINE)
 
 @evalcontextfilter
 def jinja2_filter_nl2br(eval_ctx, value):
