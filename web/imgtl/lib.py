@@ -64,6 +64,7 @@ def get_prop(fs):
     p = {
             'width': im.width,
             'height': im.height,
+            'filesize': len(fs),
             'exif': exif,
         }
     return p

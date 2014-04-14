@@ -50,8 +50,12 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>크기</td>
+						<td>이미지 크기</td>
 						<td>{{ upload.object.prop.width }}px &times; {{ upload.object.prop.height }}px</td>
+					</tr>
+					<tr>
+						<td>파일 크기</td>
+						<td>{{ upload.object.prop.filesize | filesizeformat }}</td>
 					</tr>
 					{% if (upload.object.prop.exif | count) != 0 %}
 					<tr>
