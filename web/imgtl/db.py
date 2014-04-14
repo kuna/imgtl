@@ -9,6 +9,7 @@ from urllib import urlencode
 from flask.ext.sqlalchemy import SQLAlchemy
 
 import sqlalchemy.types as types
+from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.sql import functions as sqlfuncs
 from sqlalchemy.orm import validates
 
@@ -21,7 +22,7 @@ log_db = SQLAlchemy(session_options={
     'autocommit': True,
 })
 
-class JsonType(types.TypeDecorator):
+class JsonEncodedDict(types.TypeDecorator):
     impl = types.String
 
     def process_bind_param(self, value, dialect):
@@ -31,7 +32,7 @@ class JsonType(types.TypeDecorator):
         return simplejson.loads(value)
 
     def copy(self):
-        return JsonType(self.impl.length)
+        return JsonEncodedDict(self.impl.length)
 
 
 class User(db.Model):
@@ -122,7 +123,7 @@ class Image(Object):
     __mapper_args__ = {'polymorphic_identity': TYPE_IMAGE}
     id = db.Column('image_id', db.Integer, db.ForeignKey('object.object_id'), primary_key=True, index=True)
     server = db.Column('image_srv', db.Integer, nullable=False)
-    prop = db.Column('image_prop', JsonType, nullable=False)
+    prop = db.Column('image_prop', MutableDict.as_mutable(JsonEncodedDict), nullable=False)
 
     @property
     def ext(self):
