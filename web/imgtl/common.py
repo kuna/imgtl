@@ -30,6 +30,7 @@ def get_upload(user, url):
         upload.expire_time = None
         upload.expire_behavior = None
         db.session.commit()
+        do_log(current_app.name, 'expire', upload.id, user)
     return upload
 
 def do_upload_image(user, f, desc, is_nsfw=False, is_anonymous=False, is_private=False, keep_exif=True, expire=None, expire_behavior=None):
@@ -85,6 +86,7 @@ def do_update_image(user, upload_url, is_nsfw, is_anonymous, is_private):
         upload.anonymous = is_anonymous
         upload.private = is_private
     db.session.commit()
+    do_log(current_app.name, 'update', upload.id, user)
     return 'success'
 
 def do_delete_image(user, upload_url):
