@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import requests
 
 from flask import Flask, request
 from flask.ext.restful import Api, Resource, reqparse
@@ -60,6 +61,8 @@ class Upload(Resource):
 class TweetbotUpload(Resource):
     def post(self):
         parser = RequestParser()
+        parser.add_argument('X-VERIFY-CREDENTIALS-AUTHORIZATION', type=str, location='headers', dest='authorization')
+        parser.add_argument('X-AUTH-SERVICE-PROVIDER', type=str, location='headers', dest='authorization_url')
         parser.add_argument('media', type=FileStorage, location='files')
         parser.add_argument('message', type=unicode, location='form')
         parser.add_argument('source', type=unicode, location='form')
@@ -69,8 +72,14 @@ class TweetbotUpload(Resource):
         f = args['media']
         if not f:
             return error('imagenotattached'), 400
-        desc = "%s\r\n\r\nFrom Tweetbot for iOS" % args['message']
-        upload = do_upload_image(None, f, desc)
+        message = args.get('message')
+        desc = "via Tweetbot for iOS" % ('%s\r\n\r\n' % message if message else '')
+        headers = {'Authorization': args['authorization']}
+        r = requests.get(args['authorization_url'], headers=headers)
+        user = r.json().get('id')
+        if user:
+            user = User.query.filter_by(oauth_uid=user).first()
+        upload = do_upload_image(user, f, desc)
         if isinstance(upload, str):
             return error(upload), 403
         else:
