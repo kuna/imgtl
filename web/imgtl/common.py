@@ -19,7 +19,7 @@ def do_log(target, action, action_id, user=None):
     log_db.session.add(log)
     log_db.session.flush()
 
-def get_upload(url):
+def get_upload(user, url):
     upload = Upload.query.filter_by(url=url).first()
     if upload and upload.is_expired:
         b = get_expire_behavior(upload.expire_behavior)
@@ -75,7 +75,7 @@ def do_upload_image(user, f, desc, is_nsfw=False, is_anonymous=False, is_private
     return upload
 
 def do_update_image(user, upload_url, is_nsfw, is_anonymous, is_private):
-    upload = get_upload(upload_url)
+    upload = get_upload(user, upload_url)
     if not upload or upload.deleted:
         return 'nosuchimage'
     if (upload.user != user) and (upload.id not in session.get('anon_uploads', [])):
@@ -88,7 +88,7 @@ def do_update_image(user, upload_url, is_nsfw, is_anonymous, is_private):
     return 'success'
 
 def do_delete_image(user, upload_url):
-    upload = get_upload(upload_url)
+    upload = get_upload(user, upload_url)
     if not upload or upload.deleted:
         return 'nosuchimage'
     if (upload.user != user) and (upload.id not in session.get('anon_uploads', [])):

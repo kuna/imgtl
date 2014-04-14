@@ -86,7 +86,7 @@ class TweetbotUpload(Resource):
 
 class Url(Resource):
     def get(self, url):
-        upload = get_upload(url)
+        upload = get_upload(None, url)
         if not upload or upload.deleted:
             return error('nosuchupload'), 404
         user = {'name': upload.user.name, 'profile_image_url': upload.user.profile_image_url} if upload.user else None

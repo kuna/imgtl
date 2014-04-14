@@ -311,7 +311,7 @@ def show(url):
         res = do_update_image(current_user, url, request.form.get('nsfw') == 'true', request.form.get('anonymous') == 'true', request.form.get('private') == 'true')
         return jsonify({'res': res})
     elif request.method == 'GET':
-        upload = get_upload(url)
+        upload = get_upload(current_user, url)
         if (not upload) or upload.deleted:
             abort(404)
         if upload.private and (current_user != upload.user):
@@ -327,7 +327,7 @@ def show(url):
 
 @app.route('/<url>.<ext>')
 def show_only_image(url, ext):
-    upload = get_upload(url)
+    upload = get_upload(current_user, url)
     if not upload:
         abort(404)
     obj = Object.query.get(upload.object_id)
@@ -351,7 +351,7 @@ def show_only_image(url, ext):
 
 @app.route('/thumb/<url>')
 def show_thumbnail(url):
-    upload = get_upload(url)
+    upload = get_upload(current_user, url)
     obj = Object.query.get(upload.object_id)
     if (not upload) or upload.deleted:
         abort(404)
