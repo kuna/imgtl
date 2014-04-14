@@ -11,6 +11,21 @@
 {% endblock %}
 {% block head %}
 <script src="/js/blur.js"></script>
+<style type='text/css'>
+{% set orientation = upload.object.prop.exif.Orientation %}
+{% if orientation == '6' %}
+{% set degree = 90 %}
+{% elif orientation == '3' %}
+{% set degree = 180 %}
+{% elif orientation == '8' %}
+{% set degree = 270 %}
+{% else %}
+{% set degree = 0 %}
+{% endif %}
+#content-image {
+	image-orientation: {{ degree }}deg;
+}
+</style>
 {% endblock %}
 {% block wrap %}
 	<section class="panel panel-success content-area">
