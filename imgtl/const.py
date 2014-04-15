@@ -17,10 +17,10 @@ TYPE_FILE   = 2
 TYPE_TEXT   = 3
 
 # EXPIRE_BEHAVIOR
-EXPIRE_BEHAVIORS = {
-        'delete': 1,
-        'private': 2,
-}
+EXPIRE_BEHAVIORS = (
+    'delete',
+    'private',
+)
 
 USER_DEFAULT_ICON = BASE_URL % 'img/user_icon.png'
 
