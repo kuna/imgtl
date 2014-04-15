@@ -42,7 +42,7 @@ nosetests.xml
 *~
 
 # configurations
-*.cfg
+imgtl.cfg
 
 # folders
 uploads
