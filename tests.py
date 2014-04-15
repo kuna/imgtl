@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import unittest
 import simplejson
 
-from web import app, db
 from imgtl.db import *
 from imgtl.lib import pw_hash
 from imgtl.i18n import i18n as _i18n
@@ -12,8 +12,8 @@ from imgtl.i18n import i18n as _i18n
 class ImgTLTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        os.environ['TESTING'] = 'true'
+        from web import app, db
         cls.app = app.test_client()
         db.create_all()
         # add default user

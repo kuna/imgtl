@@ -19,7 +19,10 @@ import imgtl.validator
 
 
 app = Flask(__name__)
-app.config.from_pyfile('imgtl.cfg')
+if os.environ.get('TESTING'):
+    app.config.from_pyfile('.imgtl.tests.cfg')
+else:
+    app.config.from_pyfile('imgtl.cfg')
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 app.jinja_env.filters['nl2br'] = jinja2_filter_nl2br
