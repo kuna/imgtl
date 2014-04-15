@@ -8,7 +8,7 @@ from wand.image import Image as wImage
 from struct import unpack
 from datetime import datetime, timedelta
 
-from flaskext.bcrypt import Bcrypt
+from flask.ext.bcrypt import Bcrypt
 
 from .const import URL_BLACKLIST, AVAILABLE_FORMAT, SERVERS, EXPIRE_BEHAVIORS
 
