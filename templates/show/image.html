@@ -71,6 +71,10 @@
 							<td class='image-info-key'>파일 크기</td>
 							<td class='image-info-value'>{{ upload.object.prop.filesize | filesizeformat }}</td>
 						</tr>
+						<tr>
+							<td class='image-info-key'>발생 트래픽</td>
+							<td class='image-info-value'>{{ (upload.object.prop.filesize * upload.view_count) | filesizeformat }}</td>
+						</tr>
 						{% if (upload.object.prop.exif | count) != 0 %}
 						<tr>
 							<td colspan="2" class="image-info-button"><button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#exif-modal">EXIF 정보 보기</button></td>
