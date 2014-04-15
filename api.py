@@ -35,6 +35,9 @@ def success(data):
 def error(msg):
     return {'status': 'error', 'error': msg}
 
+class Index(Resource):
+    def get(self):
+        return 'imgTL api service'
 
 class Upload(Resource):
     def post(self):
@@ -126,7 +129,7 @@ class UserInfo(Resource):
             res['uploads'] = uploads
         return success({'user': res})
 
-
+api.add_resource(Index, '/')
 api.add_resource(Upload, '/upload')
 api.add_resource(TweetbotUpload, '/tweetbot')
 api.add_resource(Url, '/url/<string:url>')
