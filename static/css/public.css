@@ -151,6 +151,10 @@ hr.divider {
 	margin-bottom: 15px;
 }
 
+input.readonly {
+	cursor: default !important;
+}
+
 /* width>=960;medium */
 @media screen and (max-width: 1259px) {
 	.outer-wrap {
