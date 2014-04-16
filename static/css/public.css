@@ -151,7 +151,7 @@ hr.divider {
 	margin-bottom: 15px;
 }
 
-input.readonly {
+.form-control[disabled], .form-control[readonly], .fieldset[disabled] .form-control {
 	cursor: default !important;
 }
 
