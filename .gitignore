@@ -42,13 +42,13 @@ nosetests.xml
 *~
 
 # configurations
-imgtl.cfg
+/imgtl.cfg
 
 # folders
-uploads
+/uploads
 
 # test databases
-test.db
+/test.db
 
 # virtualenv
 .venv
