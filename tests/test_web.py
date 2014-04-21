@@ -5,6 +5,8 @@ import os
 import unittest
 import simplejson
 
+from StringIO import StringIO
+
 from imgtl.db import *
 from imgtl.lib import pw_hash
 from imgtl.i18n import i18n as _i18n
@@ -56,6 +58,20 @@ class ImgTLTest(unittest.TestCase):
                 }
         return self.app.post('/login', data=data, follow_redirects=True)
 
+    def logout(self):
+        return self.app.get('/logout', follow_redirects=True)
+
+    def upload(self, image, desc='', keep_exif=True, expire=-1, expire_behavior='delete', expire_custom=None, expire_custom_unit=1):
+        data = {'image': image,
+                'desc': desc,
+                'keep-exif': 'on' if keep_exif else 'off',
+                'expire': expire,
+                'expire-behavior': expire_behavior,
+                'expire-custom': expire_custom,
+                'expire-custom-unit': expire_custom_unit,
+                }
+        return self.app.post('/upload', data=data, follow_redirects=True)
+
     def test_index(self):
         r = self.app.get('/')
         self.assertEqual(r.status_code, 200)
@@ -71,6 +87,7 @@ class ImgTLTest(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertIn(self.i18n('signupsuccess'), r.data)
         self.assertEqual(count, 1)
+        self.logout()
 
     def test_signup_process_invalid_email(self):
         r = self.signup(email='new@imgtl', username='new_username', password='password1234', passwordconfirm='password1234')
@@ -133,10 +150,12 @@ class ImgTLTest(unittest.TestCase):
     def test_login_process_success_email(self):
         r = self.login(emailuser='tests@img.tl', password='password1234')
         self.assertIn('tests@img.tl', r.data)
+        self.logout()
 
     def test_login_process_success_username(self):
         r = self.login(emailuser='tests', password='password1234')
         self.assertIn('tests@img.tl', r.data)
+        self.logout()
 
     def test_login_process_invalid_email(self):
         r = self.login(emailuser='nonexists@img.tl', password='password1234')
@@ -153,6 +172,37 @@ class ImgTLTest(unittest.TestCase):
     def test_login_process_with_username_invalid_password(self):
         r = self.login(emailuser='tests', password='password5678')
         self.assertIn(self.i18n('loginfailed'), r.data)
+
+    def test_upload_success(self):
+        fdata = open('tests/images/test.png', 'r')
+        r = self.upload(image=(fdata, 'test.png'))
+        self.assertIn(self.i18n('uploadsuccess'), r.data)
+        self.assertIn('test.png', r.data)
+
+    def test_upload_success_with_desc(self):
+        fdata = open('tests/images/test.png', 'r')
+        r = self.upload(image=(fdata, 'test.png'), desc='hulahulahoo')
+        self.assertIn('hulahulahoo', r.data)
+
+    def test_upload_parse_exif(self):
+        fdata = open('tests/images/exif.jpg', 'r')
+        r = self.upload(image=(fdata, 'exif.jpg'))
+        self.assertIn('C6603', r.data)
+
+    def test_upload_strip_exif(self):
+        fdata = open('tests/images/exif.jpg', 'r')
+        r = self.upload(image=(fdata, 'exif.jpg'), keep_exif=False)
+        self.assertNotIn('C6603', r.data)
+
+    def test_upload_no_exif(self):
+        fdata = open('tests/images/exif_deleted.jpg', 'r')
+        r = self.upload(image=(fdata, 'exif.jpg'))
+        self.assertNotIn('C6603', r.data)
+
+    def test_upload_fix_orientation(self):
+        fdata = open('tests/images/exif_rotate_90.jpg', 'r')
+        r = self.upload(image=(fdata, 'exif.jpg'))
+        self.assertIn('90deg', r.data)
 
 if __name__ == '__main__':
     unittest.main()
