@@ -204,5 +204,25 @@ class ImgTLTest(unittest.TestCase):
         r = self.upload(image=(fdata, 'exif.jpg'))
         self.assertIn('90deg', r.data)
 
+    def test_upload_fail_notimage(self):
+        fdata = StringIO('dummy data')
+        r = self.upload(image=(fdata, 'dummy.jpg'))
+        self.assertIn(self.i18n('notimage'), r.data)
+
+    def test_upload_fail_invalid_expire_time(self):
+        fdata = open('tests/images/test.png', 'r')
+        r = self.upload(image=(fdata, 'test.png'), expire=0, expire_custom='wahoo')
+        self.assertIn(self.i18n('invalidexpiretime'), r.data)
+
+    def test_upload_success_expire_time_not_too_long(self):
+        fdata = open('tests/images/test.png', 'r')
+        r = self.upload(image=(fdata, 'test.png'), expire=0, expire_custom=365, expire_custom_unit=1440)
+        self.assertIn(self.i18n('uploadsuccess'), r.data)
+
+    def test_upload_fail_expire_time_too_long(self):
+        fdata = open('tests/images/test.png', 'r')
+        r = self.upload(image=(fdata, 'test.png'), expire=0, expire_custom=366, expire_custom_unit=1440)
+        self.assertIn(self.i18n('invalidexpiretime-toolong'), r.data)
+
 if __name__ == '__main__':
     unittest.main()
