@@ -283,7 +283,7 @@ def upload():
                 expire = int(exp)
             else:
                 expire = int(request.form['expire-custom']) * int(request.form['expire-custom-unit'])
-            if expire > 518400:
+            if expire > 525600:
                 flash(i18n('invalidexpiretime-toolong'), 'error')
                 return redirect(url_for('index'))
             expire = imgtl.lib.calc_expire_time(expire)
