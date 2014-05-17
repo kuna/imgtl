@@ -18,7 +18,10 @@ import imgtl.lib
 
 
 app = Flask(__name__)
-app.config.from_pyfile('imgtl.cfg')
+if os.environ.get('TESTING'):
+    app.config.from_pyfile('.imgtl.tests.cfg')
+else:
+    app.config.from_pyfile('imgtl.cfg')
 
 db.init_app(app)
 db.app = app
