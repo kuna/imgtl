@@ -5,8 +5,6 @@ import os
 import unittest
 import simplejson
 
-from StringIO import StringIO
-
 from imgtl.db import *
 from imgtl.lib import pw_hash
 from imgtl.i18n import i18n as _i18n
@@ -205,6 +203,7 @@ class ImgTLTest(unittest.TestCase):
         self.assertIn('90deg', r.data)
 
     def test_upload_fail_notimage(self):
+        from StringIO import StringIO
         fdata = StringIO('dummy data')
         r = self.upload(image=(fdata, 'dummy.jpg'))
         self.assertIn(self.i18n('notimage'), r.data)
