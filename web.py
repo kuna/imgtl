@@ -153,7 +153,7 @@ def signup():
                 break
         db.session.add(user)
         db.session.commit()
-        login_user(user)
+        login_user(user, remember=True)
         do_log('web', 'signup', user.id)
         flash(i18n('signupsuccess'), 'success')
         return redirect(url_for('index'))
@@ -184,7 +184,7 @@ def login():
     elif request.method == 'POST':
         user = User.query.filter((User.email==request.form['emailuser']) | (User.name==request.form['emailuser'])).first()
         if user and user.password and imgtl.lib.pw_verify(user.password, request.form['password']):
-            login_user(user)
+            login_user(user, remember=True)
             return redirect(request.args.get('next') or url_for('index'))
         else:
             flash(i18n('loginfailed' if not user or user.password else 'loginfailed-oauthuser'), 'error')
@@ -209,7 +209,7 @@ def oauth_authorized(resp):
         resp['oauth_token_secret'],
     )
     if user:
-        login_user(user)
+        login_user(user, remember=True)
         return redirect(next_url)
     else:
         session['oauth_signup'] = {
@@ -252,7 +252,7 @@ def oauth_signup():
                 break
         db.session.add(user)
         db.session.commit()
-        login_user(user)
+        login_user(user, remember=True)
         do_log('web', 'signup_by_oauth', user.id)
         del session['oauth_signup']
         flash(i18n('signupsuccess'), 'success')
