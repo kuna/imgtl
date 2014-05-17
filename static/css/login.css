@@ -8,11 +8,11 @@ body {
 	text-align: center;
 }
 
-.login-form, .register-form {
+.login-form, .signup-form {
 	margin: 25px 50px;
 }
 
-.register-form {
+.signup-form {
 	display: none;
 }
 
@@ -54,7 +54,7 @@ hr.divider {
 		width: calc(100% - 10px);
 	}
 	
-	.login-form, .register-form {
+	.login-form, .signup-form {
 	margin: 25px;
 	}
 }

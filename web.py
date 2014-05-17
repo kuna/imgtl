@@ -119,7 +119,7 @@ def settings():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'GET':
-        return redirect(url_for('login', _anchor='register'))
+        return redirect(url_for('login', _anchor='signup'))
     elif request.method == 'POST':
         if not imgtl.validator.email(request.form['email']):
             flash(i18n('invalidemail'), 'error')

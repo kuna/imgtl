@@ -2,19 +2,19 @@ var re_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@
 var re_username = /^[a-zA-Z0-9_]{4,16}$/;
 
 $(function () {
-	if (location.hash == "#register") {
+	if (location.hash == "#signup") {
 		$(".login-form").hide();
-		$(".register-form").show();
+		$(".signup-form").show();
 		$(".login-area").css("height", "585px");
 	}
 
 	$(window).on('hashchange', function () {
-		if (location.hash == "#register") {
+		if (location.hash == "#signup") {
 			$(".login-area").animate({
 				height: "65px"
 			}, 400, function () {
 				$(".login-form").hide();
-				$(".register-form").show();
+				$(".signup-form").show();
 
 				$(".login-area").animate({
 					height: "585px"
@@ -24,7 +24,7 @@ $(function () {
 			$(".login-area").animate({
 				height: "65px"
 			}, 400, function () {
-				$(".register-form").hide();
+				$(".signup-form").hide();
 				$(".login-form").show();
 
 				$(".login-area").animate({
@@ -107,7 +107,7 @@ function error($this, text) {
 	$p.removeClass("has-success");
 	$p.addClass("has-error");
 	$p.children('.error-help').text(text).show();
-	$('#register-submit-btn').attr('disabled', 'disabled');
+	$('#signup-submit-btn').attr('disabled', 'disabled');
 }
 
 function ok($this) {
@@ -116,9 +116,9 @@ function ok($this) {
 	$p.removeClass("has-error");
 	$p.addClass("has-success");
 	var flag = true;
-	$(".register-form > div.form-group").each(function () {
+	$(".signup-form > div.form-group").each(function () {
 		if ($(this).hasClass('has-error'))
 			flag = false;
 	});
-	if (flag) $('#register-submit-btn').removeAttr('disabled');
+	if (flag) $('#signup-submit-btn').removeAttr('disabled');
 }
