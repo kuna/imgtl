@@ -1,11 +1,11 @@
 Flask==0.10.1
-Flask-Bcrypt==0.5.2
+Flask-Bcrypt==0.6.0
 Flask-Login==0.2.10
-Flask-OAuthlib==0.4.3
+Flask-OAuthlib==0.5.0
 -e git://github.com/imgtl/flask-restful.git#egg=Flask_RESTful-master
 Flask-SQLAlchemy==1.0
 Jinja2==2.7.2
-MarkupSafe==0.21
+MarkupSafe==0.23
 SQLAlchemy==0.9.4
 Wand==0.3.7
 Werkzeug==0.9.4
@@ -14,9 +14,9 @@ argparse==1.2.1
 itsdangerous==0.24
 oauthlib==0.6.1
 py-bcrypt==0.4
-pytz==2014.2
-requests==2.2.1
+pytz==2014.3
+requests==2.3.0
 shortuuid==0.4.2
-simplejson==3.4.0
+simplejson==3.4.1
 six==1.6.1
 wsgiref==0.1.2
