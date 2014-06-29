@@ -185,7 +185,8 @@ def login():
     if request.method == 'GET':
         return render_imgtl_template('login.html')
     elif request.method == 'POST':
-        user = User.query.filter((User.email==request.form['emailuser']) | (User.name==request.form['emailuser'])).first()
+        emailusername = request.form['emailusername']
+        user = User.query.filter((User.email==emailusername) | (User.name==emailusername)).first()
         if user and user.password and imgtl.lib.pw_verify(user.password, request.form['password']):
             login_user(user, remember=True)
             return redirect(request.args.get('next') or url_for('index'))
