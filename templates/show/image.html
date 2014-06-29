@@ -16,7 +16,6 @@
 {% set degree = 0 %}
 {% if 'exif' in upload.object.prop %}
 	{% set orientation = upload.object.prop.exif.Orientation %}
-{% else %}
 	{% if orientation == '6' %}
 		{% set degree = 90 %}
 	{% elif orientation == '3' %}
