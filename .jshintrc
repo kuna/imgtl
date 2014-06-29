@@ -1,0 +1,10 @@
+{
+	"curly": true,
+	"eqeqeq": true,
+	"es3": true,
+	"latedef": true,
+	"unused": true,
+	
+	"browser": true,
+	"jquery": true
+}
