@@ -50,8 +50,8 @@ class ImgTLTest(unittest.TestCase):
         if exc: data['except'] = exc
         return self.app.post('/signup/check', data=data)
 
-    def login(self, emailuser, password):
-        data = {'emailuser': emailuser,
+    def login(self, emailusername, password):
+        data = {'emailusername': emailusername,
                 'password': password,
                 }
         return self.app.post('/login', data=data, follow_redirects=True)
@@ -146,29 +146,29 @@ class ImgTLTest(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
 
     def test_login_process_success_email(self):
-        r = self.login(emailuser='tests@img.tl', password='password1234')
+        r = self.login(emailusername='tests@img.tl', password='password1234')
         self.assertIn('tests@img.tl', r.data)
         self.logout()
 
     def test_login_process_success_username(self):
-        r = self.login(emailuser='tests', password='password1234')
+        r = self.login(emailusername='tests', password='password1234')
         self.assertIn('tests@img.tl', r.data)
         self.logout()
 
     def test_login_process_invalid_email(self):
-        r = self.login(emailuser='nonexists@img.tl', password='password1234')
+        r = self.login(emailusername='nonexists@img.tl', password='password1234')
         self.assertIn(self.i18n('loginfailed'), r.data)
 
     def test_login_process_invalid_username(self):
-        r = self.login(emailuser='nonexists', password='password1234')
+        r = self.login(emailusername='nonexists', password='password1234')
         self.assertIn(self.i18n('loginfailed'), r.data)
 
     def test_login_process_with_email_invalid_password(self):
-        r = self.login(emailuser='tests@img.tl', password='password5678')
+        r = self.login(emailusername='tests@img.tl', password='password5678')
         self.assertIn(self.i18n('loginfailed'), r.data)
 
     def test_login_process_with_username_invalid_password(self):
-        r = self.login(emailuser='tests', password='password5678')
+        r = self.login(emailusername='tests', password='password5678')
         self.assertIn(self.i18n('loginfailed'), r.data)
 
     def test_upload_success(self):
