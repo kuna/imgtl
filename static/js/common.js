@@ -1,5 +1,4 @@
 var lastid = null;
-var timeoutobj = null;
 
 function showError(msg) {
 	showAlert("error-area", msg);
@@ -16,7 +15,6 @@ function showAlert(id, msg) {
 		opacity: 1,
 		top: 0
 	}, 500);
-
 	lastid = id;
 	setTimeout(hideAlertAndWhiteOverlay, 2000);
 }
@@ -50,7 +48,6 @@ function hideAlertAndWhiteOverlay() {
 
 $(function() {
 	$(".white-overlay, .alert-area").click(function() {
-		clearTimeout(timeoutobj);
 		hideAlertAndWhiteOverlay();
 	});
 
