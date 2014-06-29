@@ -19,6 +19,7 @@
 		// default setting;
 		defaultConfig: {
 			animate: false,
+			cache: true, // cache the size of blocks for performance;
 			cellW: 100, // function(container) {return 100;}
 			cellH: 100, // function(container) {return 100;}
 			delay: 0, // slowdown active block;
@@ -32,23 +33,28 @@
 			draggable: false,
 			rightToLeft: false,
 			bottomToTop: false,
-			onStartSet: function() {},
 			onGapFound: function() {},
 			onComplete: function() {},
 			onResize: function() {},
-			onSetBlock: function() {}
+			onBlockReady: function() {},
+			onBlockFinish: function() {},
+			onBlockActive: function() {}
 		},
 		plugin: {},
 		totalGrid: 1,
 		transition: false,
 		loadBlock: function(item, setting) {
 			var runtime = setting.runtime;
-			var $item = $(item);
-			var block = null;
 			var gutterX = runtime.gutterX;
 			var gutterY = runtime.gutterY;
+			var cellH = runtime.cellH;
+			var cellW = runtime.cellW;
+			var block = null;
+			var $item = $(item);
+			var active = $item.data("active");
+			var fixPos = $item.attr('data-position');
 			var fixSize = parseInt($item.attr('data-fixSize'));
-			var blockId = runtime.lastId++ + '-' + this.totalGrid;
+			var blockId = runtime.lastId++ + '-' + runtime.totalGrid;
 			
 			//ignore dragging block;
 			if ($item.hasClass('fw-float')) return;
@@ -58,21 +64,28 @@
 			if (setting.animate && this.transition) {
 				this.setTransition(item, "");
 			}
-			
+
+			isNaN(fixSize) && (fixSize = null);
+			(fixSize == null) && (fixSize = setting.fixSize);
+			var makeRound = (fixSize == 1) ? "ceil" : "round";
 			// store original size;
+		   
 			$item.attr('data-height') == null && $item.attr('data-height', $item.height());
 			$item.attr('data-width') == null && $item.attr('data-width', $item.width());
 			var height = 1 * $item.attr('data-height');
 			var width = 1 * $item.attr('data-width');
-			var fixPos = $item.attr('data-fixPos');
-
-			var cellH = runtime.cellH;
-			var cellW = runtime.cellW;
 			
-			var col = !width ? 0 : Math.round((width + gutterX) / cellW);
-			var row = !height ? 0 : Math.round((height + gutterY) / cellH);
+			if (!setting.cache) {
+				item.style.width = "";
+				width = $item.width();
 
-			isNaN(fixSize) && (fixSize = null);
+				item.style.height = "";
+				height = $item.height();
+			}
+
+			var col = !width ? 0 : Math[makeRound]((width + gutterX) / cellW);
+			var row = !height ? 0 : Math[makeRound]((height + gutterY) / cellH);
+
 			// estimate size;
 			if (!fixSize && setting.cellH == 'auto') {
 				$item.width(cellW * col - gutterX);
@@ -118,13 +131,20 @@
 					block.x = 1 * fixPos[1];
 					block.width = fixSize != null ? col : Math.min(col, runtime.limitCol - block.x);
 					block.height = fixSize != null ? row : Math.min(row, runtime.limitRow - block.y);
-					runtime.holes.push({
-						top: block.y,
-						left: block.x,
-						width: block.width,
-						height: block.height
-					});
-					this.setBlock(block, setting);
+					var holeId = block.y + "-" + block.x + "-" + block.width + "-" + block.height;
+					if (active) {
+						runtime.holes[holeId] = {
+							id: block.id,
+							top: block.y,
+							left: block.x,
+							width: block.width,
+							height: block.height
+						};
+						this.setBlock(block, setting);
+					} else {
+						delete runtime.holes[holeId];
+					}
+					
 				}
 			}
 
@@ -134,7 +154,10 @@
 			} else {
 				$item.attr("data-state", "move");
 			}
-			return fixPos ? null : block;
+
+			setting.onBlockReady.call(item, block, setting);
+
+			return (fixPos && active) ? null : block;
 		},
 		setBlock: function(block, setting) {
 			var runtime = setting.runtime;
@@ -189,7 +212,7 @@
 			// kill the old transition;
 			self.setTransition(item, "");
 			item.style.position = "absolute";
-			setting.onStartSet.call(item, block, setting);
+			setting.onBlockActive.call(item, block, setting);
 			
 			function action() {
 				// start to arrange;
@@ -238,7 +261,7 @@
 
 				runtime.length -= 1;
 
-				setting.onSetBlock.call(item, block, setting);
+				setting.onBlockFinish.call(item, block, setting);
 
 				runtime.length == 0 && setting.onComplete.call(item, block, setting);
 			}
@@ -286,9 +309,9 @@
 			var cellH = runtime.cellH;
 			var cellW = runtime.cellW;
 
-			if (setting.cellH = 'auto') {
+			if (setting.cellH == 'auto') {
 				$item.width(block.width * cellW - gutterX);
-				$item.get(0).style = "";
+				$item[0].style.height = "";
 				block.height = Math.round(($item.height() + gutterY) / cellH);
 			}
 		},
@@ -321,7 +344,7 @@
 				}
 
 				limitCol = Math.floor((width + gutterX) / cellW);
-				runtime.cellW = (width + gutterX) / limitCol;
+				runtime.cellW = (width + gutterX) / Math.max(limitCol, 1);
 				runtime.cellS = runtime.cellW / cellW;
 				runtime.gutterX = gutterX;
 				runtime.limitCol = limitCol;
@@ -341,7 +364,7 @@
 				}
 
 				limitRow = Math.floor((height + gutterY) / cellH);
-				runtime.cellH = (height + gutterY) / limitRow;
+				runtime.cellH = (height + gutterY) / Math.max(limitRow, 1);
 				runtime.cellS = runtime.cellH / cellH;
 				runtime.gutterY = gutterY;
 				runtime.limitRow = limitRow;
@@ -373,26 +396,28 @@
 			runtime.totalCol = 0;
 			runtime.totalRow = 0;
 		},
-		setDragable: function(item, option) {
-			var touch = false;
-			var def = {
-				sX: 0, //start clientX;
-				sY: 0, 
+		setDraggable: function(item, option) {
+			var isTouch = false;
+			var config = {
+				startX: 0, //start clientX;
+				startY: 0, 
 				top: 0,
 				left: 0,
-				proxy: null,
-				end: function() {},
-				move: function() {},
-				start: function() {}
+				handle: null,
+				onDrop: function() {},
+				onDrag: function() {},
+				onStart: function() {}
 			};
-			
+
 			$(item).each(function() {
-				var set = $.extend({}, def, option);
-				var ele = set.proxy || this;
-				var $ele = $(ele);
-				
-				var posStyle = $ele.css("position");
-				posStyle != "absolute" && $ele.css("position", "relative");
+				var setting = $.extend({}, config, option);
+				var handle = setting.handle || this;
+				var ele = this;
+				var $E = $(ele);
+				var $H = $(handle);
+
+				var posStyle = $E.css("position");
+				posStyle != "absolute" && $E.css("position", "relative");
 				
 
 				function mouseDown(evt) {
@@ -400,17 +425,17 @@
 					evt = evt.originalEvent;
 
 					if (evt.touches) {
-						touch = true;
+						isTouch = true;
 						evt = evt.changedTouches[0];
 					}
 
 					if (evt.button != 2 && evt.which != 3) {
-						set.start.call(ele, evt);
+						setting.onStart.call(ele, evt);
 						
-						set.sX = evt.clientX;
-						set.sY = evt.clientY;
-						set.top = parseInt($ele.css("top")) || 0;
-						set.left = parseInt($ele.css("left")) || 0;
+						setting.startX = evt.clientX;
+						setting.startY = evt.clientY;
+						setting.top = parseInt($E.css("top")) || 0;
+						setting.left = parseInt($E.css("left")) || 0;
 						
 						$D.bind("mouseup touchend", mouseUp);
 						$D.bind("mousemove touchmove", mouseMove); 
@@ -422,28 +447,28 @@
 						
 				function mouseMove(evt) {
 					evt = evt.originalEvent;
-					touch && (evt = evt.changedTouches[0]);
+					isTouch && (evt = evt.changedTouches[0]);
 					
-					$ele.css({
-						top: set.top - (set.sY - evt.clientY),
-						left: set.left - (set.sX - evt.clientX)
+					$E.css({
+						top: setting.top - (setting.startY - evt.clientY),
+						left: setting.left - (setting.startX - evt.clientX)
 					});
 					
-					set.move.call(ele, evt);
+					setting.onDrag.call(ele, evt);
 				};
 				
 				function mouseUp(evt) {
 					evt = evt.originalEvent;
-					touch && (evt = evt.changedTouches[0]);
+					isTouch && (evt = evt.changedTouches[0]);
 		
-					set.end.call(ele, evt);
+					setting.onDrop.call(ele, evt);
 
 					$D.unbind("mouseup touchend", mouseUp);
-					 $D.unbind("mousemove touchmove", mouseMove);
+					$D.unbind("mousemove touchmove", mouseMove);
 				};
 
 				// ignore drag drop on text field;
-				$(this).find("iframe, form, input, textarea, .ignore-drag")
+				$E.find("iframe, form, input, textarea, .ignore-drag")
 				.each(function() {
 					$(this).on("touchstart mousedown", function(evt) {
 						evt.stopPropagation();
@@ -452,7 +477,7 @@
 				
 				$D.unbind("mouseup touchend", mouseUp);
 				$D.unbind("mousemove touchmove", mouseMove);
-				$ele.unbind("mousedown touchstart").bind("mousedown touchstart", mouseDown);
+				$H.unbind("mousedown touchstart").bind("mousedown touchstart", mouseDown);
 
 			});
 		},
@@ -485,7 +510,7 @@
 			// find limit zone by horizon;
 			for (var y = t; y < minY; ++y) {
 				for (var x = l; x < maxX; ++x) {
-					if (matrix[y + '-' + x] == true) {
+					if (matrix[y + '-' + x]) {
 						(l < x && x < minX) && (minX = x);
 					}
 				}
@@ -494,7 +519,7 @@
 			// find limit zone by vertical;
 			for (var y = t; y < maxY; ++y) {
 				for (var x = l; x < minX; ++x) {
-					if (matrix[y + '-' + x] == true) {
+					if (matrix[y + '-' + x]) {
 						(t < y && y < minY) && (minY = y);
 					}
 				}
@@ -509,14 +534,14 @@
 
 		},
 		setWallSize: function(runtime, container) {
-			var totalRow = Math.max(1, runtime.totalRow);
-			var totalCol = Math.max(1, runtime.totalCol);
+			var totalRow = runtime.totalRow;
+			var totalCol = runtime.totalCol;
 			var gutterY = runtime.gutterY;
 			var gutterX = runtime.gutterX;
 			var cellH = runtime.cellH;
 			var cellW = runtime.cellW;
-			var totalWidth = cellW * totalCol - gutterX;
-			var totalHeight = cellH * totalRow - gutterY;
+			var totalWidth = Math.max(0, cellW * totalCol - gutterX);
+			var totalHeight = Math.max(0, cellH * totalRow - gutterY);
 			
 			container.attr({
 				'data-total-col': totalCol,
@@ -556,10 +581,10 @@
 				smallLoop = Math.min(col, row);
 
 			// fill area with top, left, width, height;
-			function fillMatrix(t, l, w, h) {
+			function fillMatrix(id, t, l, w, h) {
 				for (var y = t; y < t + h;) {
 					for (var x = l; x < l + w;) {
-						matrix[y + '-' + x] = true;
+						matrix[y + '-' + x] = id;
 						++x > maxX && (maxX = x);
 					}
 					++y > maxY && (maxY = y);
@@ -567,11 +592,12 @@
 			}
 			
 			// set a hole on the wall;
-			if (holes.length) {
-				for (var i = 0; i < holes.length; ++i) {
-					fillMatrix(holes[i]['top'], holes[i]['left'], holes[i]['width'], holes[i]['height']);
+			for (var i in holes) {
+				if (holes.hasOwnProperty(i)) {
+					fillMatrix(holes[i]["id"] || true, holes[i]['top'], holes[i]['left'], holes[i]['width'], holes[i]['height']);
 				}
 			}
+			
 
 			for (var b = 0; b < bigLoop; ++b) {
 				if (!items.length) break;
@@ -596,12 +622,12 @@
 						// resize near block to fill gap;
 						if (lastBlock && !fitWidth && runtime.minHoB > freeArea.height) {
 							lastBlock.height += freeArea.height;
-							fillMatrix(lastBlock.y, lastBlock.x, lastBlock.width, lastBlock.height);
+							fillMatrix(lastBlock.id, lastBlock.y, lastBlock.x, lastBlock.width, lastBlock.height);
 							layoutManager.setBlock(lastBlock, setting);
 							continue;
 						} else if (lastBlock && fitWidth && runtime.minWoB > freeArea.width) {
 							lastBlock.width += freeArea.width;
-							fillMatrix(lastBlock.y, lastBlock.x, lastBlock.width, lastBlock.height);
+							fillMatrix(lastBlock.id, lastBlock.y, lastBlock.x, lastBlock.width, lastBlock.height);
 							layoutManager.setBlock(lastBlock, setting);
 							continue;
 						} else {
@@ -639,7 +665,7 @@
 						// keep success block for next round;
 						lastBlock = wall[block.id];
 
-						fillMatrix(lastBlock.y, lastBlock.x, lastBlock.width, lastBlock.height);
+						fillMatrix(lastBlock.id, lastBlock.y, lastBlock.x, lastBlock.width, lastBlock.height);
 						layoutManager.setBlock(lastBlock, setting);
 					} else {
 						// get expect area;
@@ -701,7 +727,7 @@
 			blocks: {}, // store all items;
 			events: {}, // store custome events;
 			matrix: {},
-			holes: [], // forbidden zone;
+			holes: {}, // forbidden zone;
 			
 			cellW: 0,
 			cellH: 0, // unit adjust;
@@ -732,6 +758,7 @@
 			currentArguments: []
 		};
 		setting.runtime = runtime;
+		runtime.totalGrid = layoutManager.totalGrid;
 		
 		// check browser support transition;
 		var bodyStyle = document.body.style;
@@ -745,46 +772,70 @@
 		}
 		
 
-		function setDragable(item) {
+		function setDraggable(item) {
 			
 			var gutterX = runtime.gutterX;
 			var gutterY = runtime.gutterY;
 			var cellH = runtime.cellH;
 			var cellW = runtime.cellW;
-
-			layoutManager.setDragable(item, {
-				start: function(event) {
+			var $item = $(item);
+			var handle = $item.find($item.attr("data-handle"));
+			layoutManager.setDraggable(item, {
+				handle: handle[0],
+				onStart: function(event) {
 					if (setting.animate && layoutManager.transition) {
 						layoutManager.setTransition(this, "");
 					}
-					$(this).css('z-index', 9999).addClass('fw-float');
+					$item.css('z-index', 9999).addClass('fw-float');
 				},
-				move: function(evt, tracker) {
-					var position = $(this).position();
+				onDrag: function(evt, tracker) {
+					var position = $item.position();
 					var top = Math.round(position.top / cellH);
 					var left = Math.round(position.left / cellW);
-					var width = Math.round($(this).width() / cellW);
-					var height = Math.round($(this).height() / cellH);
+					var width = Math.round($item.width() / cellW);
+					var height = Math.round($item.height() / cellH);
 					top = Math.min(Math.max(0, top), runtime.limitRow - height);
 					left = Math.min(Math.max(0, left), runtime.limitCol - width);
-					klass.setHoles([{top: top, left: left, width: width, height: height}]);
+					klass.setHoles({top: top, left: left, width: width, height: height});
 					klass.refresh();
 				},
-				end: function() {
-					var position = $(this).position();
+				onDrop: function() {
+					var position = $item.position();
 					var top = Math.round(position.top / cellH);
 					var left = Math.round(position.left / cellW);
-					var width = Math.round($(this).width() / cellW);
-					var height = Math.round($(this).height() / cellH);
+					var width = Math.round($item.width() / cellW);
+					var height = Math.round($item.height() / cellH);
 					top = Math.min(Math.max(0, top), runtime.limitRow - height);
 					left = Math.min(Math.max(0, left), runtime.limitCol - width);
 
-					$(this).css({
+					$item.removeClass('fw-float');
+					$item.css({
 						zIndex: "auto",
 						top: top * cellH,
 						left: left * cellW
-					}).removeClass('fw-float');
-					klass.fillHoles();
+					});
+					
+					//check old drag element;
+					var x, y, key, oldDropId;
+					for (y = 0; y < height; ++y) {
+						for (x = 0; x < width; ++x) {
+							key = (y + top) + "-" + (x + left);
+							oldDropId = runtime.matrix[key];
+							if (oldDropId && oldDropId != true) {
+								$("#" + oldDropId).removeAttr("data-position");
+							}
+						}
+					}
+					
+					runtime.holes = {};
+					
+					$item.attr({
+						"data-width": $item.width(),
+						"data-height": $item.height(),
+						"data-position": top + "-" + left
+					});
+
+					klass.refresh();
 				}
 			});
 		}
@@ -806,25 +857,27 @@
 				var block = null;
 				var activeBlock = [];
 				
-				allBlock.each(function(index, item) {
-					item.index = ++index;
-					if (block = layoutManager.loadBlock(item, setting)) {
-						activeBlock.push(block);
-						klass.fireEvent('onBlockLoad', item, setting);
-					}
-				});
-
-				engine[setting.engine](activeBlock, setting);
+				if (runtime.currentMethod) {
+					allBlock.each(function(index, item) {
+						item.index = ++index;
+						if (block = layoutManager.loadBlock(item, setting)) {
+							activeBlock.push(block);
+						}
+					});
 				
-				layoutManager.setWallSize(runtime, container);
-				
-				runtime.length = allBlock.length;
+					engine[setting.engine](activeBlock, setting);
+					
+					layoutManager.setWallSize(runtime, container);
+					
+					runtime.length = allBlock.length;
 
-				allBlock.each(function(index, item) {
-					setting.draggable && setDragable(item);
-					layoutManager.showBlock(item, setting);
-					klass.fireEvent('onBlockShow', item, setting);
-				});
+					allBlock.each(function(index, item) {
+						layoutManager.showBlock(item, setting);
+						if (setting.draggable || item.getAttribute('data-draggable')) {
+							setDraggable(item);
+						}
+					});
+				}
 			},
 			/*
 			add one or more blank area (hole) on layout;
@@ -854,14 +907,41 @@
 
 			*/
 			appendHoles: function(holes) {
-				runtime.holes = runtime.holes.concat(holes);
+				var newHoles = [].concat(holes), h = {}, i;
+				for (i = 0; i < newHoles.length; ++i) {
+					h = newHoles[i];
+					runtime.holes[h.top + "-" + h.left + "-" + h.width + "-" + h.height] = h;
+				}
 				return this;
 			},
 
 			container: container,
 
-			fillHoles: function() {
-				runtime.holes = [];
+			destroy: function() {
+				var allBlock = container.find(setting.selector).removeAttr('id'),
+					block = null,
+					activeBlock = [];
+
+				allBlock.each(function(index, item) {
+					$item = $(item);
+					var width = 1 * $item.attr('data-width') || "";
+					var height = 1 * $item.attr('data-height') || "";
+					$item.width(width).height(height).css({
+						position: 'static'
+					});
+				});
+			},
+
+			fillHoles: function(holes) {
+				if (arguments.length == 0) {
+					runtime.holes = {};
+				} else {
+					var newHoles = [].concat(holes), h = {}, i;
+					for (i = 0; i < newHoles.length; ++i) {
+						h = newHoles[i];
+						delete runtime.holes[h.top + "-" + h.left + "-" + h.width + "-" + h.height];
+					}
+				}
 				return this;
 			},
 
@@ -876,7 +956,7 @@
 				name = name.toLowerCase();
 				if (events[name] && events[name].length) {
 					for (var i = 0; i < events[name].length; ++i) {
-						events[name][i].call(object, setting);
+						events[name][i].call(this, object, setting);
 					}
 				}
 				return this;
@@ -902,18 +982,15 @@
 					allBlock.data('active', 1);
 				}
 
-				klass.fireEvent('onGridReady', container, setting);
-
 				allBlock.each(function(index, item) {
 					var $item = $(item);
 					item.index = ++index;
 					if (block = layoutManager.loadBlock(item, setting)) {
 						$item.data("active") && activeBlock.push(block);
-						klass.fireEvent('onBlockLoad', item, setting);
 					}
 				});
 				
-				klass.fireEvent('onGridLoad', container, setting);
+				klass.fireEvent('onGridReady', container, setting);
 
 				engine[setting.engine](activeBlock, setting);
 				
@@ -924,12 +1001,11 @@
 				runtime.length = allBlock.length;
 
 				allBlock.each(function(index, item) {
-					setting.draggable && setDragable(item);
 					layoutManager.showBlock(item, setting);
-					klass.fireEvent('onBlockShow', item, setting);
+					if (setting.draggable || item.getAttribute('data-draggable')) {
+						setDraggable(item);
+					}
 				});
-
-				klass.fireEvent('onGridShow', container, setting);
 			},
 
 			fitWidth: function(width) {
@@ -952,18 +1028,15 @@
 					allBlock.data('active', 1);
 				}
 				
-				klass.fireEvent('onGridReady', container, setting);
-
 				allBlock.each(function(index, item) {
 					var $item = $(item);
 					item.index = ++index;
 					if (block = layoutManager.loadBlock(item, setting)) {
 						$item.data("active") && activeBlock.push(block);
-						klass.fireEvent('onBlockLoad', item, setting);
 					}
 				});
 				
-				klass.fireEvent('onGridLoad', container, setting);
+				klass.fireEvent('onGridReady', container, setting);
 				
 				engine[setting.engine](activeBlock, setting);
 
@@ -974,12 +1047,11 @@
 				runtime.length = allBlock.length;
 
 				allBlock.each(function(index, item) {
-					setting.draggable && setDragable(item);
 					layoutManager.showBlock(item, setting);
-					klass.fireEvent('onBlockShow', item, setting);
+					if (setting.draggable || item.getAttribute('data-draggable')) {
+						setDraggable(item);
+					}
 				});
-
-				klass.fireEvent('onGridShow', container, setting);
 			},
 
 			fitZone: function(width, height) {
@@ -1003,18 +1075,15 @@
 					allBlock.data('active', 1);
 				}
 				
-				klass.fireEvent('onGridReady', container, setting);
-
 				allBlock.each(function(index, item) {
 					var $item = $(item);
 					item.index = ++index;
 					if (block = layoutManager.loadBlock(item, setting)) {
 						$item.data("active") && activeBlock.push(block);
-						klass.fireEvent('onBlockLoad', item, setting);
 					}
 				});
 
-				klass.fireEvent('onGridLoad', container, setting);
+				klass.fireEvent('onGridReady', container, setting);
 
 				engine[setting.engine](activeBlock, setting);
 				
@@ -1025,26 +1094,25 @@
 				runtime.length = allBlock.length;
 			   
 				allBlock.each(function(index, item) {
-					setting.draggable && setDragable(item);
 					layoutManager.showBlock(item, setting);
-					klass.fireEvent('onBlockShow', item, setting);
+					if (setting.draggable || item.getAttribute('data-draggable')) {
+						setDraggable(item);
+					}
 				});
-
-				klass.fireEvent('onGridShow', container, setting);
 			},
 
 			/*
 			set block with special position, the top and left are multiple of unit width/height;
 			example:
 
-				wall.fixSize({
+				wall.fixPos({
 					top: 0,
 					left: 0,
 					block: $('.free')
 				});
 			*/
 			fixPos: function(option) {
-				$(option.block).attr({'data-fixPos': option.top + "-" + option.left});
+				$(option.block).attr({'data-position': option.top + "-" + option.left});
 				return this;
 			},
 
@@ -1059,8 +1127,8 @@
 				});
 			*/
 			fixSize: function(option) {
-				option.width != null && $(option.block).attr({'data-width': option.width});
 				option.height != null && $(option.block).attr({'data-height': option.height});
+				option.width != null && $(option.block).attr({'data-width': option.width});
 				return this;
 			},
 
@@ -1110,7 +1178,12 @@
 			*/
 			
 			setHoles: function(holes) {
-				runtime.holes = [].concat(holes);
+				var newHoles = [].concat(holes), h = {}, i;
+				runtime.holes = {};
+				for (i = 0; i < newHoles.length; ++i) {
+					h = newHoles[i];
+					runtime.holes[h.top + "-" + h.left + "-" + h.width + "-" + h.height] = h;
+				}
 				return this;
 			},
 
@@ -1141,30 +1214,19 @@
 		});
 	};
 
-
 	/*
-	support create new plugin;
+	add default setting;
 	example:
-		
-		freewall.createPlugin({
-			centering: function(setting, container) {
-				console.log(this);
-				console.log(setting);
-			}
-		}).addConfig({
+
+		freewall.addConfig({
 			offsetLeft: 0
 		});
 	*/
-	freewall.createPlugin = function(pluginData) {
-		// register new plugin;
-		$.extend(layoutManager.plugin, pluginData);
-		return {
-			addConfig: function(newConfig) {
-				// add default setting;
-				$.extend(layoutManager.defaultConfig, newConfig);	
-			}
-		}
+	freewall.addConfig = function(newConfig) {
+		// add default setting;
+		$.extend(layoutManager.defaultConfig, newConfig);	
 	};
+	
 
 	/*
 	support create new arrange algorithm;
@@ -1180,6 +1242,22 @@
 		// create new engine;
 		$.extend(engine, engineData);
 	};
+	
+	/*
+	support create new plugin;
+	example:
+		
+		freewall.createPlugin({
+			centering: function(setting, container) {
+				console.log(this);
+				console.log(setting);
+			}
+		})l
+	*/
+	freewall.createPlugin = function(pluginData) {
+		// register new plugin;
+		$.extend(layoutManager.plugin, pluginData);
+	};
 
 	/*
 	support access helper function;
@@ -1188,6 +1266,7 @@
 		freewall.getMethod('setBlock')(block, setting);
 	*/
 	freewall.getMethod = function(method) {
+		// get helper method;
 		return layoutManager[method];
 	};
  
