@@ -47,6 +47,16 @@ function hideAlertAndWhiteOverlay() {
 }
 
 $(function() {
+	$(".tool-tip").each(function () {
+		$(this).tooltip({
+			container: 'body',
+		});
+	});
+
+	$(".copytext").click(function() {
+		$(this).select();
+	});
+
 	$(".white-overlay, .alert-area").click(function() {
 		hideAlertAndWhiteOverlay();
 	});

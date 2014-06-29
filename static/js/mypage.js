@@ -1,10 +1,4 @@
 $(function () {
-	$(".tool-tip").each(function () {
-		$(this).tooltip({
-			container: 'body',
-		});
-	});
-
 	var grid = new freewall(".image-area")
 	grid.reset({
 		selector: '.grid-item',

@@ -1,13 +1,4 @@
 $(function () {
-	$(".tool-tip").each(function () {
-		$(this).tooltip({
-			container: 'body',
-		});
-	});
-
-	$(".url-text").click(function() {
-		$(this).select();
-	});
 
 	$("#delete-confirm-btn").click(function () {
 		$("#delete-modal").modal('hide');
