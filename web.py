@@ -50,6 +50,9 @@ twitter = oauth.remote_app('twitter',
     access_token_method='POST',
 )
 
+def render_imgtl_template(*args, **kwargs):
+    kwargs['user'] = current_user
+    return render_template(*args, **kwargs)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -58,19 +61,19 @@ def load_user(user_id):
 @app.route('/')
 def index():
     if current_user.is_anonymous():
-        return render_template('index.html')
+        return render_imgtl_template('index.html')
     else:
-        return render_template('mypage.html', user=current_user)
+        return render_imgtl_template('mypage.html')
 
 @app.route('/tos')
 def tos():
-    return render_template('tos.html', user=current_user)
+    return render_imgtl_template('tos.html')
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
     if request.method == 'GET':
-        return render_template('settings.html', user=current_user)
+        return render_imgtl_template('settings.html')
     elif request.method == 'POST':
         if request.form['what'] == 'token':
             while 1:
@@ -180,7 +183,7 @@ def signup_check():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_imgtl_template('login.html')
     elif request.method == 'POST':
         user = User.query.filter((User.email==request.form['emailuser']) | (User.name==request.form['emailuser'])).first()
         if user and user.password and imgtl.lib.pw_verify(user.password, request.form['password']):
@@ -224,7 +227,7 @@ def oauth_signup():
         flash(i18n('invalidaccess'), 'error')
         return redirect(url_for('index'))
     if request.method == 'GET':
-        return render_template('oauth_signup.html', user=current_user, sess=session['oauth_signup'])
+        return render_imgtl_template('oauth_signup.html', sess=session['oauth_signup'])
     elif request.method == 'POST':
         if not imgtl.validator.email(request.form['email']):
             flash(i18n('invalidemail'), 'error')
@@ -326,7 +329,7 @@ def show(url):
             upload.view_count += 1
             db.session.commit()
         if isinstance(obj, Image):
-            return render_template('show/image.html', user=current_user, upload=upload)
+            return render_imgtl_template('show/image.html', upload=upload)
 
 @app.route('/<url>.<ext>')
 def show_only_image(url, ext):
