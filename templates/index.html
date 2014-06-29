@@ -1,16 +1,13 @@
-{% extends "common.html" %}
-{% set active_page = "main" %}
+{% extends "layout.html" %}
+{% set active_page = "index" %}
 
 {% block head %}
 <script type="text/javascript" src="/js/upload.js"></script>
 {% endblock %}
 
-{% block body %}
-	<div class="center-box">
-		<div class="login-link">
-			<a href="{{ url_for('oauth_login') }}">트위터 계정을 이용해</a> / <a href="{{ url_for('login') }}">로그인</a>
-		</div>
-		<div class="wrapper">
+{% block wrap %}
+	<article class="panel panel-default">
+		<div class="panel-body text-center">
 			<form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
 				<div>
 					<div id="upload-icon-frame">
@@ -72,9 +69,11 @@
 				<button id="submit-btn" class="btn btn-info btn-lg btn-block">올리기</button>
 				<input type="file" id="file-input" name="image" />
 			</form>
+
+			<div class="tos-link">
+				<a href="{{ url_for('tos') }}">이용 약관</a>
+			</div>
+
 		</div>
-		<div class="tos-link">
-			<a href="{{ url_for('tos') }}">이용 약관</a>
-		</div>
-	</div>
+	</article>
 {% endblock %}

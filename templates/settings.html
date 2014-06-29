@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 {% set active_page = "settings" %}
-{% block title %}: Settings{% endblock %}
-
+{% block title %}: 설정{% endblock %}
+{% block head %}
+<script src="/js/account_validate.js"></script>
+{% endblock %}
 {% block wrap %}
-	<section class="panel panel-default content-area">
+	<article class="panel panel-default contents">
 		<div class="panel-body">
 			<ul class="nav nav-tabs nav-tabs-google">
 				<li class="active"><a href="#account" data-toggle="tab">계정</a></li>
@@ -11,43 +13,41 @@
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="account">
-					<form id="updateform" method="POST">
+					<form class="validate-form" method="POST">
 						<div class="form-group">
-							<label class="control-label" for="inputREmail">이메일</label>
+							<label class="control-label" for="a_email">이메일</label>
 							<div class="error-help"></div>
-							<input type="text" id="inputREmail" name="email" class="form-control" maxlength="120" placeholder="이메일" value="{{ user.email or '' }}" except="{{ user.email or '' }}" />
+							<input type="text" id="a_email" name="email" class="form-control validate-email" maxlength="120" placeholder="이메일" value="{{ user.email or '' }}" except="{{ user.email or '' }}" />
 						</div>
 
 						<div class="form-group">
-							<label class="control-label" for="inputRUsername">사용자명</label>
+							<label class="control-label" for="a_username">사용자명</label>
 							<div class="error-help"></div>
-							<input type="text" id="inputRUsername" name="username" class="form-control" maxlength="16" placeholder="사용자명" value="{{ user.name }}" except="{{ user.name }}" />
+							<input type="text" id="a_username" name="username" class="form-control validate-username" maxlength="16" placeholder="사용자명" value="{{ user.name }}" except="{{ user.name }}" />
 						</div>
 						{% if not user.oauth_uid %}
 						<div class="form-group">
-							<label class="control-label" for="inputRPassword">비밀번호</label>
+							<label class="control-label" for="a_password">비밀번호</label>
 							<div class="error-help"></div>
-							<input type="password" id="inputRPassword" name="password" class="form-control" placeholder="비밀번호"/>
+							<input type="password" id="a_password" name="password" class="form-control validate-password" placeholder="비밀번호"/>
 						</div>
 
 						<div class="form-group">
-							<label class="control-label" for="inputRPasswordConfirm">비밀번호 확인</label>
+							<label class="control-label" for="a_passwordconfirm">비밀번호 확인</label>
 							<div class="error-help"></div>
-							<input type="password" id="inputRPasswordConfirm" name="passwordconfirm" class="form-control" placeholder="비밀번호 확인" />
+							<input type="password" id="a_passwordconfirm" name="passwordconfirm" class="form-control validate-pwconfirm" placeholder="비밀번호 확인" />
 						</div>
 						{% endif %}
 
-						<div style="margin: 10px 0 47px 0;">
-							<input type='hidden' name='what' value='update' />
-							<button type="submit" id="update-submit-button" class="btn btn-primary pull-right">저장</button>
-						</div>
+						<input type='hidden' name='what' value='update' />
+						<button type="submit" class="btn btn-primary pull-right validate-submit">저장</button>
 					</form>
 				</div>
 
 				<div class="tab-pane" id="token">
 					<div class="form-group">
-						<label class="control-label" for="inputToken">토큰</label>
-						<input type="text" id="inputToken" name="token" class="form-control" value="{{user.token}}" readonly />
+						<label class="control-label" for="t_token">토큰</label>
+						<input type="text" id="t_token" name="token" class="form-control copytext" value="{{user.token}}" readonly />
 					</div>
 
 					<div style="margin: 10px 0 47px 0;">
@@ -56,7 +56,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</article>
 
 	<aside class="panel panel-default sidebar">
 		<div class="panel-body">
@@ -85,7 +85,7 @@
 
 				<div class="modal-footer">
 					<button class="btn btn-default" data-dismiss="modal">취소</button>
-					<button class="btn btn-danger" id="token-reissue-btn">재발급</button>
+					<button class="btn btn-danger" id="token-modal-ok">재발급</button>
 				</div>
 			</div>
 		</div>

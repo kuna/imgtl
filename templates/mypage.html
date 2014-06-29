@@ -5,21 +5,22 @@
 {% block head %}
 <script type="text/javascript" src="/js/upload.js"></script>
 <script type="text/javascript" src="/js/freewall.js"></script>
+<script type="text/javascript" src="/js/mypage.js"></script>
 {% endblock %}
 
 {% block wrap %}
-	<section class="panel panel-info content-area image-grid">
+	<article class="panel panel-info contents image-grid">
 		<div class="panel-heading">
 			<h3 class="panel-title">내 이미지들</h3>
 		</div>
 		<div class="panel-body">
 			<div class="image-area">
 			{% for upload in user.uploads | reverse %}
-			<a href="/{{ upload.url }}"{{ (' class="nsfw"' | safe) if upload.nsfw }}><div class="grid-item" style="width: {{ range(150, 300) | random }}px; height: 200px; background-image: url('{{ upload.thumbnail_url}}');"></div></a>
+				<a href="/{{ upload.url }}"{{ (' class="nsfw"' | safe) if upload.nsfw }}><div class="grid-item" style="width: {{ range(150, 300) | random }}px; height: 200px; background-image: url('{{ upload.thumbnail_url}}');"></div></a>
 			{% endfor %}
 			</div>
 		</div>
-	</section>
+	</article>
 
 	<aside class="panel panel-default sidebar">
 		<div class="panel-body">
@@ -34,7 +35,9 @@
 			<div class="desc">
 				<b>총 올린 이미지 수</b>: <span class="pull-right">{{ user.uploads.all() | count }}개</span>
 			</div>
+
 			<hr class="divider" />
+
 			<div class="imagegrid-options">
 				<b>내 이미지들 표시 옵션</b>
 				<div class="checkbox">
@@ -118,8 +121,11 @@
 					<button id="submit-btn" class="btn btn-info btn-lg btn-block">올리기</button>
 					<input type="file" id="file-input" name="image" />
 				</form>
+			</div>
 
-				<hr class="divider" />
+			<hr class='divider' />
+
+			<div class="text-center">
 				<a href="{{ url_for('tos') }}">이용 약관</a>
 			</div>
 		</div>

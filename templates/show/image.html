@@ -10,6 +10,7 @@
 {% endif %}
 {% endblock %}
 {% block head %}
+<script src="/js/show.js"></script>
 <script src="/js/blur.js"></script>
 <style type='text/css'>
 {% set orientation = upload.object.prop.exif.Orientation %}
@@ -28,135 +29,125 @@
 </style>
 {% endblock %}
 {% block wrap %}
-	<section class="panel panel-success content-area">
+	<article class="panel panel-success contents">
 		<div class="panel-heading">
 			<h2 class="panel-title">{{ upload.title }}</h2>
 		</div>
 
 		<div class="panel-body">
-			<div class="image-area">
-				<a href="{{ upload.direct_url }}">
-					<img src="{{ upload.direct_url }}" id="content-image" class="content-image{{ ' nsfw' if upload.nsfw }}" />
-				</a>
-			</div>
+			<a href="{{ upload.direct_url }}">
+				<img src="{{ upload.direct_url }}" class="image{{ ' nsfw' if upload.nsfw }}" />
+			</a>
 		</div>
-	</section>
+	</article>
 
 	<aside class="sidebar">
-		<div class="panel panel-info sidebar-element">
+		<div class="panel panel-info">
 			<div class="panel-heading">
 				<small>링크</small>
 			</div>
 
 			<p>이미지 직접 링크</p>
-			<input type="text" value="{{ upload.direct_url }}" class="form-control url-text" readonly />
+			<input type="text" value="{{ upload.direct_url }}" class="form-control copytext url-text" readonly />
 
 			<p>페이지 링크</p>
-			<input type="text" value="{{ upload.page_url }}" class="form-control url-text" readonly />
+			<input type="text" value="{{ upload.page_url }}" class="form-control copytext url-text" readonly />
 		</div>
 
-		<div class="panel panel-info sidebar-element">
+		<div class="panel panel-info">
 			<div class="panel-heading">
 				<small>이미지 정보</small>
 			</div>
 
-			<div class="image-info">
-				<table class="table table-bordered">
-					<tbody>
-						<tr>
-							<td class='image-info-key'>이미지 크기</td>
-							<td class='image-info-value'>{{ upload.object.prop.width }}px &times; {{ upload.object.prop.height }}px</td>
-						</tr>
-						<tr>
-							<td class='image-info-key'>파일 크기</td>
-							<td class='image-info-value'>{{ upload.object.prop.filesize | filesizeformat }}</td>
-						</tr>
-						<tr>
-							<td class='image-info-key'>발생 트래픽</td>
-							<td class='image-info-value'>{{ (upload.object.prop.filesize * upload.view_count) | filesizeformat }}</td>
-						</tr>
-						{% if (upload.object.prop.exif | count) != 0 %}
-						<tr>
-							<td colspan="2" class="image-info-button"><button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#exif-modal">EXIF 정보 보기</button></td>
-						</tr>
-						{% endif %}
-					</tbody>
-				</table>
-			</div>
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td>이미지 크기</td>
+						<td>{{ upload.object.prop.width }}px &times; {{ upload.object.prop.height }}px</td>
+					</tr>
+					<tr>
+						<td>파일 크기</td>
+						<td>{{ upload.object.prop.filesize | filesizeformat }}</td>
+					</tr>
+					<tr>
+						<td>발생 트래픽</td>
+						<td>{{ (upload.object.prop.filesize * upload.view_count) | filesizeformat }}</td>
+					</tr>
+					{% if (upload.object.prop.exif | count) != 0 %}
+					<tr>
+						<td colspan="2" class="image-info-button"><button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#exif-modal">EXIF 정보 보기</button></td>
+					</tr>
+					{% endif %}
+				</tbody>
+			</table>
 		</div>
 
-		<div class="panel panel-info sidebar-element">
+		<div class="panel panel-info">
 			<div class="panel-heading">
 				<small>업로드 정보</small>
 			</div>
 
-			<div class="image-desc">
+			<div class="upload-sc">
 				{{ (upload.desc or '') | nl2br }}
 			</div>
 
-			<div class="image-time">
+			<div class="upload-info">
 				At {{ upload.time | dt }} (KST)
 			</div>
 
-			<div class="image-author">
+			<div class="upload-info">
 				By {{ '(숨겨짐)' if upload.anonymous else (upload.user.name or '익명 사용자') }}
 			</div>
 
-			<div class="image-view-count">
+			<div class="upload-info">
 				Viewed {{ upload.view_count }} times
 			</div>
 
 			{% if upload.expire_time %}
-			<div class="image-time">
+			<div class="upload-info">
 				{{ upload.expire_time | dt }} (KST) 에 만료
 			</div>
 			{% endif %}
 		</div>
 		{% if (user == upload.user) or (upload.id in session.anon_uploads) %}
-		<div class="panel panel-warning sidebar-element">
+		<div class="panel panel-warning">
 			<div class="panel-heading">
-				<small>이미지 옵션</small>
+				<small>업로드 옵션</small>
 			</div>
 
-			<div class="operation">
-				<div class="upload-options">
-					<div class="checkbox">
-						<label>
-							<input name="nsfw" type="checkbox"{{ (' checked="checked"' | safe) if upload.nsfw }}> <span class="tool-tip" data-toggle="tooltip" data-placement="right" title=" = 후방주의">민감한 내용으로 표시</span>
-						</label>
-					</div>
-					{% if user.is_authenticated() %}
-					<div class="checkbox">
-						<label>
-							<input name="anonymous" type="checkbox"{{ (' checked="checked"' | safe) if upload.anonymous }}> 누가 올렸는지 숨기기
-						</label>
-					</div>
-					<div class="checkbox">
-						<label>
-							<input name="private" type="checkbox"{{ (' checked="checked"' | safe) if upload.private }}> 나만 보기
-						</label>
-					</div>
-					{% endif %}
+			<div class="upload-options">
+				<div class="checkbox">
+					<label>
+						<input name="nsfw" type="checkbox"{{ (' checked="checked"' | safe) if upload.nsfw }}> <span class="tool-tip" data-toggle="tooltip" data-placement="right" title=" = 후방주의">민감한 내용으로 표시</span>
+					</label>
 				</div>
-
-				<button id="update-submit-btn" class="btn btn-info btn-block">저장</button>
+				{% if user.is_authenticated() %}
+				<div class="checkbox">
+					<label>
+						<input name="anonymous" type="checkbox"{{ (' checked="checked"' | safe) if upload.anonymous }}> 누가 올렸는지 숨기기
+					</label>
+				</div>
+				<div class="checkbox">
+					<label>
+						<input name="private" type="checkbox"{{ (' checked="checked"' | safe) if upload.private }}> 나만 보기
+					</label>
+				</div>
+				{% endif %}
 			</div>
+
+			<button id="update-submit-btn" class="btn btn-info btn-block">저장</button>
 		</div>
 
-		<div class="panel panel-danger sidebar-element">
+		<div class="panel panel-danger">
 			<div class="panel-heading">
-				<small>이미지 관리</small>
+				<small>업로드 관리</small>
 			</div>
 
-			<div class="operation">
-				<button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#delete-modal">이미지 지우기</button>
-			</div>
+			<button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#delete-modal">이미지 지우기</button>
 		</div>
 		{% endif %}
-		<div class="panel panel-default">
-			<div class="panel-body text-center">
-				<a href="{{ url_for('tos') }}">이용 약관</a>
-			</div>
+		<div class="panel panel-default text-center">
+			<a href="{{ url_for('tos') }}">이용 약관</a>
 		</div>
 	</aside>
 
@@ -200,7 +191,7 @@
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-default" data-dismiss="modal">취소</button>
-					<button class="btn btn-danger" id="delete-confirm-btn">지우기</a>
+					<button class="btn btn-danger" id="delete-modal-ok">지우기</a>
 				</div>
 			</div>
 		</div>
@@ -219,7 +210,7 @@
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-default" data-dismiss="modal">안 열기</button>
-					<button class="btn btn-warning" id="shownsfw-confirm-btn">그래도 열기</a>
+					<button class="btn btn-warning" id="nsfw-modal-ok">그래도 열기</a>
 				</div>
 			</div>
 		</div>

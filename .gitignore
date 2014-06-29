@@ -52,3 +52,7 @@ nosetests.xml
 
 # virtualenv
 .venv
+
+# CSS files
+.sass-cache
+/static/css/*.css

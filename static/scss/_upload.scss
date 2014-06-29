@@ -1,0 +1,44 @@
+#file-input {
+	display: none;
+}
+
+#upload-icon-frame {
+	display: inline-block;
+	border: 4px dashed #aaa;
+	border-radius: 10px;
+	padding: 20px;
+	margin: 20px auto 5px auto;
+}
+
+#upload-icon {
+	width: 160px;
+	height: 160px;
+	border-radius: 10px;
+	background-image: url('/img/upload_icon.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.upload-options {
+	text-align: left;
+}
+
+#filename-text {
+	border-radius: 4px 0 0 4px;
+}
+
+#submit-btn {
+	margin: 15px 0px 0px 0px;
+}
+
+#expire-custom {
+	text-align: right;
+}
+
+#expire-custom-unitdd {
+	text-align: left;
+}
+
+#expire-behavior-wrap {
+	margin-bottom: 15px;
+}

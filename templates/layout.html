@@ -1,13 +1,13 @@
 {% extends "common.html" %}
 {% block head %}{% endblock %}
 {% block body %}
-	<div class="outer-wrap">
-		<header class="header">
+	<div class="outer-wrapper">
+		<header>
 			<a href="/">
 				<img src="/img/logo_small.png" class="top-logo" />
 			</a>
 			
-			<div class="btn-group pull-right user-menu">
+			<nav class="btn-group pull-right user-menu">
 				{% if user.is_anonymous() %}
 				<a class="btn btn-primary hand-cursor" href="{{ url_for('login') }}">로그인 / 가입</a>
 				{% else %}
@@ -19,9 +19,9 @@
 					<li><a href="/settings">설정</a></li>
 					<li><a href="/logout">로그아웃</a></li>
 				</ul>
-			</div>
+			</nav>
 		</header>
-		<div class="wrap clearfix">
+		<div class="inner-wrapper clearfix">
 		{% block wrap %}{% endblock %}
 		</div>
 	</div>

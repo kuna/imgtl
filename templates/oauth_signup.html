@@ -1,37 +1,33 @@
 {% extends "layout.html" %}
 {% set active_page = "oauth_signup" %}
-{% block title %}: Sign up with Twitter{% endblock %}
-
+{% block title %}: 트위터로 가입하기{% endblock %}
 {% block head %}
-<script src="/js/login.js"></script>
+<script src="/js/account_validate.js"></script>
 {% endblock %}
-
 {% block wrap %}
-	<section class="panel panel-info settings-area">
+	<article class="panel panel-info">
 		<div class="panel-heading">
 			<h3 class="panel-title">트위터 계정으로 가입</h3>
 		</div>
 		<div class="panel-body">
 			<div id="account">
-				<form class="signup-form" method="POST">
+				<form class="validate-form" method="POST">
 					<div class="form-group">
-						<label class="control-label" for="inputREmail">이메일</label>
+						<label class="control-label" for="s_email">이메일</label>
 						<div class="error-help"></div>
-						<input type="text" id="inputREmail" name="email" class="form-control" maxlength="120" placeholder="이메일" value="" />
+						<input type="text" id="s_email" name="email" class="form-control validate-email" maxlength="120" placeholder="이메일" value="" />
 					</div>
 					
 					<div class="form-group">
-						<label class="control-label" for="inputRUsername">사용자명</label>
+						<label class="control-label" for="s_username">사용자명</label>
 						<div class="error-help"></div>
-						<input type="text" id="inputRUsername" name="username" class="form-control" maxlength="16" placeholder="사용자명" value="{{ sess.name }}" except="{{ sess.name }}" />
+						<input type="text" id="s_username" name="username" class="form-control validate-username" maxlength="16" placeholder="사용자명" value="{{ sess.name }}" except="{{ sess.name }}" />
 					</div>
 					
-					<div style="margin: 10px 0 47px 0;">
-						<input type='hidden' name='what' value='update' />
-						<button id="signup-submit-btn" type="submit" class="btn btn-lg btn-primary pull-right">가입</button>
-					</div>
+					<input type='hidden' name='what' value='update' />
+					<button type="submit" class="btn btn-lg btn-primary pull-right validate-submit">가입</button>
 				</form>
 			</div>
 		</div>
-	</section>
+	</article>
 {% endblock %}

@@ -1,28 +1,26 @@
 /* width>=1260;default */
+@import 'variables';
+@import 'upload';
 
 .image-area {
 	font-size: 0px;
+	&:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
 }
 
 .grid-item {
 	margin: 0px;
 	padding: 0px;
 	vertical-align: baseline;
-
 	border: solid 1px rgba(49, 176, 213, 0);
-
 	position: absolute;
-
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
-
 	cursor: pointer;
-}
-
-.grid-item:hover {
-	color: inherit;
-	text-decoration: none;
 }
 
 .upload-area {
@@ -32,10 +30,8 @@
 
 #upload-icon-frame {
 	display: inline-block;
-
 	border: 4px dashed #aaa;
 	border-radius: 10px;
-
 	padding: 20px;
 	margin: 20px auto 5px auto;
 }
@@ -43,9 +39,7 @@
 #upload-icon {
 	width: 160px;
 	height: 160px;
-
 	border-radius: 10px;
-
 	background-image: url('/img/upload_icon.png');
 	background-size: cover;
 	background-repeat: no-repeat;
@@ -63,46 +57,40 @@
 	margin: 15px 0px 0px 0px;
 }
 
-
 /* width>=960;medium */
-@media screen and (max-width: 1259px) {
-}
+@media screen and (max-width: $break-medium) {}
 
 /* width>=760;tablet */
-@media screen and (max-width: 959px) {
+@media screen and (max-width: $break-tablet) {
 	.image-grid {
 		margin-right: inherit;
 	}
-
 	#upload-icon-frame {
 		padding: 6px;
 		margin: 2px auto 8px auto;
 	}
-
 	#upload-icon {
 		width: 140px;
 		height: 140px;
 	}
-
-	.myinfo>:not(:first-child) {
-		display: none;
+	.myinfo > {
+		:not(:first-child) {
+			display: none;
+		}
+		.top-desc > .user-icon {
+			margin-bottom: auto;
+		}
 	}
-
-	.myinfo>.top-desc>.user-icon {
-		margin-bottom: auto;
-	}
-
 	hr.divider {
 		margin-top: 10px;
 	}
 }
 
 /* width<760;phone */
-@media screen and (max-width: 759px) {
+@media screen and (max-width: $break-phone) {
 	#upload-icon-frame {
 		padding: 5px;
 	}
-
 	#upload-icon {
 		width: 90px;
 		height: 90px;

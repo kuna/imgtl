@@ -1,69 +1,65 @@
-{% extends "common.html" %}
+{% extends "layout.html" %}
 {% set active_page = "login" %}
-{% block body %}
-	<div class="center-box login-area">
-		<div class="logo-wrapper">
-			<a href="/">
-				<img class="logo" src="/img/logo_medium.png" style="max-width: 200px;" />
-			</a>
-		</div>
-		
-		<form class="login-form" action="{{ url_for('login') }}" method="post">
-			<div class="form-title">로그인</div>
-			
-			<div class="form-group">
-				<label class="control-label" for="inputEmail">이메일 또는 사용자명</label>
-				<input type="text" id="inputEmail" name="emailuser" class="form-control" placeholder="이메일" maxlength="120" autofocus />
-			</div>
-			
-			<div class="form-group">
-				<label class="control-label" for="inputPassword" style="margin-top: 7px;">비밀번호</label>
-				<input type="password" id="inputPassword" name="password" class="form-control" placeholder="비밀번호" />
-			</div>
-			
-			<div style="margin: 10px 0 70px 0;">
-				<button type="submit" class="btn btn-lg btn-primary pull-right">로그인</button>
-			</div>
-			
-			<hr class="divider" />
-			
-			<a href="#signup" class="btn btn-lg btn-info btn-block">가입</a>
-		</form>
-		
-		<form class="signup-form" action="{{ url_for('signup') }}" method="post">
-			<div class="form-title">가입</div>
-			
-			<div class="form-group">
-				<label class="control-label" for="inputREmail">이메일</label>
-				<div class="error-help"></div>
-				<input type="text" id="inputREmail" name="email" class="form-control" maxlength="120" placeholder="이메일" />
-			</div>
-			
-			<div class="form-group">
-				<label class="control-label" for="inputRUsername">사용자명</label>
-				<div class="error-help"></div>
-				<input type="text" id="inputRUsername" name="username" class="form-control" maxlength="16" placeholder="사용자명" />
-			</div>
-			
-			<div class="form-group">
-				<label class="control-label" for="inputRPassword" style="margin-top: 7px;">비밀번호</label>
-				<div class="error-help"></div>
-				<input type="password" id="inputRPassword" name="password" class="form-control" placeholder="비밀번호" />
-			</div>
-			
-			<div class="form-group">
-				<label class="control-label" for="inputRPasswordConfirm" style="margin-top: 7px;">비밀번호 확인</label>
-				<div class="error-help"></div>
-				<input type="password" id="inputRPasswordConfirm" name="passwordconfirm" class="form-control" placeholder="비밀번호 확인" />
-			</div>
-			
-			<div style="margin: 10px 0 70px 0;">
-				<button type="submit" id="signup-submit-btn" class="btn btn-lg btn-primary pull-right">가입</button>
-			</div>
-			
-			<hr class="divider" />
-			
-			<a href="#login" class="btn btn-lg btn-info btn-block">로그인</a>
-		</form>
-	</div>
+{% block title %}: 로그인/가입{%endblock%}
+{% block head %}
+<script src="/js/account_validate.js"></script>
+{% endblock %}
+{% block wrap %}
+	<article class="panel panel-default">
+		<table class="table table-bordered main-table">
+			<tbody>
+				<tr>
+					<td>
+						<form class="login-form" action="{{ url_for('login') }}" method="post">
+							<div class="form-title">로그인</div>
+							
+							<div class="form-group">
+								<label class="control-label" for="l_emailusername">이메일 또는 사용자명</label>
+								<input type="text" id="l_emailusername" name="emailusername" class="form-control" placeholder="이메일" maxlength="120" autofocus />
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="l_password">비밀번호</label>
+								<input type="password" id="l_password" name="password" class="form-control" placeholder="비밀번호" />
+							</div>
+							<a href="#">비밀번호를 잊어버리셨나요?</a>
+							<button type="submit" class="btn btn-lg btn-primary pull-right">로그인</button>
+						</form>
+					</td>
+					<td>
+						<form class="validate-form" action="{{ url_for('signup') }}" method="post">
+							<div class="form-title">가입</div>
+
+							<div class="form-group">
+								<label class="control-label" for="s_email">이메일</label>
+								<div class="error-help"></div>
+								<input type="text" id="s_email" name="email" class="form-control validate-email" maxlength="120" placeholder="이메일" />
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="s_username">사용자명</label>
+								<div class="error-help"></div>
+								<input type="text" id="s_username" name="username" class="form-control validate-username" maxlength="16" placeholder="사용자명" />
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="s_password">비밀번호</label>
+								<div class="error-help"></div>
+								<input type="password" id="s_password" name="password" class="form-control validate-password" placeholder="비밀번호" />
+							</div>
+
+							<div class="form-group">
+								<label class="control-label" for="s_passwordconfirm">비밀번호 확인</label>
+								<div class="error-help"></div>
+								<input type="password" id="s_passwordconfirm" name="passwordconfirm" class="form-control validate-pwconfirm" placeholder="비밀번호 확인" />
+							</div>
+
+							가입시 <a href="{{ url_for('tos') }}">이용 약관</a>에 동의하는 것으로 간주합니다.
+							<button type="submit" class="btn btn-lg btn-primary pull-right validate-submit">가입</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
 {% endblock %}
