@@ -33,7 +33,7 @@ def get_upload(user, url):
         do_log(current_app.name, 'expire', upload.id, user)
     return upload
 
-def do_upload_image(user, f, desc, is_nsfw=False, is_anonymous=False, is_private=False, keep_exif=True, expire=None, expire_behavior=None):
+def do_upload_image(user, f, desc='', is_nsfw=False, is_anonymous=False, is_private=False, keep_exif=True, expire=None, expire_behavior=None):
     if not f:
         return 'wrongimage'
     fn = f.filename
