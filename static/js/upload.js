@@ -23,16 +23,16 @@ $(function () {
 	$.event.props.push('dataTransfer');
 
 	$("#upload-icon-frame").bind({
-		click: function (e) {
+		click: function() {
 			$("#file-input").click();
 		},
-		dragenter: function (e) {
-			if (event.dataTransfer.dropEffect == "move") {
+		dragenter: function() {
+			if (event.dataTransfer.dropEffect === "move") {
 				event.preventDefault();
 			}
 		},
-		dragover: function (e) {
-			if (event.dataTransfer.dropEffect == "move") {
+		dragover: function() {
+			if (event.dataTransfer.dropEffect === "move") {
 				event.preventDefault();
 			}
 		},
@@ -47,10 +47,10 @@ $(function () {
 
 	$("#submit-btn").click(function () {
 		exp = ($("#expire option:selected").val());
-		if (exp != '-1') {
-			if (exp == '0') {
+		if (exp !== '-1') {
+			if (exp === '0') {
 				cst_exp = $("#expire-custom").val() * $("#expire-custom-unit").val();
-				if (!(cst_exp > 0)) {
+				if (cst_exp <= 0) {
 					showError("만료 시간을 정확히 입력해주세요.");
 					return false;
 				} else if (cst_exp > 518400) {

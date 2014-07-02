@@ -1,24 +1,5 @@
 var lastid = null;
 
-function showError(msg) {
-	showAlert("error-area", msg);
-}
-
-function showSuccess(msg) {
-	showAlert("success-area", msg);
-}
-
-function showAlert(id, msg) {
-	showWhiteOverlay();
-	$("#" + id + " > #msg-text").text(msg);
-	$("#" + id).animate({
-		opacity: 1,
-		top: 0
-	}, 500);
-	lastid = id;
-	setTimeout(hideAlertAndWhiteOverlay, 2000);
-}
-
 function hideAlert() {
 	$("#" + lastid).animate({
 		opacity: 0,
@@ -35,7 +16,7 @@ function showWhiteOverlay() {
 
 function hideWhiteOverlay() {
 	$(".white-overlay").animate({
-		opacity: 0,
+		opacity: 0
 	}, 500, function () {
 		$(".white-overlay").css("display", "none");
 	});
@@ -46,10 +27,29 @@ function hideAlertAndWhiteOverlay() {
 	hideWhiteOverlay();
 }
 
+function showAlert(id, msg) {
+	showWhiteOverlay();
+	$("#" + id + " > #msg-text").text(msg);
+	$("#" + id).animate({
+		opacity: 1,
+		top: 0
+	}, 500);
+	lastid = id;
+	setTimeout(hideAlertAndWhiteOverlay, 2000);
+}
+
+function showError(msg) { // jshint ignore:line
+	showAlert("error-area", msg);
+}
+
+function showSuccess(msg) { // jshint ignore:line
+	showAlert("success-area", msg);
+}
+
 $(function() {
 	$(".tool-tip").each(function () {
 		$(this).tooltip({
-			container: 'body',
+			container: 'body'
 		});
 	});
 
@@ -62,20 +62,21 @@ $(function() {
 	});
 
 	$("select").not('.input-lg').not('.input-sm').each(function() {
-		var e = $(this)
+		var e = $(this);
 			e.select2({
-			minimumResultsForSearch: 25565,
-		})
+			minimumResultsForSearch: 25565
+		});
 	});
 
 	$("#expire").change(function() {
-		var val = $("#expire option:selected").val()
-		if (val != '-1') {
+		var val = $("#expire option:selected").val();
+		if (val !== '-1') {
 			$("#expire-behavior-wrap").removeClass('hidden');
-			if (val == '0')
+			if (val === '0') {
 				$("#expire-custom-wrap").removeClass('hidden');
-			else
+			} else {
 				$("#expire-custom-wrap").addClass('hidden');
+			}
 		} else {
 			$("#expire-custom-wrap").addClass('hidden');
 			$("#expire-behavior-wrap").addClass('hidden');
@@ -88,9 +89,10 @@ $(function() {
 	});
 
 	$("#expire-custom").keypress(function(e) {
-		var charCode = (e.which) ? e.which : event.keyCode
-		if (charCode > 31 && (charCode < 48 || charCode > 57))
+		var charCode = (e.which) ? e.which : event.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
 			return false;
+		}
 		return true;
 	});
 });

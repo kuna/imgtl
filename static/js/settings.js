@@ -9,7 +9,7 @@ $(function () {
 				if (data.token) {
 					$("#t_token").val(data.token);
 				}
-				$("#token-modal").modal('hide')
+				$("#token-modal").modal('hide');
 			}
 		});
 	});

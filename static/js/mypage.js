@@ -1,5 +1,5 @@
 $(function () {
-	var grid = new freewall(".image-area")
+	var grid = new freewall(".image-area");
 	grid.reset({
 		selector: '.grid-item',
 		animate: true,

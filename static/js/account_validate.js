@@ -3,7 +3,9 @@ var re_username = /^[a-zA-Z0-9_]{4,16}$/;
 
 $(function () {
 	function valueCheck(val, what, except) {
-		if (val == except) return false;
+		if (val === except) {
+			return false;
+		}
 		res = false;
 		$.ajax({
 			type: "POST",
@@ -32,10 +34,13 @@ $(function () {
 		$p.addClass("has-success");
 		var flag = true;
 		$(".validate-form > div.form-group").each(function () {
-			if ($(this).hasClass('has-error'))
+			if ($(this).hasClass('has-error')) {
 				flag = false;
+			}
 		});
-		if (flag) $('.validate-submit').removeAttr('disabled');
+		if (flag) {
+			$('.validate-submit').removeAttr('disabled');
+		}
 	}
 
 	$(".validate-email").change(function () {
@@ -76,9 +81,8 @@ $(function () {
 	});
 
 	$(".validate-pwconfirm").keyup(function () {
-		var $p = $(this).parent();
-		if ($(this).val() != $(".validate-password").val()) {
-			error($(this), "비밀번호가 일치하지 않습니다")
+		if ($(this).val() !== $(".validate-password").val()) {
+			error($(this), "비밀번호가 일치하지 않습니다");
 		} else {
 			ok($(this));
 		}
