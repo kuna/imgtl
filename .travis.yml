@@ -8,11 +8,13 @@ before_install:
 install:
     - gem install scss-lint
     - sudo npm install -g jshint
+    - pip install flake8
     - pip install -r requirements.txt
 before_script: mkdir -p uploads/thumb
 script:
     - scss-lint static/scss
     - jshint --verbose static/js
+    - flake8 --ignore=E124,E128,E302,E501 .
     - nosetests
 after_script: rm -r uploads
 notifications:
