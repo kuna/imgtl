@@ -1,0 +1,13 @@
+exclude:
+  - 'static/scss/bootstrap.scss'
+  - 'static/scss/bootstrap-theme.scss'
+  - 'static/scss/todc-bootstrap.scss'
+  - 'static/scss/select2.scss'
+
+linters:
+  PropertySortOrder:
+    enabled: false
+  SelectorDepth:
+    enabled: false
+  Shorthand:
+    enabled: false

@@ -4,12 +4,14 @@ python:
 before_install:
     - echo 'yes' | sudo add-apt-repository ppa:chris-lea/node.js
     - sudo apt-get update
-    - sudo apt-get install -y nodejs
+    - sudo apt-get install -y nodejs ruby1.9.1
 install:
+    - gem install scss-lint
     - sudo npm install -g jshint
     - pip install -r requirements.txt
 before_script: mkdir -p uploads/thumb
 script:
+    - scss-lint static/scss
     - jshint --verbose static/js
     - nosetests
 after_script: rm -r uploads
