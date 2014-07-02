@@ -8,7 +8,7 @@ from flask import request, session, current_app
 from sqlalchemy.exc import IntegrityError
 
 from .lib import md5, is_image, get_ext, get_spath, make_url, create_thumbnail, get_prop, strip_exif, get_server_id, get_expire_behavior_id, get_expire_behavior
-from .db import *
+from .db import db, log_db, Log, Image, Upload
 
 
 def do_log(target, action, action_id, user=None):

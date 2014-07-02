@@ -5,7 +5,7 @@ import os
 import unittest
 import simplejson
 
-from imgtl.db import *
+from imgtl.db import db, User
 from imgtl.lib import pw_hash
 from imgtl.i18n import i18n as _i18n
 
@@ -47,7 +47,8 @@ class ImgTLTest(unittest.TestCase):
         data = {'what': what,
                 'value': value,
                 }
-        if exc: data['except'] = exc
+        if exc:
+            data['except'] = exc
         return self.app.post('/signup/check', data=data)
 
     def login(self, emailusername, password):

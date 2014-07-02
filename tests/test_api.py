@@ -5,8 +5,8 @@ import os
 import unittest
 import simplejson
 
-from imgtl.db import *
-from imgtl.lib import pw_hash, make_token
+from imgtl.db import db, User
+from imgtl.lib import pw_hash
 from imgtl.i18n import i18n as _i18n
 
 class ImgTLTest(unittest.TestCase):

@@ -62,11 +62,11 @@ def get_prop(fs):
     im = wImage(blob=fs)
     exif.update((k[5:], v) for k, v in im.metadata.items() if k.startswith('exif:'))
     p = {
-            'width': im.width,
-            'height': im.height,
-            'filesize': len(fs),
-            'exif': exif,
-        }
+        'width': im.width,
+        'height': im.height,
+        'filesize': len(fs),
+        'exif': exif,
+    }
     return p
 
 def get_server_id(name):
@@ -88,7 +88,7 @@ def strip_exif(image):
     begin_exif = image.find(b'\xff\xe1')
     if begin_exif >= 0:
         ret = image[0:begin_exif]
-        exif_size = unpack('>H', image[begin_exif+2:begin_exif+4])[0]
-        ret += image[begin_exif+exif_size+2:]
+        exif_size = unpack('>H', image[begin_exif + 2:begin_exif + 4])[0]
+        ret += image[begin_exif + exif_size + 2:]
         return ret
     return image

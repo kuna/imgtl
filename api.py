@@ -4,17 +4,14 @@
 import os
 import requests
 
-from flask import Flask, request
-from flask.ext.restful import Api, Resource, reqparse
+from flask import Flask
+from flask.ext.restful import Api, Resource
 from flask.ext.restful.reqparse import RequestParser, Argument
 from werkzeug.datastructures import FileStorage
 
-from sqlalchemy.exc import IntegrityError
-
-from imgtl.db import *
-from imgtl.const import *
+from imgtl.db import db, log_db, User
+from imgtl.const import BASE_URL
 from imgtl.common import get_upload, do_upload_image, do_delete_image
-import imgtl.lib
 
 
 app = Flask(__name__)

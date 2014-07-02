@@ -13,8 +13,8 @@ from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.sql import functions as sqlfuncs
 from sqlalchemy.orm import validates
 
-from .const import *
-from .lib import md5, get_spath, get_ext
+from .const import BASE_URL, TYPE_FILE, TYPE_IMAGE, TYPE_TEXT, USER_DEFAULT_ICON
+from .lib import md5, get_ext
 
 
 db = SQLAlchemy()

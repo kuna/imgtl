@@ -9,8 +9,8 @@ from flask.ext.oauthlib.client import OAuth
 
 from sqlalchemy.exc import IntegrityError
 
-from imgtl.db import *
-from imgtl.const import *
+from imgtl.db import db, log_db, User, Object, Image
+from imgtl.const import USERNAME_BLACKLIST
 from imgtl.i18n import i18n
 from imgtl.common import get_upload, do_upload_image, do_update_image, do_delete_image, do_log
 from imgtl.template import jinja2_filter_nl2br, jinja2_filter_dt
@@ -134,9 +134,9 @@ def signup():
             flash(i18n('invalidpassword'), 'error')
             return redirect(url_for('signup'))
         if request.form['password'] != request.form['passwordconfirm']:
-            flash(i18n('passwordmismatch'),'error')
+            flash(i18n('passwordmismatch'), 'error')
             return redirect(url_for('signup'))
-        user = User.query.filter((User.email==request.form['email']) | (User.name==request.form['username'])).first()
+        user = User.query.filter((User.email == request.form['email']) | (User.name == request.form['username'])).first()
         if user:
             if user.email == request.form['email']:
                 flash(i18n('alreadyexistemail'), 'error')
@@ -186,7 +186,7 @@ def login():
         return render_imgtl_template('login.html')
     elif request.method == 'POST':
         emailusername = request.form['emailusername']
-        user = User.query.filter((User.email==emailusername) | (User.name==emailusername)).first()
+        user = User.query.filter((User.email == emailusername) | (User.name == emailusername)).first()
         if user and user.password and imgtl.lib.pw_verify(user.password, request.form['password']):
             login_user(user, remember=True)
             return redirect(request.args.get('next') or url_for('index'))
@@ -196,10 +196,9 @@ def login():
 
 @app.route('/oauth/login')
 def oauth_login():
-    if session.has_key('twitter_token'):
+    if 'twitter_token' in session:
         del session['twitter_token']
-    return twitter.authorize(callback=url_for('oauth_authorized',
-        next=request.args.get('next') or request.referrer or None))
+    return twitter.authorize(callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
 
 @app.route('/oauth/authorized')
 @twitter.authorized_handler
@@ -224,7 +223,7 @@ def oauth_authorized(resp):
 
 @app.route('/oauth/signup', methods=['GET', 'POST'])
 def oauth_signup():
-    if not session.has_key('oauth_signup'):
+    if 'oauth_signup' not in session:
         flash(i18n('invalidaccess'), 'error')
         return redirect(url_for('index'))
     if request.method == 'GET':
@@ -236,7 +235,7 @@ def oauth_signup():
         if not imgtl.validator.username(request.form['username']):
             flash(i18n('invalidusername'), 'error')
             return redirect(url_for('oauth_signup'))
-        user = User.query.filter((User.email==request.form['email']) | (User.name==request.form['username'])).first()
+        user = User.query.filter((User.email == request.form['email']) | (User.name == request.form['username'])).first()
         if user:
             if user.email == request.form['email']:
                 flash(i18n('alreadyexistemail'), 'error')
@@ -268,7 +267,7 @@ def get_twitter_token(token=None):
 
 @app.route('/logout')
 def logout():
-    if session.has_key('twitter_token'):
+    if 'twitter_token' in session:
         del session['twitter_token']
     logout_user()
     return redirect(request.referrer or url_for('index'))
@@ -295,14 +294,15 @@ def upload():
         flash(i18n('invalidexpiretime'), 'error')
         return redirect(url_for('index'))
     upload = do_upload_image(user, request.files['image'], request.form.get('desc'),
-                                request.form.get('nsfw') == 'on', request.form.get('anonymous') == 'on', request.form.get('private') == 'on',
-                                request.form.get('keep-exif') == 'on', expire, request.form.get('expire-behavior'))
+                             request.form.get('nsfw') == 'on', request.form.get('anonymous') == 'on', request.form.get('private') == 'on',
+                             request.form.get('keep-exif') == 'on', expire, request.form.get('expire-behavior'))
     if isinstance(upload, str):
         flash(i18n(upload), 'error')
         return redirect(url_for('index'))
     else:
         if current_user.is_anonymous():
-            if 'anon_uploads' not in session: session['anon_uploads'] = []
+            if 'anon_uploads' not in session:
+                session['anon_uploads'] = []
             session['anon_uploads'].append(upload.id)
         flash(i18n('uploadsuccess'), 'success')
         return redirect(url_for('show', url=upload.url))
@@ -324,7 +324,8 @@ def show(url):
         if upload.private and (current_user != upload.user):
             abort(403)
         obj = Object.query.get(upload.object_id)
-        if 'views' not in session: session['views'] = []
+        if 'views' not in session:
+            session['views'] = []
         if upload.id not in session.get("views"):
             session['views'].append(upload.id)
             upload.view_count += 1
@@ -343,12 +344,12 @@ def show_only_image(url, ext):
             abort(404)
         if upload.private and (current_user != upload.user):
             abort(403)
-        if 'views' not in session: session['views'] = []
+        if 'views' not in session:
+            session['views'] = []
         if upload.id not in session.get("views"):
             session['views'].append(upload.id)
             upload.view_count += 1
             db.session.commit()
-        fpath = imgtl.lib.get_spath(app.config['UPLOAD_DIR'], obj.code)
         r = make_response()
         r.headers['Cache-Control'] = 'public'
         r.headers['Content-Type'] = ''
@@ -364,7 +365,6 @@ def show_thumbnail(url):
         abort(404)
     if upload.private and (current_user != upload.user):
         abort(403)
-    fpath = imgtl.lib.get_spath(os.path.join(app.config['UPLOAD_DIR'], 'thumb'), obj.code)
     r = make_response()
     r.headers['Cache-Control'] = 'public'
     r.headers['Content-Type'] = ''
