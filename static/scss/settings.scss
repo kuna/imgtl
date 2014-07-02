@@ -1,8 +1,8 @@
-/* width>=1260;default */
+// width>=1260;default
 @import 'variables';
 
 .tab-content {
-	margin-top: 15px;
+  margin-top: 15px;
 }
 
 @media screen and (max-width: $break-medium) {
