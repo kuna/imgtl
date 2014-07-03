@@ -22,7 +22,7 @@
 								<label class="control-label" for="l_password">비밀번호</label>
 								<input type="password" id="l_password" name="password" class="form-control" placeholder="비밀번호" />
 							</div>
-							<a href="#">비밀번호를 잊어버리셨나요?</a>
+							<div class='help-text'><a href="#">비밀번호를 잊어버리셨나요?</a></div>
 							<button type="submit" class="btn btn-lg btn-primary pull-right">로그인</button>
 						</form>
 					</td>
@@ -54,7 +54,7 @@
 								<input type="password" id="s_passwordconfirm" name="passwordconfirm" class="form-control validate-pwconfirm" placeholder="비밀번호 확인" />
 							</div>
 
-							가입시 <a href="{{ url_for('tos') }}">이용 약관</a>에 동의하는 것으로 간주합니다.
+							<div class='help-text'>가입시 <a href="{{ url_for('tos') }}">이용 약관</a>에 동의하는 것으로 간주합니다.</div>
 							<button type="submit" class="btn btn-lg btn-primary pull-right validate-submit">가입</button>
 						</form>
 					</td>

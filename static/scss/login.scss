@@ -16,6 +16,11 @@
   font-size: 17pt;
 }
 
+.help-text {
+  float: left;
+  margin: 0 10px 5px 0;
+}
+
 @media screen and (max-width: $break-medium) {
 }
 
@@ -23,4 +28,22 @@
 }
 
 @media screen and (max-width: $break-phone) {
+  .main-table {
+    &,
+    > tbody,
+    > tbody > tr,
+    > tbody > tr > td {
+      display: block;
+      width: 100%;
+      border: 0;
+    }
+
+    > tbody > tr > td {
+      padding-bottom: 100px;
+
+      &:first-child {
+        border-bottom: 1px solid #ddd !important;
+      }
+    }
+  }
 }
