@@ -26,10 +26,12 @@
 							<button type="submit" class="btn btn-lg btn-primary pull-right">로그인</button>
 						</form>
 
-                        <div class="oauth">
-                            <div class="oauth-title">또는</div>
-                            <a href="{{ url_for('oauth_login') }}">트위터</a>로 로그인
-                        </div>
+						<div class="oauth-login">
+							<div class="oauth-title">외부 계정 연동</div>
+							<ul>
+								<li><a href="{{ url_for('oauth_login') }}">트위터로 로그인/가입</a></li>
+							</ul>
+						</div>
 					</td>
 					<td>
 						<form class="validate-form" action="{{ url_for('signup') }}" method="post">
