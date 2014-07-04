@@ -56,3 +56,6 @@ nosetests.xml
 # CSS files
 .sass-cache
 /static/css/*.css
+
+# Pycharm settings
+.idea

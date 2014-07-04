@@ -11,6 +11,10 @@
   }
 }
 
+.login-form {
+  overflow: hidden;
+}
+
 .form-title {
   height: 45px;
   font-size: 17pt;
@@ -19,6 +23,16 @@
 .help-text {
   float: left;
   margin: 0 10px 5px 0;
+}
+
+.oauth {
+  clear: both;
+  margin: 30px 0 0 0;
+
+  .oauth-title {
+    height: 45px;
+    font-size: 17pt;
+  }
 }
 
 @media screen and (max-width: $break-medium) {
