@@ -1,8 +1,9 @@
+@import '_variables';
 @import 'upload';
 
 .outer-wrapper,
 .inner-wrapper {
-  height: 90%;
+  height: 500px;
 }
 
 .panel {
@@ -10,10 +11,23 @@
 }
 
 .panel-body {
-  width: 500px;
+  width: 300px;
   margin: 0 auto;
 }
 
 .tos-link {
   margin-top: 10px;
+}
+
+// width>=960;medium
+@media screen and (max-width: $break-medium) {}
+
+// width>=760;tablet
+@media screen and (max-width: $break-tablet) {}
+
+// width<760;phone
+@media screen and (max-width: $break-phone) {
+  .panel-body {
+    width: 100%;
+  }
 }
