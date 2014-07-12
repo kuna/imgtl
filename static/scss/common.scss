@@ -158,6 +158,10 @@ hr.divider {
 }
 
 @media screen and (max-width: $break-phone) {
+  .top-logo {
+    width: 50%;
+  }
+
   .outer-wrapper {
     width: calc(100% - 42px);
   }
