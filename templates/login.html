@@ -29,7 +29,7 @@
 						<div class="oauth-login">
 							<div class="oauth-title">외부 계정 연동</div>
 							<ul>
-								<li><a href="{{ url_for('oauth_login') }}">트위터로 로그인/가입</a></li>
+								<li><a href="{{ url_for('oauth_login', next=request.args.get('next') or '/') }}">트위터로 로그인/가입</a></li>
 							</ul>
 						</div>
 					</td>
