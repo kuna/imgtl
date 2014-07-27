@@ -205,6 +205,7 @@ def oauth_authorized(resp):
         resp['oauth_token_secret'],
     )
     if user:
+        del session['twitter_token']
         login_user(user, remember=True)
         return redirect(next_url)
     else:
