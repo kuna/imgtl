@@ -13,7 +13,7 @@ from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.sql import functions as sqlfuncs
 from sqlalchemy.orm import validates
 
-from .const import BASE_URL, TYPE_FILE, TYPE_IMAGE, TYPE_TEXT, USER_DEFAULT_ICON
+from .const import BASE_URL, TYPE_FILE, TYPE_IMAGE, TYPE_TEXT, USER_DEFAULT_ICON, ADMIN_IDS
 from .lib import md5, get_ext
 
 
@@ -52,6 +52,10 @@ class User(db.Model):
     @property
     def uploads(self):
         return self.all_uploads.filter_by(deleted=False)
+
+    @property
+    def is_admin(self):
+        return self.id in ADMINS_IDS
 
     def get_id(self):
         return unicode(self.id)
