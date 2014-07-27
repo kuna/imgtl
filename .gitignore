@@ -43,6 +43,7 @@ nosetests.xml
 
 # configurations
 /imgtl.cfg
+/imgtl/const.py
 
 # folders
 /uploads
