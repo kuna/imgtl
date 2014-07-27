@@ -2,7 +2,7 @@ Flask==0.10.1
 Flask-Bcrypt==0.6.0
 Flask-Login==0.2.11
 Flask-OAuthlib==0.5.0
-Flask-RESTful==0.2.12
+-e git://github.com/imgtl/flask-restful.git#egg=Flask_RESTful-master
 Flask-SQLAlchemy==1.0
 Jinja2==2.7.3
 MarkupSafe==0.23
