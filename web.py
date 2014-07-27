@@ -6,6 +6,7 @@ import os
 from flask import Flask, request, redirect, url_for, render_template, abort, make_response, flash, jsonify, session
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
 from flask.ext.oauthlib.client import OAuth
+from flask.ext.oauthlib.contrib.apps import twitter as twitter_factory
 
 from sqlalchemy.exc import IntegrityError
 
@@ -38,17 +39,9 @@ login_manager.login_view = 'login'
 login_manager.login_message = i18n('youmustlogin')
 login_manager.init_app(app)
 
-oauth = OAuth()
-oauth.init_app(app)
-twitter = oauth.remote_app('twitter',
-    base_url='https://api.twitter.com/1.1/',
-    request_token_url='https://api.twitter.com/oauth/request_token',
-    access_token_url='https://api.twitter.com/oauth/access_token',
-    authorize_url='https://api.twitter.com/oauth/authorize',
-    consumer_key=app.config['TWITTER_CONSUMER_KEY'],
-    consumer_secret=app.config['TWITTER_CONSUMER_SECRET'],
-    access_token_method='POST',
-)
+oauth = OAuth(app)
+twitter = twitter_factory.register_to(oauth)
+
 
 def render_imgtl_template(*args, **kwargs):
     kwargs['user'] = current_user
