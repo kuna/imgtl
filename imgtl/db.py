@@ -55,7 +55,7 @@ class User(db.Model):
 
     @property
     def is_admin(self):
-        return self.id in ADMINS_IDS
+        return self.id in ADMIN_IDS
 
     def get_id(self):
         return unicode(self.id)
