@@ -28,3 +28,5 @@ USERNAME_BLACKLIST = ['admin', 'root', 'mail', 'beta', 'test', 'static']
 URL_BLACKLIST = ['login', 'signup', 'logout', 'upload', 'img', 'css', 'js', 'fonts']
 
 AVAILABLE_FORMAT = ['JPEG', 'PNG', 'GIF', 'SVG']
+
+ADMIN_IDS = (1, )
