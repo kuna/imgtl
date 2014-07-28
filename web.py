@@ -327,37 +327,21 @@ def show(url):
         return jsonify({'res': res})
     elif request.method == 'GET':
         upload = get_upload(current_user, url)
-        if (not upload) or upload.deleted:
-            abort(404)
-        if upload.private and (current_user != upload.user):
-            abort(403)
+        if isinstance(upload, int):
+            abort(upload)
         obj = Object.query.get(upload.object_id)
-        if 'views' not in session:
-            session['views'] = []
-        if upload.id not in session.get("views"):
-            session['views'].append(upload.id)
-            upload.view_count += 1
-            db.session.commit()
         if isinstance(obj, Image):
             return render_imgtl_template('show/image.html', upload=upload)
 
 @app.route('/<url>.<ext>')
 def show_only_image(url, ext):
     upload = get_upload(current_user, url)
-    if not upload:
-        abort(404)
+    if isinstance(upload, int):
+        abort(upload)
     obj = Object.query.get(upload.object_id)
     if isinstance(obj, Image):
-        if (not upload) or upload.deleted or obj.ext != ext:
+        if obj.ext != ext:
             abort(404)
-        if upload.private and (current_user != upload.user):
-            abort(403)
-        if 'views' not in session:
-            session['views'] = []
-        if upload.id not in session.get("views"):
-            session['views'].append(upload.id)
-            upload.view_count += 1
-            db.session.commit()
         r = make_response()
         r.headers['Cache-Control'] = 'public'
         r.headers['Content-Type'] = ''
@@ -368,11 +352,9 @@ def show_only_image(url, ext):
 @app.route('/thumb/<url>')
 def show_thumbnail(url):
     upload = get_upload(current_user, url)
+    if isinstance(upload, int):
+        abort(upload)
     obj = Object.query.get(upload.object_id)
-    if (not upload) or upload.deleted:
-        abort(404)
-    if upload.private and (current_user != upload.user):
-        abort(403)
     r = make_response()
     r.headers['Cache-Control'] = 'public'
     r.headers['Content-Type'] = ''

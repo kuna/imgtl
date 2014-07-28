@@ -31,6 +31,16 @@ def get_upload(user, url):
         upload.expire_behavior = None
         db.session.commit()
         do_log(current_app.name, 'expire', upload.id, user)
+    if (not upload) or upload.deleted:
+        return 404
+    if upload.private and (user != upload.user):
+        return 403
+    if 'views' not in session:
+        session['views'] = []
+    if upload.id not in session.get("views"):
+        session['views'].append(upload.id)
+        upload.view_count += 1
+        db.session.commit()
     return upload
 
 def do_upload_image(user, f, desc='', is_nsfw=False, is_anonymous=False, is_private=False, keep_exif=True, expire=None, expire_behavior=None):
