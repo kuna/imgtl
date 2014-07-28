@@ -99,8 +99,7 @@ def settings():
                     flash(i18n('passwordmismatch'), 'error')
                     return redirect(url_for('settings'))
                 else:
-                    current_user.password = request.form['password']
-                    db.session.commit()
+                    user.password = imgtl.lib.pw_hash(request.form['password'])
             new_email = request.form['email']
             new_username = request.form['username']
             if not imgtl.validator.email(new_email):
