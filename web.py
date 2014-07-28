@@ -63,10 +63,17 @@ def tos():
     return render_imgtl_template('tos.html')
 
 @app.route('/settings', methods=['GET', 'POST'])
-@login_required
 def settings():
+    if not (current_user.is_authenticated() or (request.method == 'GET' and 'oauth-signup' in session) or (request.method == 'POST' and 'oauth-signup-post' in session)):
+        return redirect(url_for('login', next=url_for('settings')))
     if request.method == 'GET':
-        return render_imgtl_template('settings.html')
+        if 'oauth-signup' in session:
+            user = User(email='', name=session['oauth-signup']['name'], oauth_uid=session['oauth-signup']['oauth_uid'])
+            session['oauth-signup-post'] = session['oauth-signup']
+            del session['oauth-signup']
+            return render_template('settings.html', user=user)
+        else:
+            return render_imgtl_template('settings.html')
     elif request.method == 'POST':
         if request.form['what'] == 'token':
             while 1:
@@ -80,6 +87,10 @@ def settings():
                     break
             return jsonify({'token': current_user.token})
         elif request.form['what'] == 'update':
+            if 'oauth-signup-post' in session:
+                user = User(email='', name=session['oauth-signup-post']['name'], oauth_uid=session['oauth-signup-post']['oauth_uid'])
+            else:
+                user = current_user
             if request.form.get('password', '') != '':
                 if not imgtl.validator.password(request.form['password']):
                     flash(i18n('invalidpassowrd'), 'error')
@@ -98,19 +109,36 @@ def settings():
             if not imgtl.validator.username(new_username):
                 flash(i18n('invalidusername'), 'error')
                 return redirect(url_for('settings'))
-            if current_user.email != new_email:
+            if user.email != new_email:
                 if User.query.filter_by(email=new_email).first():
                     flash(i18n('alreadyexistemail'), 'error')
                     return redirect(url_for('settings'))
-            if current_user.name != new_username:
+            if user.name != new_username:
                 if User.query.filter_by(name=new_username).first():
                     flash(i18n('alreadyexistname'), 'error')
                     return redirect(url_for('settings'))
-            current_user.email = new_email
-            current_user.name = new_username
+            user.email = new_email
+            user.name = new_username
+            db.session.add(user)
             db.session.commit()
-            flash(i18n('accupdatesuccess'), 'success')
-            return redirect(url_for('settings'))
+            if 'oauth-signup-post' in session:
+                while 1:
+                    try:
+                        user.token = imgtl.lib.make_token()
+                        db.session.commit()
+                    except IntegrityError:
+                        db.session.rollback()
+                        continue
+                    else:
+                        break
+                login_user(user, remember=True)
+                do_log('web', 'signup_by_oauth', user.id)
+                del session['oauth-signup-post']
+                flash(i18n('signupsuccess'), 'success')
+                return redirect(url_for('index'))
+            else:
+                flash(i18n('accupdatesuccess'), 'success')
+                return redirect(url_for('settings'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -209,51 +237,12 @@ def oauth_authorized(resp):
         login_user(user, remember=True)
         return redirect(next_url)
     else:
-        session['oauth_signup'] = {
+        session['oauth-signup'] = {
             'name': resp['screen_name'],
             'oauth_uid': resp['user_id'],
         }
-        return redirect(url_for('oauth_signup'))
+        return redirect(url_for('settings'))
 
-@app.route('/oauth/signup', methods=['GET', 'POST'])
-def oauth_signup():
-    if 'oauth_signup' not in session:
-        flash(i18n('invalidaccess'), 'error')
-        return redirect(url_for('index'))
-    if request.method == 'GET':
-        return render_imgtl_template('oauth_signup.html', sess=session['oauth_signup'])
-    elif request.method == 'POST':
-        if not imgtl.validator.email(request.form['email']):
-            flash(i18n('invalidemail'), 'error')
-            return redirect(url_for('oauth_signup'))
-        if not imgtl.validator.username(request.form['username']):
-            flash(i18n('invalidusername'), 'error')
-            return redirect(url_for('oauth_signup'))
-        user = User.query.filter((User.email == request.form['email']) | (User.name == request.form['username'])).first()
-        if user:
-            if user.email == request.form['email']:
-                flash(i18n('alreadyexistemail'), 'error')
-                return redirect(url_for('oauth_signup'))
-            elif user.name == request.form['username']:
-                flash(i18n('alreadyexistname'), 'error')
-                return redirect(url_for('oauth_signup'))
-        user = User(email=request.form['email'], name=request.form['username'], oauth_uid=session['oauth_signup']['oauth_uid'])
-        while 1:
-            try:
-                user.token = imgtl.lib.make_token()
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-                continue
-            else:
-                break
-        db.session.add(user)
-        db.session.commit()
-        login_user(user, remember=True)
-        do_log('web', 'signup_by_oauth', user.id)
-        del session['oauth_signup']
-        flash(i18n('signupsuccess'), 'success')
-        return redirect(url_for('index'))
 
 @twitter.tokengetter
 def get_twitter_token(token=None):

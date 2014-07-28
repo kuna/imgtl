@@ -10,7 +10,9 @@
 		<div class="panel-body">
 			<ul class="nav nav-tabs nav-tabs-google">
 				<li class="active"><a href="#account" data-toggle="tab">계정</a></li>
+				{% if user.id %}
 				<li><a href="#token" data-toggle="tab">API 토큰</a></li>
+				{% endif %}
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="account">
@@ -26,7 +28,7 @@
 							<div class="error-help"></div>
 							<input type="text" id="a_username" name="username" class="form-control validate-username" maxlength="16" placeholder="사용자명" value="{{ user.name }}" except="{{ user.name }}" />
 						</div>
-						{% if not user.oauth_uid %}
+
 						<div class="form-group">
 							<label class="control-label" for="a_password">비밀번호</label>
 							<div class="error-help"></div>
@@ -38,13 +40,12 @@
 							<div class="error-help"></div>
 							<input type="password" id="a_passwordconfirm" name="passwordconfirm" class="form-control validate-pwconfirm" placeholder="비밀번호 확인" />
 						</div>
-						{% endif %}
 
 						<input type="hidden" name="what" value="update" />
 						<button type="submit" class="btn btn-primary pull-right validate-submit">저장</button>
 					</form>
 				</div>
-
+				{% if user.id %}
 				<div class="tab-pane" id="token">
 					<div class="form-group">
 						<label class="control-label" for="t_token">토큰</label>
@@ -55,6 +56,7 @@
 						<button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#token-modal">토큰 재발급</button>
 					</div>
 				</div>
+				{% endif %}
 			</div>
 		</div>
 	</article>
