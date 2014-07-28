@@ -19,7 +19,10 @@ i18n_dict = {
         'signupsuccess': '가입이 완료되었습니다.',
         'deletesuccess': '이미지가 삭제되었습니다.',
         'invalidexpiretime': '잘못된 만료 시간입니다.',
-        'invalidexpiretime-toolong': '만료 시간은 1년을 넘을 수 없습니다.'
+        'invalidexpiretime-toolong': '만료 시간은 1년을 넘을 수 없습니다.',
+        'nopassword': '비밀번호를 설정해야 합니다.',
+        'oauth-connected': '외부 계정이 ImgTL 계정에 연결되었습니다.',
+        'oauth-disconnected': '외부 계정 연결이 해제되었습니다.'
     }
 }
 

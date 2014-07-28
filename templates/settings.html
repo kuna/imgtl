@@ -12,6 +12,7 @@
 				<li class="active"><a href="#account" data-toggle="tab">계정</a></li>
 				{% if user.id %}
 				<li><a href="#token" data-toggle="tab">API 토큰</a></li>
+				<li><a href="#oauth" data-toggle="tab">외부 계정 연결</a></li>
 				{% endif %}
 			</ul>
 			<div class="tab-content">
@@ -54,6 +55,21 @@
 
 					<div style="margin: 10px 0 47px 0;">
 						<button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#token-modal">토큰 재발급</button>
+					</div>
+				</div>
+
+				<div class="tab-pane" id="oauth">
+					<div class="form-group">
+						<label>연결된 외부 계정</label>
+						<div class="oauth-account">
+							{% if twitter %}
+							<img class="user-icon img-circle" src="{{ twitter.profile_image_url_https }}" />
+							<div class="username" title="{{ twitter.screen_name }}">{{ twitter.screen_name }}</div>
+							<a href="{{ url_for('oauth_disconnect') }}">연결 끊기</a>
+							{% else %}
+							<a href="{{ url_for('oauth_connect') }}">외부 계정 연결하기</a>
+							{% endif %}
+						</div>
 					</div>
 				</div>
 				{% endif %}

@@ -5,6 +5,23 @@
   margin-top: 15px;
 }
 
+.oauth-account {
+  margin-top: 2px;
+
+  .user-icon {
+    width: 48px;
+    height: 48px;
+    float: left;
+    margin-right: 10px;
+  }
+
+  .username {
+    height: 24px;
+    line-height: 24px;
+    font-size: 16pt;
+  }
+}
+
 @media screen and (max-width: $break-medium) {
 }
 

@@ -73,7 +73,12 @@ def settings():
             del session['oauth-signup']
             return render_template('settings.html', user=user)
         else:
-            return render_imgtl_template('settings.html')
+            data = None
+            if current_user.oauth_uid is not None:
+                resp = twitter.get('users/show.json', data={'user_id': current_user.oauth_uid})
+                if resp.status == 200:
+                    data = resp.data
+            return render_imgtl_template('settings.html', twitter=data)
     elif request.method == 'POST':
         if request.form['what'] == 'token':
             while 1:
@@ -236,12 +241,33 @@ def oauth_authorized(resp):
         login_user(user, remember=True)
         return redirect(next_url)
     else:
-        session['oauth-signup'] = {
-            'name': resp['screen_name'],
-            'oauth_uid': resp['user_id'],
-        }
+        if 'oauth-connect-pre' in session:
+            current_user.oauth_uid = resp['user_id']
+            db.session.commit()
+            flash(i18n('oauth-connected'), 'success')
+        else:
+            session['oauth-signup'] = {
+                'name': resp['screen_name'],
+                'oauth_uid': resp['user_id'],
+            }
         return redirect(url_for('settings'))
 
+@app.route('/oauth/connect')
+@login_required
+def oauth_connect():
+    session['oauth-connect-pre'] = True
+    return twitter.authorize(callback=url_for('oauth_authorized', next=request.args.get('next') or request.referrer or None))
+
+@app.route('/oauth/disconnect')
+@login_required
+def oauth_disconnect():
+    if current_user.password:
+        current_user.oauth_uid = None
+        db.session.commit()
+        flash(i18n('oauth-disconnected'), 'success')
+    else:
+        flash(i18n('nopassword'), 'error')
+    return redirect(url_for('settings'))
 
 @twitter.tokengetter
 def get_twitter_token(token=None):
