@@ -329,7 +329,7 @@ def show(url):
         upload = get_upload(current_user, url)
         if isinstance(upload, int):
             abort(upload)
-        obj = Object.query.get(upload.object_id)
+        obj = upload.object
         if isinstance(obj, Image):
             return render_imgtl_template('show/image.html', upload=upload)
 
@@ -338,7 +338,7 @@ def show_only_image(url, ext):
     upload = get_upload(current_user, url)
     if isinstance(upload, int):
         abort(upload)
-    obj = Object.query.get(upload.object_id)
+    obj = upload.object
     if isinstance(obj, Image):
         if obj.ext != ext:
             abort(404)
@@ -354,7 +354,7 @@ def show_thumbnail(url):
     upload = get_upload(current_user, url)
     if isinstance(upload, int):
         abort(upload)
-    obj = Object.query.get(upload.object_id)
+    obj = upload.object
     r = make_response()
     r.headers['Cache-Control'] = 'public'
     r.headers['Content-Type'] = ''

@@ -78,7 +78,7 @@ class Upload(db.Model):
     id = db.Column('upload_id', db.Integer, primary_key=True, index=True)
     url = db.Column('upload_url', db.String(8), unique=True, index=True, nullable=False)
     object_id = db.Column('upload_obj_id', db.Integer, db.ForeignKey('object.object_id'), nullable=False)
-    object = db.relationship('Object', backref=db.backref('uploads', lazy='dynamic'))
+    object = db.relationship('Object', backref=db.backref('uploads', lazy='select'))
     user_id = db.Column('upload_user_id', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
     user = db.relationship('User', backref=db.backref('all_uploads', lazy='dynamic'))
     time = db.Column('upload_time', db.DateTime, nullable=False, default=sqlfuncs.now())
@@ -170,7 +170,7 @@ class Log(db.Model):
     action_id = db.Column('log_action_id', db.Integer, nullable=False)
     ip = db.Column('log_by_ip', db.String(16), nullable=True)
     user_id = db.Column('log_by_user_id', db.Integer, db.ForeignKey('user.user_id'), nullable=True)
-    user = db.relationship('User', backref=db.backref('logs', lazy='dynamic'))
+    user = db.relationship('User', backref=db.backref('logs', lazy='select'))
     time = db.Column('log_time', db.DateTime, nullable=False, default=sqlfuncs.now())
 
     def __repr__(self):
