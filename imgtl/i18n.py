@@ -30,4 +30,4 @@ def i18n(key, lang='ko'):
     try:
         return i18n_dict[lang][key].decode('utf-8')
     except KeyError:
-        return None
+        return key
