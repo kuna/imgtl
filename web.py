@@ -10,7 +10,7 @@ from flask.ext.oauthlib.contrib.apps import twitter as twitter_factory
 
 from sqlalchemy.exc import IntegrityError
 
-from imgtl.db import db, log_db, User, Object, Image
+from imgtl.db import db, log_db, User, Image
 from imgtl.const import USERNAME_BLACKLIST
 from imgtl.i18n import i18n
 from imgtl.common import get_upload, do_upload_image, do_update_image, do_delete_image, do_log
@@ -75,7 +75,7 @@ def settings():
         else:
             data = None
             if current_user.oauth_uid is not None:
-                resp = twitter.get('users/show.json', data={'user_id': current_user.oauth_uid})
+                resp = twitter.get('users/show.json', data={'user_id': current_user.oauth_uid}, token='')
                 if resp.status == 200:
                     data = resp.data
             return render_imgtl_template('settings.html', twitter=data)
