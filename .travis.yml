@@ -10,11 +10,12 @@ install:
     - sudo npm install -g jshint
     - pip install flake8
     - pip install -r requirements.txt
-before_script: mkdir -p uploads/thumb
-script:
+before_script:
+    - mkdir -p uploads/thumb
     - scss-lint static/scss
     - jshint --verbose static/js
     - flake8 --ignore=E124,E128,E302,E501 .
+script:
     - nosetests
 after_script: rm -r uploads
 notifications:
