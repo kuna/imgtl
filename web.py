@@ -9,6 +9,7 @@ from flask.ext.oauthlib.client import OAuth
 from flask.ext.oauthlib.contrib.apps import twitter as twitter_factory
 
 from sqlalchemy.exc import IntegrityError
+from git import Repo
 
 from imgtl.db import db, log_db, User, Image
 from imgtl.const import USERNAME_BLACKLIST
@@ -44,7 +45,9 @@ twitter = twitter_factory.register_to(oauth)
 
 
 def render_imgtl_template(*args, **kwargs):
+    c = Repo('.').commit('master')
     kwargs['user'] = current_user
+    kwargs['version'] = 'ver:{0}'.format(c.id[:10])
     return render_template(*args, **kwargs)
 
 @login_manager.user_loader
