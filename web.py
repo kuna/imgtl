@@ -3,7 +3,7 @@
 
 import os
 
-from flask import Flask, request, redirect, url_for, render_template, abort, make_response, flash, jsonify, session
+from flask import Flask, request, redirect, url_for, render_template, abort, make_response, flash, jsonify, session, send_file
 from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
 from flask.ext.oauthlib.client import OAuth
 from flask.ext.oauthlib.contrib.apps import twitter as twitter_factory
@@ -18,9 +18,10 @@ from imgtl.template import jinja2_filter_nl2br, jinja2_filter_dt
 import imgtl.lib
 import imgtl.validator
 
+app = Flask(__name__, static_url_path='')
 
-app = Flask(__name__)
 if os.environ.get('TESTING'):
+    print('PROGRAM IS IN TESTING MODE!')
     app.config.from_pyfile('.imgtl.tests.cfg')
 else:
     app.config.from_pyfile('imgtl.cfg')
@@ -342,12 +343,16 @@ def show_only_image(url, ext):
     if isinstance(obj, Image):
         if obj.ext != ext:
             abort(404)
-        r = make_response()
-        r.headers['Cache-Control'] = 'public'
-        r.headers['Content-Type'] = ''
-        r.headers['Content-Disposition'] = 'inline; filename="%s"' % upload.title.encode('utf8')
-        r.headers['X-Accel-Redirect'] = imgtl.lib.get_spath('/x', obj.code)
-        return r
+        if (app.config['NONGINX']):
+            return send_file(imgtl.lib.get_spath(app.config['UPLOAD_DIR'], obj.code))
+        else:
+            r = make_response()
+            r.headers['Cache-Control'] = 'public'
+            r.headers['Content-Type'] = ''
+            r.headers['Content-Disposition'] = 'inline; filename="%s"' % upload.title.encode('utf8')
+            r.headers['X-Accel-Redirect'] = imgtl.lib.get_spath('/x', obj.code)
+            print imgtl.lib.get_spath('/x', obj.code)
+            return r
 
 @app.route('/thumb/<url>')
 def show_thumbnail(url):
@@ -356,11 +361,18 @@ def show_thumbnail(url):
         abort(upload)
     obj = upload.object
     r = make_response()
-    r.headers['Cache-Control'] = 'public'
-    r.headers['Content-Type'] = ''
-    r.headers['Content-Disposition'] = 'inline; filename="%s"' % upload.title.encode('utf8')
-    r.headers['X-Accel-Redirect'] = imgtl.lib.get_spath('/x/thumb', obj.code)
-    return r
+    if (app.config['NONGINX']):
+        return send_file(imgtl.lib.get_spath(app.config['UPLOAD_DIR'] + '/thumb', obj.code))
+    else:
+        r.headers['Cache-Control'] = 'public'
+        r.headers['Content-Type'] = ''
+        r.headers['Content-Disposition'] = 'inline; filename="%s"' % upload.title.encode('utf8')
+        r.headers['X-Accel-Redirect'] = imgtl.lib.get_spath('/x/thumb', obj.code)
+        return r
+
+@app.route('/x/<path:path>')
+def show_imagefile(path):
+    return send_from_directory('uploads', path)
 
 if __name__ == '__main__':
     db.create_all()

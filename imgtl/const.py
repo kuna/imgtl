@@ -3,12 +3,12 @@
 
 from collections import OrderedDict
 
-BASE_URL = 'https://img.tl/%s'
+# if you want to use HTTPS connection, change it into https protocol.
+BASE_URL = 'http://127.0.0.1:2560/%s'
 
 # SERVERS
 SERVERS = OrderedDict((
-    ('S1', 's1.img.tl'),
-    ('S2', 's2.img.tl'),
+    ('S1', '127.0.0.1:2560'),
 ))
 
 # OBJ_TYPE

@@ -50,7 +50,8 @@ def get_ext(fn):
     return os.path.splitext(fn)[1][1:]
 
 def get_spath(path, code):
-    return os.path.join(path, code[0], code[1], code)
+    # replace code added in case of windows
+    return os.path.join(path, code[0], code[1], code).replace('\\', '/')
 
 def create_thumbnail(fs):
     im = wImage(blob=fs)
@@ -92,3 +93,9 @@ def strip_exif(image):
         ret += image[begin_exif + exif_size + 2:]
         return ret
     return image
+
+# get difference hash from image
+# code from http://www.devblog.kr/r/8y0gFPAvJ2v93JJuIjYxxv9CWVs7HEvqs3yvJe4SrAsV9yRigLZZlIc4FVfavA
+# dhash part
+def  dhash(image):
+    aa

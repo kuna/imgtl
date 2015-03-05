@@ -56,6 +56,10 @@ nosetests.xml
 # CSS files
 .sass-cache
 /static/css/*.css
+*.map
 
 # Pycharm settings
 .idea
+
+# temporary batch files
+*.bat

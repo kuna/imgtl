@@ -51,6 +51,7 @@ def do_upload_image(user, f, desc='', is_nsfw=False, is_anonymous=False, is_priv
     if not is_image(fs):
         return 'notimage'
     if not keep_exif:
+        print 'IM STRIPING EXIF'
         fs = strip_exif(fs)
     code = '%s.%s' % (md5(fs), get_ext(fn))
     image = Image.query.filter_by(code=code).first()
@@ -62,7 +63,7 @@ def do_upload_image(user, f, desc='', is_nsfw=False, is_anonymous=False, is_priv
             os.makedirs(os.path.dirname(fp))
         if not os.path.exists(os.path.dirname(tfp)):
             os.makedirs(os.path.dirname(tfp))
-        with open(fp, 'w') as fi:
+        with open(fp, 'wb') as fi:
             fi.write(fs)
         create_thumbnail(fs).save(filename=tfp)
     if not expire:
